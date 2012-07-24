@@ -13,3 +13,6 @@ file(GLOB SPACEROCKS_SOURCES src/*.cpp)
 
 add_executable(spacerocks ${SPACEROCKS_SOURCES})
 target_link_libraries(spacerocks glfw glhck ${GLFW_LIBRARIES})
+
+install(TARGETS spacerocks DESTINATION .)
+install(DIRECTORY img DESTINATION .)
