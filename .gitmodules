@@ -1,0 +1,3 @@
+[submodule "lib/glhck"]
+	path = lib/glhck
+	url = git://github.com/bzar/glhck.git
