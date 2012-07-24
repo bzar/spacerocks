@@ -10,8 +10,10 @@ include_directories(
 )
 
 file(GLOB SPACEROCKS_SOURCES src/*.cpp)
-
+add_definitions(-DGLHCK_KAZMATH_FLOAT -DUSE_SINGLE_PRECISION)
+list(APPEND CMAKE_CXX_FLAGS -std=c++0x)
 add_executable(spacerocks ${SPACEROCKS_SOURCES})
+
 target_link_libraries(spacerocks glfw glhck ${GLFW_LIBRARIES})
 
 install(TARGETS spacerocks DESTINATION .)

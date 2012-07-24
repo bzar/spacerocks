@@ -1,17 +1,25 @@
 #include "GL/glfw3.h"
 #include "GL/glhck.h"
+
 #include <cstdlib>
+#include <iostream>
+#include <set>
+#include <memory>
+
+#include "asteroid.h"
 
 int const WIDTH = 800;
 int const HEIGHT = 480;
 
-struct Game {
+struct Runtime {
   bool running;
+  double now;
+  double total;
+  unsigned int frame;
 };
 
 static int windowCloseCallback(GLFWwindow window);
 int gameloop(GLFWwindow& window);
-
 
 int main(int argc, char** argv)
 {
@@ -24,7 +32,7 @@ int main(int argc, char** argv)
   if(!window)
     return EXIT_FAILURE;
 
-  glfwSwapInterval(0);
+  glfwSwapInterval(1);
   glfwSetWindowCloseCallback(windowCloseCallback);
   
   if(!glhckInit(argc, argv))
@@ -44,8 +52,8 @@ int main(int argc, char** argv)
 
 static int windowCloseCallback(GLFWwindow window)
 {
-  Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
-  game->running = false;
+  Runtime* runtime = static_cast<Runtime*>(glfwGetWindowUserPointer(window));
+  runtime->running = false;
   return GL_FALSE;
 }
 
@@ -56,54 +64,62 @@ int gameloop(GLFWwindow& window)
   if(!camera)
     return EXIT_FAILURE;
   
-  glhckCameraRange(camera, 0.1f, 1000.0f);
-  kmVec3 cameraPos = { 0, 0, -40 };
+  glhckCameraRange(camera, 0.1f, 20.0f);
+  kmVec3 cameraPos = { 0, 0, -10 };
   kmVec3 cameraRot = { 0, 0, 0 };
+  glhckCameraPosition(camera, &cameraPos);
+  glhckCameraTargetf(camera, cameraPos.x, cameraPos.y, cameraPos.z + 1);
+  glhckCameraRotate(camera, &cameraRot);
+  glhckCameraUpdate(camera);
   
-  glhckObject* sprite = glhckSpriteNew("glhck.png", 100, GLHCK_TEXTURE_DEFAULTS);
+  Runtime runtime = { true, glfwGetTime(), 0, 0 };
+  glfwSetWindowUserPointer(window, &runtime);
   
-  if(!sprite)
-    return EXIT_FAILURE;
+  std::set<std::shared_ptr<Sprite>> sprites;
   
-  glhckObjectPositionf(sprite, 0, 0, 0);
+  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(4, -4, 0)));
+  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(3, -2, 0)));
+  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(2, -1, 0)));
+  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(1, 0, 0)));
+  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(2, 1, 0)));
+  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(3, 2, 0)));
+  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(4, 4, 0)));
   
-  Game game = { true };
-  glfwSetWindowUserPointer(window, &game);
-  
-  glhckText *text = glhckTextNew(512, 512);
-  unsigned int font = glhckTextNewFont(text, "/usr/share/fonts/truetype/freefont/FreeSans.ttf");
+ // glhckObject* background = glhckSpriteNew("img/background.png", 800, GLHCK_TEXTURE_DEFAULTS);
+ // glhckObjectPositionf(background, 0, 0, 10);
   
   glhckMemoryGraph();
 
-  float now = glfwGetTime();
-  float total = 0;
-  while(game.running)
+  while(runtime.running)
   {
-    float delta = glfwGetTime() - now;
-    now += delta;
-    total += delta;
+    float delta = glfwGetTime() - runtime.now;
+    runtime.now += delta;
+    runtime.total += delta;
     
     glfwPollEvents();
     
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
     {
-      game.running = false;
+      runtime.running = false;
     }
     
-    glhckCameraUpdate(camera);
-    glhckCameraPosition(camera, &cameraPos);
-    glhckCameraTargetf(camera, cameraPos.x, cameraPos.y, cameraPos.z + 1);
-    glhckCameraRotate(camera, &cameraRot);
+    for(auto i : sprites)
+    {
+      i->update(delta);
+    }
     
-    glhckObjectRotatef(sprite, total * 90, total * 360, total * 20);
-    glhckObjectDraw(sprite);
+    //glhckObjectDraw(background);
+    
+    for(auto i : sprites)
+    {
+      i->render();
+    }
+    
     glhckRender();
-    
-    glhckTextDraw(text, font, 32, -64 + static_cast<int>(total * 64) % (WIDTH + 64), 16, "Tekstiä ", NULL);
-    glhckTextRender(text);
-    
     glfwSwapBuffers();
     glhckClear();
+    
+    ++runtime.frame;
   }
  
   return EXIT_SUCCESS;
