@@ -64,9 +64,9 @@ int gameloop(GLFWwindow& window)
   if(!camera)
     return EXIT_FAILURE;
   
-  glhckCameraRange(camera, 0.1f, 20.0f);
-  kmVec3 cameraPos = { 0, 0, -10 };
-  kmVec3 cameraRot = { 0, 0, 0 };
+  glhckCameraRange(camera, 0.1f, 200.0f);
+  kmVec3 cameraPos = { 0, 0, 50 };
+  kmVec3 cameraRot = { 0, 180, 0 };
   glhckCameraPosition(camera, &cameraPos);
   glhckCameraTargetf(camera, cameraPos.x, cameraPos.y, cameraPos.z + 1);
   glhckCameraRotate(camera, &cameraRot);
@@ -77,16 +77,17 @@ int gameloop(GLFWwindow& window)
   
   std::set<std::shared_ptr<Sprite>> sprites;
   
-  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(4, -4, 0)));
-  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(3, -2, 0)));
-  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(2, -1, 0)));
+  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(4, -20, 0)));
+  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(3, -10, 0)));
+  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(2, -5, 0)));
   sprites.insert(std::shared_ptr<Sprite>(new Asteroid(1, 0, 0)));
-  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(2, 1, 0)));
-  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(3, 2, 0)));
-  //sprites.insert(std::shared_ptr<Sprite>(new Asteroid(4, 4, 0)));
+  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(2, 5, 0)));
+  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(3, 10, 0)));
+  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(4, 20, 0)));
   
- // glhckObject* background = glhckSpriteNew("img/background.png", 800, GLHCK_TEXTURE_DEFAULTS);
- // glhckObjectPositionf(background, 0, 0, 10);
+  glhckObject* background = glhckSpriteNew("img/background.png", 2, GLHCK_TEXTURE_DEFAULTS);
+  glhckObjectPositionf(background, 0, 0, -42);
+  glhckObjectRotatef(background, 0, 0, 0);
   
   glhckMemoryGraph();
 
@@ -108,7 +109,7 @@ int gameloop(GLFWwindow& window)
       i->update(delta);
     }
     
-    //glhckObjectDraw(background);
+    glhckObjectDraw(background);
     
     for(auto i : sprites)
     {
