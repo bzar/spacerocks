@@ -5,14 +5,21 @@
 #include "GL/glhck.h"
 #include "vec2.h"
 
+#include <map>
+#include <string>
+
 class Asteroid : public Sprite
 {
 public:
-  Asteroid(int const size, km::vec2 const& position, km::vec2 const& velocity);
+  enum Size { TINY = 1, SMALL, MEDIUM, LARGE };
+  Asteroid(Size const size, km::vec2 const& position, km::vec2 const& velocity);
   void render();
   void update(float delta);
   
 private:
+  
+  static std::map<int, std::string> const IMAGES;
+  
   glhckObject* o;
   float angle;
   km::vec2 v;

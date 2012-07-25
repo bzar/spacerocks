@@ -79,14 +79,14 @@ int gameloop(GLFWwindow& window)
   std::set<std::shared_ptr<Sprite>> sprites;
   
   
-  struct { int s; km::vec2 p; km::vec2 v; } asteroids[] = {
-    {4, {-20, 0}, {1, 0}},
-    {3, {-10, 0}, {0, 0}},
-    {2, {-5, 0}, {0, 0}},
-    {1, {0, 0}, {0, 0}},
-    {2, {5, 0}, {0, 0}},
-    {3, {10, 0}, {0, 0}},
-    {4, {20, 0}, {0, 1}}
+  struct { Asteroid::Size s; km::vec2 p; km::vec2 v; } asteroids[] = {
+    {Asteroid::LARGE,  {-20, 0}, {1, 0}},
+    {Asteroid::MEDIUM, {-10, 0}, {0, 0}},
+    {Asteroid::SMALL,  { -5, 0}, {0, 0}},
+    {Asteroid::TINY,   {  0, 0}, {0, 0}},
+    {Asteroid::SMALL,  {  5, 0}, {0, 0}},
+    {Asteroid::MEDIUM, { 10, 0}, {0, 0}},
+    {Asteroid::LARGE,  { 20, 0}, {0, 1}}
   };
   
   for(auto d : asteroids)
