@@ -39,7 +39,7 @@ int main(int argc, char** argv)
   if(!glhckInit(argc, argv))
     return EXIT_FAILURE;
 
-  if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_OPENGL))
+  if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_AUTO))
     return EXIT_FAILURE;
   
   int retval = gameloop(window);
@@ -81,12 +81,19 @@ int gameloop(GLFWwindow& window)
   
   struct { Asteroid::Size s; km::vec2 p; km::vec2 v; } asteroids[] = {
     {Asteroid::LARGE,  {-20, 0}, {1, 0}},
-    {Asteroid::MEDIUM, {-10, 0}, {0, 0}},
+    {Asteroid::MEDIUM, {-10, 0}, {0.5, 0.5}},
     {Asteroid::SMALL,  { -5, 0}, {0, 0}},
     {Asteroid::TINY,   {  0, 0}, {0, 0}},
     {Asteroid::SMALL,  {  5, 0}, {0, 0}},
-    {Asteroid::MEDIUM, { 10, 0}, {0, 0}},
-    {Asteroid::LARGE,  { 20, 0}, {0, 1}}
+    {Asteroid::MEDIUM, { 10, 0}, {-0.5, -0.5}},
+    {Asteroid::LARGE,  { 20, 0}, {0, 1}},
+    {Asteroid::LARGE,  {-20, 5}, {1, 0}},
+    {Asteroid::MEDIUM, {-10, 5}, {0.5, 0.5}},
+    {Asteroid::SMALL,  { -5, 5}, {0, 0}},
+    {Asteroid::TINY,   {  0, 5}, {0, 0}},
+    {Asteroid::SMALL,  {  5, 5}, {0, 0}},
+    {Asteroid::MEDIUM, { 10, 5}, {-0.5, -0.5}},
+    {Asteroid::LARGE,  { 20, 5}, {0, 1}}
   };
   
   for(auto d : asteroids)
