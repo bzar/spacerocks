@@ -21,7 +21,6 @@ private:
   static std::map<Size, std::string> const IMAGES;
   
   glhckObject* o;
-  float angle;
   km::vec2 v;
 };
 #endif
