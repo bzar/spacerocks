@@ -1,6 +1,7 @@
 #include "asteroid.h"
 
-Asteroid::Asteroid(int const size, float x, float y) : Sprite(), o(0), angle(0)
+Asteroid::Asteroid(int const size, km::vec2 const& position, km::vec2 const& velocity) : 
+  Sprite(), o(0), angle(0), v(velocity.x, velocity.y)
 {
   if(size <= 1) {
     o = glhckSpriteNew("img/asteroid_1.png", 3, GLHCK_TEXTURE_DEFAULTS);
@@ -13,7 +14,7 @@ Asteroid::Asteroid(int const size, float x, float y) : Sprite(), o(0), angle(0)
   }
 
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
-  glhckObjectPositionf(o, x, y, 0);
+  glhckObjectPositionf(o, position.x, position.y, 0);
 }
 
 void Asteroid::render()
@@ -24,5 +25,6 @@ void Asteroid::render()
 void Asteroid::update(float delta)
 {
   angle += delta * 40;
+  glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
   glhckObjectRotatef(o, 0, 0, angle);
 }

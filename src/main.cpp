@@ -5,6 +5,7 @@
 #include <iostream>
 #include <set>
 #include <memory>
+#include <sstream>
 
 #include "asteroid.h"
 
@@ -14,7 +15,7 @@ int const HEIGHT = 480;
 struct Runtime {
   bool running;
   double now;
-  double total;
+  double start;
   unsigned int frame;
 };
 
@@ -72,30 +73,41 @@ int gameloop(GLFWwindow& window)
   glhckCameraRotate(camera, &cameraRot);
   glhckCameraUpdate(camera);
   
-  Runtime runtime = { true, glfwGetTime(), 0, 0 };
+  Runtime runtime = { true, glfwGetTime(), glfwGetTime(), 0 };
   glfwSetWindowUserPointer(window, &runtime);
   
   std::set<std::shared_ptr<Sprite>> sprites;
   
-  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(4, -20, 0)));
-  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(3, -10, 0)));
-  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(2, -5, 0)));
-  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(1, 0, 0)));
-  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(2, 5, 0)));
-  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(3, 10, 0)));
-  sprites.insert(std::shared_ptr<Sprite>(new Asteroid(4, 20, 0)));
+  
+  struct { int s; km::vec2 p; km::vec2 v; } asteroids[] = {
+    {4, {-20, 0}, {1, 0}},
+    {3, {-10, 0}, {0, 0}},
+    {2, {-5, 0}, {0, 0}},
+    {1, {0, 0}, {0, 0}},
+    {2, {5, 0}, {0, 0}},
+    {3, {10, 0}, {0, 0}},
+    {4, {20, 0}, {0, 1}}
+  };
+  
+  for(auto d : asteroids)
+  {
+    sprites.insert(std::shared_ptr<Sprite>(new Asteroid(d.s, d.p, d.v)));
+  }
   
   glhckObject* background = glhckSpriteNew("img/background.png", 2, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectPositionf(background, 0, 0, -42);
-  glhckObjectRotatef(background, 0, 0, 0);
+
+  glhckText *text = glhckTextNew(800, 40);
+  unsigned int font = glhckTextNewFont(text, "/usr/share/fonts/truetype/freefont/FreeSans.ttf");
   
   glhckMemoryGraph();
 
   while(runtime.running)
   {
+    
     float delta = glfwGetTime() - runtime.now;
     runtime.now += delta;
-    runtime.total += delta;
+    
     
     glfwPollEvents();
     
@@ -117,6 +129,14 @@ int gameloop(GLFWwindow& window)
     }
     
     glhckRender();
+    
+    std::ostringstream ss;
+    ss << "total: " << static_cast<int>((runtime.now - runtime.start) * 1000) 
+       << "ms, frame: " << runtime.frame;
+    glhckTextDraw(text, font, 20, 5, 465, ss.str().data(), NULL);
+    glhckTextRender(text);
+    
+    
     glfwSwapBuffers();
     glhckClear();
     
