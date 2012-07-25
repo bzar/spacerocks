@@ -18,7 +18,7 @@ public:
   
 private:
   
-  static std::map<int, std::string> const IMAGES;
+  static std::map<Size, std::string> const IMAGES;
   
   glhckObject* o;
   float angle;

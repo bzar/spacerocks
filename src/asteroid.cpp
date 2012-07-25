@@ -1,10 +1,10 @@
 #include "asteroid.h"
 
-std::map<int, std::string> const Asteroid::IMAGES = {
-  {1, "img/asteroid_1.png"},
-  {2, "img/asteroid_2.png"},
-  {3, "img/asteroid_3.png"},
-  {4, "img/asteroid_4.png"}
+std::map<Asteroid::Size, std::string> const Asteroid::IMAGES = {
+  {Asteroid::TINY, "img/asteroid_1.png"},
+  {Asteroid::SMALL, "img/asteroid_2.png"},
+  {Asteroid::MEDIUM, "img/asteroid_3.png"},
+  {Asteroid::LARGE, "img/asteroid_4.png"}
 };
 
 Asteroid::Asteroid(Size const size, km::vec2 const& position, km::vec2 const& velocity) : 
