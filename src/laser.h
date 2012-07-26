@@ -19,6 +19,7 @@ public:
   
 private:
   static std::string const IMAGE;
+  static glhckTexture* TEXTURE;
   glhckObject* o;
   float life;
   Vec2D v;

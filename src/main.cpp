@@ -101,7 +101,7 @@ int gameloop(GLFWwindow& window)
   std::shared_ptr<Ship> ship(new Ship({0, 0}, {0, 0}));
   sprites.insert(ship);
   
-  glhckObject* background = glhckSpriteNew("img/background.png", 2, GLHCK_TEXTURE_DEFAULTS);
+  glhckObject* background = glhckSpriteNewFromFile("img/background.png", 2, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectPositionf(background, 0, 0, -42);
 
   glhckText *text = glhckTextNew(800, 40);

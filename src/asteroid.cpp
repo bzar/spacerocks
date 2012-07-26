@@ -1,16 +1,16 @@
 #include "asteroid.h"
 
-std::map<Asteroid::Size, std::string> const Asteroid::IMAGES = {
-  {Asteroid::TINY, "img/asteroid_1.png"},
-  {Asteroid::SMALL, "img/asteroid_2.png"},
-  {Asteroid::MEDIUM, "img/asteroid_3.png"},
-  {Asteroid::LARGE, "img/asteroid_4.png"}
+ std::string const Asteroid::IMAGES[NUM_SIZES] = {
+  "img/asteroid_1.png",
+  "img/asteroid_2.png",
+  "img/asteroid_3.png",
+  "img/asteroid_4.png"
 };
 
 Asteroid::Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity) : 
   Sprite(), o(0), v(velocity)
 {
-  o = glhckSpriteNew(IMAGES.at(size).data(), 2, GLHCK_TEXTURE_DEFAULTS);
+  o = glhckSpriteNewFromFile(IMAGES[size].data(), 2, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }

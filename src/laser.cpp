@@ -1,11 +1,16 @@
 #include "laser.h"
 
 std::string const Laser::IMAGE = "img/laser.png";
+glhckTexture* Laser::TEXTURE = nullptr;
 
 Laser::Laser(float const life, Vec2D const& position, Vec2D const& velocity) : 
   Particle(), o(0), life(life), v(velocity)
 {
-  o = glhckSpriteNew(IMAGE.data(), 1, GLHCK_TEXTURE_DEFAULTS);
+  if(TEXTURE == nullptr)
+  {
+    TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
+  }
+  o = glhckSpriteNew(TEXTURE, 1);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);

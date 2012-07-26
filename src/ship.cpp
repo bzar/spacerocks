@@ -11,8 +11,6 @@ Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
   Sprite(), o(0), v(velocity), 
   turnLeft(false), turnRight(false), accelerate(false)
 {
-  o = glhckSpriteNew(IMAGES[DEFAULT].data(), 1.5, GLHCK_TEXTURE_DEFAULTS);
-  
   if(TEXTURES == nullptr)
   {
     TEXTURES = glhckAtlasNew();
@@ -23,6 +21,8 @@ Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
     }
     glhckAtlasPack(TEXTURES, true, false);
   }
+
+  o = glhckSpriteNew(glhckAtlasGetTextureByIndex(TEXTURES, DEFAULT), 1.5);
   
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);

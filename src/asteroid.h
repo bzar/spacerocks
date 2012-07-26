@@ -5,13 +5,12 @@
 #include "GL/glhck.h"
 #include "vec2d.h"
 
-#include <map>
 #include <string>
 
 class Asteroid : public Sprite
 {
 public:
-  enum Size { TINY = 1, SMALL, MEDIUM, LARGE };
+  enum Size { TINY, SMALL, MEDIUM, LARGE, NUM_SIZES };
   Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity);
   ~Asteroid();
   
@@ -20,7 +19,7 @@ public:
   
 private:
   
-  static std::map<Size, std::string> const IMAGES;
+  static std::string const IMAGES[NUM_SIZES];
   
   glhckObject* o;
   Vec2D v;
