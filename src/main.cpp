@@ -143,7 +143,7 @@ int gameloop(GLFWwindow& window)
     }
 
     double delta = timer.getDeltaTime();
-    laserCooldown = laserCooldown ? laserCooldown - delta : laserCooldown;
+    laserCooldown -= delta;
     
     for(auto i : sprites)
     {
