@@ -11,6 +11,7 @@
 #include "timer.h"
 #include "asteroid.h"
 #include "ship.h"
+#include "laser.h"
 #include "vec2d.h"
 
 int const WIDTH = 800;
@@ -73,7 +74,7 @@ int gameloop(GLFWwindow& window)
   glhckCameraUpdate(camera);
   
   std::set<std::shared_ptr<Sprite>> sprites;
-  
+  std::set<std::shared_ptr<Particle>> particles;
   
   struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
     {Asteroid::LARGE,  {-20, 0}, {1, 0}},
@@ -111,6 +112,7 @@ int gameloop(GLFWwindow& window)
   Runtime runtime = { true };
   glfwSetWindowUserPointer(window, &runtime);
 
+  double laserCooldown = 0;
   Timer timer;
   
   while(runtime.running)
@@ -126,7 +128,23 @@ int gameloop(GLFWwindow& window)
     ship->turningRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
     ship->accelerating(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
     
+    if(laserCooldown <= 0 && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+      Vec2D v(0, 120);
+      v.rotatei(ship->getAngle());
+      Vec2D p = v.normal().uniti().scalei(0.7);
+      std::shared_ptr<Laser> laser1(new Laser(0.25, ship->getPosition() + p, v));
+      std::shared_ptr<Laser> laser2(new Laser(0.25, ship->getPosition() - p, v));
+      sprites.insert(laser1);
+      sprites.insert(laser2);
+      particles.insert(laser1);
+      particles.insert(laser2);
+      laserCooldown = 0.15;
+    }
+
     double delta = timer.getDeltaTime();
+    laserCooldown = laserCooldown ? laserCooldown - delta : laserCooldown;
+    
     for(auto i : sprites)
     {
       i->update(delta);
@@ -139,6 +157,14 @@ int gameloop(GLFWwindow& window)
       i->render();
     }
     
+    for(auto i : particles)
+    {
+      if(!i->alive())
+      {
+        sprites.erase(i);
+        particles.erase(i);
+      }
+    }
     glhckRender();
     
     std::ostringstream ss;

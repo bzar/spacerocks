@@ -11,7 +11,7 @@ Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
   Sprite(), o(0), v(velocity), 
   turnLeft(false), turnRight(false), accelerate(false)
 {
-  o = glhckSpriteNew(IMAGES[DEFAULT].data(), 2, GLHCK_TEXTURE_DEFAULTS);
+  o = glhckSpriteNew(IMAGES[DEFAULT].data(), 1.5, GLHCK_TEXTURE_DEFAULTS);
   
   if(TEXTURES == nullptr)
   {
@@ -27,6 +27,12 @@ Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
+
+Ship::~Ship()
+{
+  glhckObjectFree(o);
+}
+
 
 void Ship::render()
 {
@@ -95,4 +101,22 @@ void Ship::accelerating(bool const value)
 {
   accelerate = value;
 }
+
+Vec2D Ship::getVelocity() const
+{
+  return v;
+}
+
+Vec2D Ship::getPosition() const
+{
+  kmVec3 const* pos = glhckObjectGetPosition(o);
+  return {pos->x, pos->y};
+}
+
+float Ship::getAngle() const
+{
+  kmVec3 const* rot = glhckObjectGetRotation(o);
+  return rot->z / 360;
+}
+
 

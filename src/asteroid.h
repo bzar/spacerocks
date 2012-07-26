@@ -13,6 +13,8 @@ class Asteroid : public Sprite
 public:
   enum Size { TINY = 1, SMALL, MEDIUM, LARGE };
   Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity);
+  ~Asteroid();
+  
   void render();
   void update(float delta);
   
