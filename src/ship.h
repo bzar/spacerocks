@@ -25,7 +25,7 @@ private:
                    RIGHT, RIGHT_ACCELERATING, 
                    NUM_IMAGES };
   static std::string const IMAGES[NUM_IMAGES];
-  static glhckTexture* TEXTURES[NUM_IMAGES];
+  static glhckAtlas* TEXTURES;
   
   glhckObject* o;
   Vec2D v;
