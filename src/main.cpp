@@ -10,6 +10,8 @@
 
 #include "timer.h"
 #include "asteroid.h"
+#include "ship.h"
+#include "vec2d.h"
 
 int const WIDTH = 800;
 int const HEIGHT = 480;
@@ -65,17 +67,15 @@ int gameloop(GLFWwindow& window)
     return EXIT_FAILURE;
   
   glhckCameraRange(camera, 0.1f, 200.0f);
-  kmVec3 cameraPos = { 0, 0, 50 };
-  kmVec3 cameraRot = { 0, 180, 0 };
-  glhckCameraPosition(camera, &cameraPos);
-  glhckCameraTargetf(camera, cameraPos.x, cameraPos.y, cameraPos.z + 1);
-  glhckCameraRotate(camera, &cameraRot);
+  glhckCameraPositionf(camera, 0, 0, 50);
+  glhckCameraTargetf(camera, 0, 0, 0);
+  glhckCameraRotatef(camera, 0, 180, 0);
   glhckCameraUpdate(camera);
   
   std::set<std::shared_ptr<Sprite>> sprites;
   
   
-  struct { Asteroid::Size s; km::vec2 p; km::vec2 v; } asteroids[] = {
+  struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
     {Asteroid::LARGE,  {-20, 0}, {1, 0}},
     {Asteroid::MEDIUM, {-10, 0}, {0.5, 0.5}},
     {Asteroid::SMALL,  { -5, 0}, {0, 0}},
@@ -96,6 +96,9 @@ int gameloop(GLFWwindow& window)
   {
     sprites.insert(std::shared_ptr<Sprite>(new Asteroid(d.s, d.p, d.v)));
   }
+  
+  std::shared_ptr<Ship> ship(new Ship({0, 0}, {0, 0}));
+  sprites.insert(ship);
   
   glhckObject* background = glhckSpriteNew("img/background.png", 2, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectPositionf(background, 0, 0, -42);
@@ -118,6 +121,10 @@ int gameloop(GLFWwindow& window)
     {
       runtime.running = false;
     }
+    
+    ship->turningLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
+    ship->turningRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
+    ship->accelerating(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
     
     double delta = timer.getDeltaTime();
     for(auto i : sprites)

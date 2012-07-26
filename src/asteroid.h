@@ -3,7 +3,7 @@
 
 #include "sprite.h"
 #include "GL/glhck.h"
-#include "vec2.h"
+#include "vec2d.h"
 
 #include <map>
 #include <string>
@@ -12,7 +12,7 @@ class Asteroid : public Sprite
 {
 public:
   enum Size { TINY = 1, SMALL, MEDIUM, LARGE };
-  Asteroid(Size const size, km::vec2 const& position, km::vec2 const& velocity);
+  Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity);
   void render();
   void update(float delta);
   
@@ -21,6 +21,6 @@ private:
   static std::map<Size, std::string> const IMAGES;
   
   glhckObject* o;
-  km::vec2 v;
+  Vec2D v;
 };
 #endif

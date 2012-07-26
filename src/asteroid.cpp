@@ -7,8 +7,8 @@ std::map<Asteroid::Size, std::string> const Asteroid::IMAGES = {
   {Asteroid::LARGE, "img/asteroid_4.png"}
 };
 
-Asteroid::Asteroid(Size const size, km::vec2 const& position, km::vec2 const& velocity) : 
-  Sprite(), o(0), v(velocity.x, velocity.y)
+Asteroid::Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity) : 
+  Sprite(), o(0), v(velocity)
 {
   o = glhckSpriteNew(IMAGES.at(size).data(), 3, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
