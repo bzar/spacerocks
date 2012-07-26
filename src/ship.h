@@ -20,8 +20,12 @@ public:
   void accelerating(bool const value);
   
 private:
-  
-  static std::string const IMAGE;
+  enum ImageType { DEFAULT, ACCELERATING, 
+                   LEFT, LEFT_ACCELERATING, 
+                   RIGHT, RIGHT_ACCELERATING, 
+                   NUM_IMAGES };
+  static std::string const IMAGES[NUM_IMAGES];
+  static glhckTexture* TEXTURES[NUM_IMAGES];
   
   glhckObject* o;
   Vec2D v;

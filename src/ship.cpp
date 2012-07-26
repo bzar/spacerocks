@@ -1,12 +1,27 @@
 #include "ship.h"
 
-std::string const Ship::IMAGE = "img/ship.png";
+std::string const Ship::IMAGES[NUM_IMAGES] = {
+  "img/ship.png", "img/ship_accelerating.png",
+  "img/ship_left.png", "img/ship_left_accelerating.png",
+  "img/ship_right.png", "img/ship_right_accelerating.png",
+};
+
+glhckTexture* Ship::TEXTURES[NUM_IMAGES] = {nullptr};
 
 Ship::Ship(Vec2D const& position, Vec2D const& velocity) : 
   Sprite(), o(0), v(velocity), 
   turnLeft(false), turnRight(false), accelerate(false)
 {
-  o = glhckSpriteNew(IMAGE.data(), 2, GLHCK_TEXTURE_DEFAULTS);
+  o = glhckSpriteNew(IMAGES[DEFAULT].data(), 2, GLHCK_TEXTURE_DEFAULTS);
+  
+  if(TEXTURES[DEFAULT] == nullptr)
+  {
+    for(int i = 0; i < NUM_IMAGES; ++i)
+    {
+      TEXTURES[i] = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
+    }
+  }
+  
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
@@ -28,7 +43,23 @@ void Ship::update(float delta)
     acceleration.rotatei(angle / 360);
     v += acceleration;
   }
-
+  
+  ImageType t = DEFAULT;
+  if(accelerate) {
+    t = turnLeft && !turnRight ? LEFT_ACCELERATING : 
+        turnRight && !turnLeft ? RIGHT_ACCELERATING : 
+        ACCELERATING;
+  } else {
+    t = turnLeft && !turnRight ? LEFT : 
+        turnRight && !turnLeft ? RIGHT : 
+        DEFAULT;
+  }
+  
+  if(TEXTURES[t] != glhckObjectGetTexture(o))
+  {
+    glhckObjectSetTexture(o, TEXTURES[t]);
+  }
+  
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
   
   
