@@ -24,4 +24,18 @@ void Asteroid::update(float delta)
 {
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
   glhckObjectRotatef(o, 0, 0, delta * 40);
+  
+  // FIXME: Do proper wrapping
+  kmVec3 const* pos = glhckObjectGetPosition(o);
+  if(pos->x < -27) {
+     glhckObjectMovef(o, 54, 0, 0);
+  } else if(pos->x > 27) {
+     glhckObjectMovef(o, -54, 0, 0);
+  }
+  
+  if(pos->y < -16) {
+     glhckObjectMovef(o, 0, 32, 0);
+  } else if(pos->y > 16) {
+     glhckObjectMovef(o, 0, -32, 0);
+  }
 }

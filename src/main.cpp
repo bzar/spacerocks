@@ -3,10 +3,12 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
 #include <set>
 #include <memory>
 #include <sstream>
 
+#include "timer.h"
 #include "asteroid.h"
 
 int const WIDTH = 800;
@@ -14,9 +16,6 @@ int const HEIGHT = 480;
 
 struct Runtime {
   bool running;
-  double now;
-  double start;
-  unsigned int frame;
 };
 
 static int windowCloseCallback(GLFWwindow window);
@@ -73,9 +72,6 @@ int gameloop(GLFWwindow& window)
   glhckCameraRotate(camera, &cameraRot);
   glhckCameraUpdate(camera);
   
-  Runtime runtime = { true, glfwGetTime(), glfwGetTime(), 0 };
-  glfwSetWindowUserPointer(window, &runtime);
-  
   std::set<std::shared_ptr<Sprite>> sprites;
   
   
@@ -83,7 +79,7 @@ int gameloop(GLFWwindow& window)
     {Asteroid::LARGE,  {-20, 0}, {1, 0}},
     {Asteroid::MEDIUM, {-10, 0}, {0.5, 0.5}},
     {Asteroid::SMALL,  { -5, 0}, {0, 0}},
-    {Asteroid::TINY,   {  0, 0}, {0, 0}},
+    {Asteroid::TINY,   {  0, 0}, {5, 2}},
     {Asteroid::SMALL,  {  5, 0}, {0, 0}},
     {Asteroid::MEDIUM, { 10, 0}, {-0.5, -0.5}},
     {Asteroid::LARGE,  { 20, 0}, {0, 1}},
@@ -109,13 +105,13 @@ int gameloop(GLFWwindow& window)
   
   glhckMemoryGraph();
 
+  Runtime runtime = { true };
+  glfwSetWindowUserPointer(window, &runtime);
+
+  Timer timer;
+  
   while(runtime.running)
   {
-    
-    float delta = glfwGetTime() - runtime.now;
-    runtime.now += delta;
-    
-    
     glfwPollEvents();
     
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
@@ -123,6 +119,7 @@ int gameloop(GLFWwindow& window)
       runtime.running = false;
     }
     
+    double delta = timer.getDeltaTime();
     for(auto i : sprites)
     {
       i->update(delta);
@@ -138,8 +135,10 @@ int gameloop(GLFWwindow& window)
     glhckRender();
     
     std::ostringstream ss;
-    ss << "total: " << static_cast<int>((runtime.now - runtime.start) * 1000) 
-       << "ms, frame: " << runtime.frame;
+    ss << std::setprecision(2) << std::fixed 
+       << "FPS: " << timer.getFPS()
+       << ", total: " << timer.getTotalTime()
+       << "s, frame: " << timer.getTicks();
     glhckTextDraw(text, font, 20, 5, 465, ss.str().data(), NULL);
     glhckTextRender(text);
     
@@ -147,7 +146,7 @@ int gameloop(GLFWwindow& window)
     glfwSwapBuffers();
     glhckClear();
     
-    ++runtime.frame;
+    timer.tick();
   }
  
   return EXIT_SUCCESS;
