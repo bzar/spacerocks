@@ -1,4 +1,6 @@
 #include "laser.h"
+#include "asteroid.h"
+#include <iostream>
 
 std::string const Laser::IMAGE = "img/laser.png";
 glhckTexture* Laser::TEXTURE = nullptr;
@@ -49,4 +51,19 @@ void Laser::update(float delta)
 bool Laser::alive() const
 {
   return life > 0;
+}
+
+void Laser::collide(Collidable const* other) {
+  kmVec3 const* pos = glhckObjectGetPosition(o);
+  Vec2D position{pos->x, pos->y};
+
+  Asteroid const* asteroid = dynamic_cast<Asteroid const*>(other);
+  if(asteroid != nullptr)
+  {
+    if((asteroid->getPosition() - position).lengthSquared() < asteroid->getRadius() * asteroid->getRadius())
+    {
+      life = 0;
+    }
+    return;
+  }
 }

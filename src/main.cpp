@@ -76,6 +76,7 @@ int gameloop(GLFWwindow& window)
 
   std::set<std::shared_ptr<Sprite>> sprites;
   std::set<std::shared_ptr<Particle>> particles;
+  std::set<std::shared_ptr<Collidable>> collidables;
 
   struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
     {Asteroid::LARGE,  {-20, 0}, {1, 0}},
@@ -96,7 +97,9 @@ int gameloop(GLFWwindow& window)
 
   for(auto d : asteroids)
   {
-    sprites.insert(std::shared_ptr<Sprite>(new Asteroid(d.s, d.p, d.v)));
+    std::shared_ptr<Asteroid> asteroid(new Asteroid(d.s, d.p, d.v));
+    sprites.insert(asteroid);
+    collidables.insert(asteroid);
   }
 
   std::shared_ptr<Ship> ship(new Ship({0, 0}, {0, 0}));
@@ -140,6 +143,8 @@ int gameloop(GLFWwindow& window)
       sprites.insert(laser2);
       particles.insert(laser1);
       particles.insert(laser2);
+      collidables.insert(laser1);
+      collidables.insert(laser2);
       laserCooldown = 0.15;
     }
 
@@ -149,6 +154,17 @@ int gameloop(GLFWwindow& window)
     for(auto i : sprites)
     {
       i->update(delta);
+    }
+
+    for(auto i : collidables)
+    {
+      for(auto j : collidables)
+      {
+        if(i != j)
+        {
+          i->collide(j.get());
+        }
+      }
     }
 
     std::forward_list<std::shared_ptr<Particle>> deadParticles;
