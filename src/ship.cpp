@@ -7,8 +7,8 @@ std::string const Ship::IMAGES[NUM_IMAGES] = {
 };
 
 glhckAtlas* Ship::TEXTURES = nullptr;
-Ship::Ship(Vec2D const& position, Vec2D const& velocity) : 
-  Sprite(), o(0), v(velocity), 
+Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
+  Sprite(), o(0), v(velocity),
   turnLeft(false), turnRight(false), accelerate(false)
 {
   if(TEXTURES == nullptr)
@@ -18,12 +18,13 @@ Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
     {
       glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
       glhckAtlasInsertTexture(TEXTURES, texture);
+      glhckTextureFree(texture);
     }
     glhckAtlasPack(TEXTURES, true, false);
   }
 
   o = glhckSpriteNew(glhckAtlasGetTextureByIndex(TEXTURES, DEFAULT), 1.5);
-  
+
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
@@ -43,7 +44,7 @@ void Ship::update(float delta)
 {
   if(turnLeft) glhckObjectRotatef(o, 0, 0, delta * 120);
   if(turnRight) glhckObjectRotatef(o, 0, 0, delta * -120);
-  
+
   if(accelerate)
   {
     kmScalar angle = glhckObjectGetRotation(o)->z;
@@ -51,27 +52,27 @@ void Ship::update(float delta)
     acceleration.rotatei(angle / 360);
     v += acceleration;
   }
-  
+
   ImageType t = DEFAULT;
   if(accelerate) {
-    t = turnLeft && !turnRight ? LEFT_ACCELERATING : 
-        turnRight && !turnLeft ? RIGHT_ACCELERATING : 
+    t = turnLeft && !turnRight ? LEFT_ACCELERATING :
+        turnRight && !turnLeft ? RIGHT_ACCELERATING :
         ACCELERATING;
   } else {
-    t = turnLeft && !turnRight ? LEFT : 
-        turnRight && !turnLeft ? RIGHT : 
+    t = turnLeft && !turnRight ? LEFT :
+        turnRight && !turnLeft ? RIGHT :
         DEFAULT;
   }
-  
+
   glhckTexture* tex = glhckAtlasGetTextureByIndex(TEXTURES, t);
   if(tex != glhckObjectGetTexture(o))
   {
     glhckObjectSetTexture(o, tex);
   }
-  
+
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
-  
-  
+
+
   // FIXME: Do proper wrapping
   kmVec3 const* pos = glhckObjectGetPosition(o);
   if(pos->x < -27) {
@@ -79,7 +80,7 @@ void Ship::update(float delta)
   } else if(pos->x > 27) {
      glhckObjectMovef(o, -54, 0, 0);
   }
-  
+
   if(pos->y < -16) {
      glhckObjectMovef(o, 0, 32, 0);
   } else if(pos->y > 16) {
