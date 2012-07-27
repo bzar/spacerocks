@@ -182,14 +182,12 @@ int gameloop(GLFWwindow& window)
       particles.erase(i);
     }
 
-    glhckObjectDraw(background);
+    glhckObjectRender(background);
 
     for(auto i : sprites)
     {
       i->render();
     }
-
-    glhckRender();
 
     std::ostringstream ss;
     ss << std::setprecision(2) << std::fixed

@@ -25,7 +25,7 @@ Laser::~Laser()
 
 void Laser::render()
 {
-  glhckObjectDraw(o);
+  glhckObjectRender(o);
 }
 
 void Laser::update(float delta)

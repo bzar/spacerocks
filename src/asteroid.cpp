@@ -23,7 +23,7 @@ Asteroid::~Asteroid()
 
 void Asteroid::render()
 {
-  glhckObjectDraw(o);
+  glhckObjectRender(o);
 }
 
 void Asteroid::update(float delta)

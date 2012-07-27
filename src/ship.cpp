@@ -37,7 +37,7 @@ Ship::~Ship()
 
 void Ship::render()
 {
-  glhckObjectDraw(o);
+  glhckObjectRender(o);
 }
 
 void Ship::update(float delta)
