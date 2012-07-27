@@ -7,6 +7,7 @@
 #include <set>
 #include <memory>
 #include <sstream>
+#include <forward_list>
 
 #include "timer.h"
 #include "asteroid.h"
@@ -150,13 +151,19 @@ int gameloop(GLFWwindow& window)
       i->update(delta);
     }
 
+    std::forward_list<std::shared_ptr<Particle>> deadParticles;
     for(auto i : particles)
     {
       if(!i->alive())
       {
-        sprites.erase(i);
-        particles.erase(i);
+        deadParticles.push_front(i);
       }
+    }
+
+    for(auto i : deadParticles)
+    {
+      sprites.erase(i);
+      particles.erase(i);
     }
 
     glhckObjectDraw(background);
