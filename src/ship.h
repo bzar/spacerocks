@@ -7,6 +7,14 @@
 
 #include <map>
 #include <string>
+#include <vector>
+
+class TransformData
+{
+public:
+  kmVec4 transform;
+  short degree;
+};
 
 class Ship : public Sprite
 {
@@ -34,7 +42,8 @@ private:
                    RIGHT, RIGHT_ACCELERATING,
                    NUM_IMAGES };
   static std::string const IMAGES[NUM_IMAGES];
-  static glhckAtlas* TEXTURES;
+  static std::vector<TransformData> TRANSFORM;
+  static glhckTexture *ATLAS_TEXTURE;
 
   glhckObject* o;
   Vec2D v;

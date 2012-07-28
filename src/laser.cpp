@@ -13,7 +13,8 @@ Laser::Laser(float const life, Vec2D const& position, Vec2D const& velocity) :
   {
     TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
   }
-  o = glhckSpriteNew(TEXTURE, 0.5);
+  o = glhckSpriteNew(TEXTURE, 0, 0);
+  glhckObjectScalef(o, 0.5f, 0.5f, 0.5f);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);

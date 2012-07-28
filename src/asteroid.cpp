@@ -13,7 +13,7 @@ std::string const Asteroid::IMAGES[NUM_SIZES] = {
 Asteroid::Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity) :
   o(0), size(size), v(velocity)
 {
-  o = glhckSpriteNewFromFile(IMAGES[size].data(), 1, GLHCK_TEXTURE_DEFAULTS);
+  o = glhckSpriteNewFromFile(IMAGES[size].data(), 0, 0, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }

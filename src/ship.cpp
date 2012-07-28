@@ -8,14 +8,15 @@ std::string const Ship::IMAGES[NUM_IMAGES] = {
   "img/ship_right.png", "img/ship_right_accelerating.png",
 };
 
-glhckAtlas* Ship::TEXTURES = nullptr;
+std::vector<TransformData> Ship::TRANSFORM;
+glhckTexture *Ship::ATLAS_TEXTURE = NULL;
+
 Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
   Sprite(), o(0), v(velocity),
   turnLeft(false), turnRight(false), accelerate(false)
 {
-  if(TEXTURES == nullptr)
-  {
-    TEXTURES = glhckAtlasNew();
+  if (!ATLAS_TEXTURE) {
+    glhckAtlas *TEXTURES = glhckAtlasNew();
     for(int i = 0; i < NUM_IMAGES; ++i)
     {
       glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
@@ -23,9 +24,21 @@ Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
       glhckTextureFree(texture);
     }
     glhckAtlasPack(TEXTURES, true, false);
+
+    for(int i = 0; i < NUM_IMAGES; ++i)
+    {
+      TransformData t;
+      glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
+      TRANSFORM.push_back(t);
+    }
+
+    ATLAS_TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
+    glhckAtlasFree(TEXTURES);
   }
 
-  o = glhckSpriteNew(glhckAtlasGetTextureByIndex(TEXTURES, DEFAULT), 0.75);
+  o = glhckSpriteNew(ATLAS_TEXTURE, 32, 32);
+  glhckObjectScalef(o, 0.75, 0.75, 0.75);
+  glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
 
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
@@ -66,12 +79,7 @@ void Ship::update(float delta)
         DEFAULT;
   }
 
-  glhckTexture* tex = glhckAtlasGetTextureByIndex(TEXTURES, t);
-  if(tex != glhckObjectGetTexture(o))
-  {
-    glhckObjectSetTexture(o, tex);
-  }
-
+  glhckObjectTransformCoordinates(o, &TRANSFORM[t].transform, TRANSFORM[t].degree);
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
 
