@@ -13,7 +13,7 @@ Laser::Laser(float const life, Vec2D const& position, Vec2D const& velocity) :
   {
     TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
   }
-  o = glhckSpriteNew(TEXTURE, 1);
+  o = glhckSpriteNew(TEXTURE, 0.5);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);
@@ -36,16 +36,16 @@ void Laser::update(float delta)
 
   // FIXME: Do proper wrapping
   kmVec3 const* pos = glhckObjectGetPosition(o);
-  if(pos->x < -27) {
-     glhckObjectMovef(o, 54, 0, 0);
-  } else if(pos->x > 27) {
-     glhckObjectMovef(o, -54, 0, 0);
+  if(pos->x < -400) {
+     glhckObjectMovef(o, 800, 0, 0);
+  } else if(pos->x > 400) {
+     glhckObjectMovef(o, -800, 0, 0);
   }
 
-  if(pos->y < -16) {
-     glhckObjectMovef(o, 0, 32, 0);
-  } else if(pos->y > 16) {
-     glhckObjectMovef(o, 0, -32, 0);
+  if(pos->y < -240) {
+     glhckObjectMovef(o, 0, 480, 0);
+  } else if(pos->y > 240) {
+     glhckObjectMovef(o, 0, -480, 0);
   }
 }
 

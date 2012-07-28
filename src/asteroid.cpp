@@ -2,7 +2,7 @@
 #include <iostream>
 
 int const Asteroid::ID = Entity::newEntityId();
-float const Asteroid::RADII[NUM_SIZES] = {0.5, 1.0, 1.5, 2.5};
+float const Asteroid::RADII[NUM_SIZES] = {8, 16, 32, 48};
 std::string const Asteroid::IMAGES[NUM_SIZES] = {
   "img/asteroid_1.png",
   "img/asteroid_2.png",
@@ -13,7 +13,7 @@ std::string const Asteroid::IMAGES[NUM_SIZES] = {
 Asteroid::Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity) :
   o(0), size(size), v(velocity)
 {
-  o = glhckSpriteNewFromFile(IMAGES[size].data(), 2, GLHCK_TEXTURE_DEFAULTS);
+  o = glhckSpriteNewFromFile(IMAGES[size].data(), 1, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
@@ -35,16 +35,16 @@ void Asteroid::update(float delta)
 
   // FIXME: Do proper wrapping
   kmVec3 const* pos = glhckObjectGetPosition(o);
-  if(pos->x < -27) {
-     glhckObjectMovef(o, 54, 0, 0);
-  } else if(pos->x > 27) {
-     glhckObjectMovef(o, -54, 0, 0);
+  if(pos->x < -400) {
+     glhckObjectMovef(o, 800, 0, 0);
+  } else if(pos->x > 400) {
+     glhckObjectMovef(o, -800, 0, 0);
   }
 
-  if(pos->y < -16) {
-     glhckObjectMovef(o, 0, 32, 0);
-  } else if(pos->y > 16) {
-     glhckObjectMovef(o, 0, -32, 0);
+  if(pos->y < -240) {
+     glhckObjectMovef(o, 0, 480, 0);
+  } else if(pos->y > 240) {
+     glhckObjectMovef(o, 0, -480, 0);
   }
 }
 

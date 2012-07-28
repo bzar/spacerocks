@@ -63,34 +63,27 @@ static int windowCloseCallback(GLFWwindow window)
 
 int gameloop(GLFWwindow& window)
 {
-  glhckCamera *camera = glhckCameraNew();
-
-  if(!camera)
-    return EXIT_FAILURE;
-
-  glhckCameraProjection(camera, GLHCK_PROJECTION_ORTHOGRAPHIC);
-  glhckCameraRange(camera, 0, 100);
-  glhckCameraPositionf(camera, 0, 0, -90);
-  glhckCameraTargetf(camera, 0, 0, 0);
-  glhckCameraUpdate(camera);
+  kmMat4 proj;
+  kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
+  glhckRenderSetProjection(&proj);
 
   std::set<std::shared_ptr<Sprite>> sprites;
 
   struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
-    {Asteroid::LARGE,  {-20, 0}, {1, 0}},
-    {Asteroid::MEDIUM, {-10, 0}, {0.5, 0.5}},
-    {Asteroid::SMALL,  { -5, 0}, {0, 0}},
-    {Asteroid::TINY,   {  0, 0}, {5, 2}},
-    {Asteroid::SMALL,  {  5, 0}, {0, 0}},
-    {Asteroid::MEDIUM, { 10, 0}, {-0.5, -0.5}},
-    {Asteroid::LARGE,  { 20, 0}, {0, 1}},
-    {Asteroid::LARGE,  {-20, 5}, {1, 0}},
-    {Asteroid::MEDIUM, {-10, 5}, {0.5, 0.5}},
-    {Asteroid::SMALL,  { -5, 5}, {0, 0}},
-    {Asteroid::TINY,   {  0, 5}, {0, 0}},
-    {Asteroid::SMALL,  {  5, 5}, {0, 0}},
-    {Asteroid::MEDIUM, { 10, 5}, {-0.5, -0.5}},
-    {Asteroid::LARGE,  { 20, 5}, {0, 1}}
+    {Asteroid::LARGE,  {-200, 0}, {10, 0}},
+    {Asteroid::MEDIUM, {-100, 0}, {5, 5}},
+    {Asteroid::SMALL,  { -50, 0}, {0, 0}},
+    {Asteroid::TINY,   {  0, 0}, {50, 20}},
+    {Asteroid::SMALL,  {  50, 0}, {0, 0}},
+    {Asteroid::MEDIUM, { 100, 0}, {-5, -5}},
+    {Asteroid::LARGE,  { 200, 0}, {0, 10}},
+    {Asteroid::LARGE,  {-200, 50}, {10, 0}},
+    {Asteroid::MEDIUM, {-100, 50}, {5, 5}},
+    {Asteroid::SMALL,  { -50, 50}, {0, 0}},
+    {Asteroid::TINY,   {  0, 50}, {0, 0}},
+    {Asteroid::SMALL,  {  50, 50}, {0, 0}},
+    {Asteroid::MEDIUM, { 100, 50}, {-5, -5}},
+    {Asteroid::LARGE,  { 200, 50}, {0, 1}}
   };
 
   for(auto d : asteroids)
@@ -102,7 +95,7 @@ int gameloop(GLFWwindow& window)
   std::shared_ptr<Ship> ship(new Ship({0, 0}, {0, 0}));
   sprites.insert(ship);
 
-  glhckObject* background = glhckSpriteNewFromFile("img/background.png", 1.05, GLHCK_TEXTURE_DEFAULTS);
+  glhckObject* background = glhckSpriteNewFromFile("img/background.png", 0.5, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectPositionf(background, 0, 0, -0.01);
 
   glhckText *text = glhckTextNew(800, 40);
@@ -131,9 +124,9 @@ int gameloop(GLFWwindow& window)
 
     if(laserCooldown <= 0 && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
     {
-      Vec2D v(0, 120);
+      Vec2D v(0, 1200);
       v.rotatei(ship->getAngle());
-      Vec2D p = v.normal().uniti().scalei(0.7);
+      Vec2D p = v.normal().uniti().scalei(12);
       std::shared_ptr<Laser> laser1(new Laser(0.25, ship->getPosition() + p, v));
       std::shared_ptr<Laser> laser2(new Laser(0.25, ship->getPosition() - p, v));
       sprites.insert(laser1);

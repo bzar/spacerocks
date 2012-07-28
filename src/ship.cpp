@@ -25,7 +25,7 @@ Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
     glhckAtlasPack(TEXTURES, true, false);
   }
 
-  o = glhckSpriteNew(glhckAtlasGetTextureByIndex(TEXTURES, DEFAULT), 1.5);
+  o = glhckSpriteNew(glhckAtlasGetTextureByIndex(TEXTURES, DEFAULT), 0.75);
 
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
@@ -44,13 +44,13 @@ void Ship::render()
 
 void Ship::update(float delta)
 {
-  if(turnLeft) glhckObjectRotatef(o, 0, 0, delta * -120);
-  if(turnRight) glhckObjectRotatef(o, 0, 0, delta * 120);
+  if(turnLeft) glhckObjectRotatef(o, 0, 0, delta * 120);
+  if(turnRight) glhckObjectRotatef(o, 0, 0, delta * -120);
 
   if(accelerate)
   {
     kmScalar angle = glhckObjectGetRotation(o)->z;
-    Vec2D acceleration(0, 8 *  delta);
+    Vec2D acceleration(0, 120 *  delta);
     acceleration.rotatei(angle / 360);
     v += acceleration;
   }
@@ -77,16 +77,16 @@ void Ship::update(float delta)
 
   // FIXME: Do proper wrapping
   kmVec3 const* pos = glhckObjectGetPosition(o);
-  if(pos->x < -25) {
-     glhckObjectMovef(o, 54, 0, 0);
-  } else if(pos->x > 25) {
-     glhckObjectMovef(o, -54, 0, 0);
+  if(pos->x < -400) {
+     glhckObjectMovef(o, 800, 0, 0);
+  } else if(pos->x > 400) {
+     glhckObjectMovef(o, -800, 0, 0);
   }
 
-  if(pos->y < -16) {
-     glhckObjectMovef(o, 0, 32, 0);
-  } else if(pos->y > 16) {
-     glhckObjectMovef(o, 0, -32, 0);
+  if(pos->y < -240) {
+     glhckObjectMovef(o, 0, 480, 0);
+  } else if(pos->y > 240) {
+     glhckObjectMovef(o, 0, -480, 0);
   }
 }
 
