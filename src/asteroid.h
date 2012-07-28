@@ -20,11 +20,14 @@ public:
   void render();
   void update(float delta);
 
+  virtual void collide(Sprite const* other);
+
   Vec2D getPosition() const;
   float getRadius() const;
 
 private:
 
+  static float const RADII[NUM_SIZES];
   static std::string const IMAGES[NUM_SIZES];
 
   glhckObject* o;

@@ -2,7 +2,7 @@
 #include <iostream>
 
 int const Asteroid::ID = Entity::newEntityId();
-
+float const Asteroid::RADII[NUM_SIZES] = {0.5, 1.0, 1.5, 2.5};
 std::string const Asteroid::IMAGES[NUM_SIZES] = {
   "img/asteroid_1.png",
   "img/asteroid_2.png",
@@ -48,6 +48,22 @@ void Asteroid::update(float delta)
   }
 }
 
+void Asteroid::collide(Sprite const* other) {
+  kmVec3 const* pos = glhckObjectGetPosition(o);
+  Vec2D position{pos->x, pos->y};
+
+  if(other->getEntityId() == Asteroid::ID) {
+    Asteroid const* asteroid = static_cast<Asteroid const*>(other);
+    float d1 = (asteroid->getPosition() - position).lengthSquared();
+    float d2 = (asteroid->getRadius() + getRadius()) * (asteroid->getRadius() + getRadius());
+    if(d1 < d2)
+    {
+      v = (position - asteroid->getPosition()).uniti().scalei(v.length());
+    }
+    return;
+  }
+}
+
 Vec2D Asteroid::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
@@ -56,5 +72,5 @@ Vec2D Asteroid::getPosition() const
 
 float Asteroid::getRadius() const
 {
-  return 2.0 * (size + 1) / 3.0;
+  return RADII[size];
 }
