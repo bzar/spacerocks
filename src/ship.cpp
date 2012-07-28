@@ -44,8 +44,8 @@ void Ship::render()
 
 void Ship::update(float delta)
 {
-  if(turnLeft) glhckObjectRotatef(o, 0, 0, delta * 120);
-  if(turnRight) glhckObjectRotatef(o, 0, 0, delta * -120);
+  if(turnLeft) glhckObjectRotatef(o, 0, 0, delta * -120);
+  if(turnRight) glhckObjectRotatef(o, 0, 0, delta * 120);
 
   if(accelerate)
   {
@@ -77,9 +77,9 @@ void Ship::update(float delta)
 
   // FIXME: Do proper wrapping
   kmVec3 const* pos = glhckObjectGetPosition(o);
-  if(pos->x < -27) {
+  if(pos->x < -25) {
      glhckObjectMovef(o, 54, 0, 0);
-  } else if(pos->x > 27) {
+  } else if(pos->x > 25) {
      glhckObjectMovef(o, -54, 0, 0);
   }
 

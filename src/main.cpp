@@ -68,10 +68,10 @@ int gameloop(GLFWwindow& window)
   if(!camera)
     return EXIT_FAILURE;
 
-  glhckCameraRange(camera, 0.1f, 200.0f);
-  glhckCameraPositionf(camera, 0, 0, 50);
+  glhckCameraProjection(camera, GLHCK_PROJECTION_ORTHOGRAPHIC);
+  glhckCameraRange(camera, 0, 100);
+  glhckCameraPositionf(camera, 0, 0, -90);
   glhckCameraTargetf(camera, 0, 0, 0);
-  glhckCameraRotatef(camera, 0, 180, 0);
   glhckCameraUpdate(camera);
 
   std::set<std::shared_ptr<Sprite>> sprites;
@@ -102,8 +102,8 @@ int gameloop(GLFWwindow& window)
   std::shared_ptr<Ship> ship(new Ship({0, 0}, {0, 0}));
   sprites.insert(ship);
 
-  glhckObject* background = glhckSpriteNewFromFile("img/background.png", 2, GLHCK_TEXTURE_DEFAULTS);
-  glhckObjectPositionf(background, 0, 0, -42);
+  glhckObject* background = glhckSpriteNewFromFile("img/background.png", 1.05, GLHCK_TEXTURE_DEFAULTS);
+  glhckObjectPositionf(background, 0, 0, -0.01);
 
   glhckText *text = glhckTextNew(800, 40);
   unsigned int font = glhckTextNewFont(text, "/usr/share/fonts/truetype/freefont/FreeSans.ttf");
