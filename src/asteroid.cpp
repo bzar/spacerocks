@@ -1,6 +1,8 @@
 #include "asteroid.h"
 #include <iostream>
 
+int const Asteroid::ID = Entity::newEntityId();
+
 std::string const Asteroid::IMAGES[NUM_SIZES] = {
   "img/asteroid_1.png",
   "img/asteroid_2.png",
@@ -9,7 +11,7 @@ std::string const Asteroid::IMAGES[NUM_SIZES] = {
 };
 
 Asteroid::Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(), o(0), size(size), v(velocity)
+  o(0), size(size), v(velocity)
 {
   o = glhckSpriteNewFromFile(IMAGES[size].data(), 2, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);

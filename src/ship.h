@@ -14,6 +14,9 @@ public:
   Ship(Vec2D const& position, Vec2D const& velocity);
   ~Ship();
 
+  static int const ID;
+  int getEntityId() const { return ID; }
+
   void render();
   void update(float delta);
 

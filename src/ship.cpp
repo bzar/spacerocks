@@ -1,5 +1,7 @@
 #include "ship.h"
 
+int const Ship::ID = Entity::newEntityId();
+
 std::string const Ship::IMAGES[NUM_IMAGES] = {
   "img/ship.png", "img/ship_accelerating.png",
   "img/ship_left.png", "img/ship_left_accelerating.png",

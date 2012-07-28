@@ -75,8 +75,6 @@ int gameloop(GLFWwindow& window)
   glhckCameraUpdate(camera);
 
   std::set<std::shared_ptr<Sprite>> sprites;
-  std::set<std::shared_ptr<Particle>> particles;
-  std::set<std::shared_ptr<Collidable>> collidables;
 
   struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
     {Asteroid::LARGE,  {-20, 0}, {1, 0}},
@@ -99,7 +97,6 @@ int gameloop(GLFWwindow& window)
   {
     std::shared_ptr<Asteroid> asteroid(new Asteroid(d.s, d.p, d.v));
     sprites.insert(asteroid);
-    collidables.insert(asteroid);
   }
 
   std::shared_ptr<Ship> ship(new Ship({0, 0}, {0, 0}));
@@ -141,10 +138,6 @@ int gameloop(GLFWwindow& window)
       std::shared_ptr<Laser> laser2(new Laser(0.25, ship->getPosition() - p, v));
       sprites.insert(laser1);
       sprites.insert(laser2);
-      particles.insert(laser1);
-      particles.insert(laser2);
-      collidables.insert(laser1);
-      collidables.insert(laser2);
       laserCooldown = 0.15;
     }
 
@@ -156,9 +149,9 @@ int gameloop(GLFWwindow& window)
       i->update(delta);
     }
 
-    for(auto i : collidables)
+    for(auto i : sprites)
     {
-      for(auto j : collidables)
+      for(auto j : sprites)
       {
         if(i != j)
         {
@@ -167,8 +160,8 @@ int gameloop(GLFWwindow& window)
       }
     }
 
-    std::forward_list<std::shared_ptr<Particle>> deadParticles;
-    for(auto i : particles)
+    std::forward_list<std::shared_ptr<Sprite>> deadParticles;
+    for(auto i : sprites)
     {
       if(!i->alive())
       {
@@ -179,7 +172,6 @@ int gameloop(GLFWwindow& window)
     for(auto i : deadParticles)
     {
       sprites.erase(i);
-      particles.erase(i);
     }
 
     glhckObjectRender(background);

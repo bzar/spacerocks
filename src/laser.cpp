@@ -2,11 +2,12 @@
 #include "asteroid.h"
 #include <iostream>
 
+int const Laser::ID = Entity::newEntityId();
 std::string const Laser::IMAGE = "img/laser.png";
 glhckTexture* Laser::TEXTURE = nullptr;
 
 Laser::Laser(float const life, Vec2D const& position, Vec2D const& velocity) :
-  Particle(), o(0), life(life), v(velocity)
+  o(0), life(life), v(velocity)
 {
   if(TEXTURE == nullptr)
   {
@@ -53,13 +54,12 @@ bool Laser::alive() const
   return life > 0;
 }
 
-void Laser::collide(Collidable const* other) {
+void Laser::collide(Sprite const* other) {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   Vec2D position{pos->x, pos->y};
 
-  Asteroid const* asteroid = dynamic_cast<Asteroid const*>(other);
-  if(asteroid != nullptr)
-  {
+  if(other->getEntityId() == Asteroid::ID) {
+    Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if((asteroid->getPosition() - position).lengthSquared() < asteroid->getRadius() * asteroid->getRadius())
     {
       life = 0;
