@@ -22,6 +22,10 @@
 int const WIDTH = 800;
 int const HEIGHT = 480;
 
+int const UFO_SCORE_INTERVAL = 500;
+float const DEATH_DELAY = 3.0f;
+float const UFO_DELAY = 2.0f;
+
 struct Runtime {
   bool running;
 };
@@ -116,9 +120,6 @@ int gameloop(GLFWwindow& window)
   world.ship = new Ship(&world, {0, -200}, {0, 0});
   world.sprites.insert(std::shared_ptr<Ship>(world.ship));
 
-  std::shared_ptr<Ufo> ufo(new Ufo(&world, {0, 0}));
-  world.sprites.insert(ufo);
-
   glhckObject* background = glhckSpriteNewFromFile("img/background.png", 0, 0, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectScalef(background, 0.5f, 0.5f, 0.5f);
   glhckObjectPositionf(background, 0, 0, -0.01);
@@ -134,6 +135,8 @@ int gameloop(GLFWwindow& window)
 
   Timer timer;
   float deathDelay = 0;
+  float ufoDelay = 0;
+  int nextUfoScore = UFO_SCORE_INTERVAL;
 
   while(runtime.running)
   {
@@ -163,6 +166,23 @@ int gameloop(GLFWwindow& window)
       }
     }
 
+    if(ufoDelay > 0)
+    {
+      ufoDelay -= delta;
+
+      if(ufoDelay <= 0)
+      {
+        std::shared_ptr<Ufo> ufo(new Ufo(&world, {0, 0}));
+        world.sprites.insert(ufo);
+      }
+    }
+
+    if(world.score >= nextUfoScore)
+    {
+      nextUfoScore += UFO_SCORE_INTERVAL;
+      ufoDelay = UFO_DELAY;
+    }
+
     for(auto i : world.sprites)
     {
       i->update(delta);
@@ -182,7 +202,7 @@ int gameloop(GLFWwindow& window)
     if(world.ship != nullptr && !world.ship->alive())
     {
       world.ship = nullptr;
-      deathDelay = 3.0;
+      deathDelay = DEATH_DELAY;
     }
 
     std::forward_list<std::shared_ptr<Sprite>> deadParticles;
