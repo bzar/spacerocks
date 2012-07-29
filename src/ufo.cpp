@@ -4,6 +4,7 @@
 #include "explosion.h"
 #include "world.h"
 #include "spark.h"
+#include "ufolaser.h"
 
 int const Ufo::ID = Entity::newEntityId();
 
@@ -18,6 +19,8 @@ std::string const Ufo::IMAGES[NUM_IMAGES] = {
 
 std::vector<Sprite::TransformData> Ufo::TRANSFORM;
 glhckTexture *Ufo::TEXTURE = NULL;
+
+float const Ufo::SHOOT_INTERVAL = 1.5;
 
 void Ufo::init()
 {
@@ -68,6 +71,15 @@ void Ufo::update(float delta)
   int frame = ANIMATION_FRAMES[static_cast<int>(time * FPS) % NUM_FRAMES];
   glhckObjectTransformCoordinates(o, &TRANSFORM[frame].transform, TRANSFORM[frame].degree);
   glhckObjectRotatef(o, 0, 0, delta * 180);
+
+  bool timeToShoot = static_cast<int>((time - delta) / SHOOT_INTERVAL) !=
+    static_cast<int>(time / SHOOT_INTERVAL);
+  if(timeToShoot && world->ship != nullptr)
+  {
+    Vec2D velocity = (world->ship->getPosition() - getPosition()).uniti().scale(600);
+    UfoLaser* laser = new UfoLaser(world, 5.0, getPosition(), velocity);
+    world->sprites.insert(std::shared_ptr<UfoLaser>(laser));
+  }
 }
 
 bool Ufo::alive() const

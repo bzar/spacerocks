@@ -38,6 +38,7 @@ private:
   static glhckTexture *TEXTURE;
 
   static int const RADIUS = 24;
+  static float const SHOOT_INTERVAL;
 
   float time;
   glhckObject* o;

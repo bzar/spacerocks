@@ -4,6 +4,7 @@
 #include <set>
 #include <memory>
 #include "sprite.h"
+#include "ship.h"
 
 class ZComparator
 {
@@ -25,8 +26,10 @@ public:
   }
 };
 
+typedef std::set<std::shared_ptr<Sprite>, ZComparator> SpriteSet;
 struct World {
-  std::set<std::shared_ptr<Sprite>, ZComparator> sprites;
+  Ship* ship;
+  SpriteSet sprites;
 };
 
 #endif

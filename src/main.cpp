@@ -17,6 +17,7 @@
 #include "spark.h"
 #include "explosion.h"
 #include "ufo.h"
+#include "ufolaser.h"
 
 int const WIDTH = 800;
 int const HEIGHT = 480;
@@ -85,6 +86,7 @@ int gameloop(GLFWwindow& window)
   Explosion::init();
   Spark::init();
   Ufo::init();
+  UfoLaser::init();
 
   struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
     {Asteroid::LARGE,  {-200, 0}, {10, 0}},
@@ -103,7 +105,7 @@ int gameloop(GLFWwindow& window)
     {Asteroid::LARGE,  { 200, 50}, {0, 1}}
   };
 
-  World world;
+  World world = {nullptr, SpriteSet()};
 
   for(auto d : asteroids)
   {
@@ -111,8 +113,8 @@ int gameloop(GLFWwindow& window)
     world.sprites.insert(asteroid);
   }
 
-  std::shared_ptr<Ship> ship(new Ship(&world, {0, -200}, {0, 0}));
-  world.sprites.insert(ship);
+  world.ship = new Ship(&world, {0, -200}, {0, 0});
+  world.sprites.insert(std::shared_ptr<Ship>(world.ship));
 
   std::shared_ptr<Ufo> ufo(new Ufo(&world, {0, 0}));
   world.sprites.insert(ufo);
@@ -144,20 +146,20 @@ int gameloop(GLFWwindow& window)
 
     double delta = timer.getDeltaTime();
 
-    if(ship != nullptr)
+    if(world.ship != nullptr)
     {
-      ship->turnLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
-      ship->turnRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
-      ship->accelerate(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
-      ship->shoot(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
+      world.ship->turnLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
+      world.ship->turnRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
+      world.ship->accelerate(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
+      world.ship->shoot(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
     }
     else
     {
       deathDelay -= delta;
       if(deathDelay <= 0)
       {
-        ship.reset(new Ship(&world, {0, 0}, {0, 0}));
-        world.sprites.insert(ship);
+        world.ship = new Ship(&world, {0, 0}, {0, 0});
+        world.sprites.insert(std::shared_ptr<Ship>(world.ship));
       }
     }
 
@@ -177,9 +179,9 @@ int gameloop(GLFWwindow& window)
       }
     }
 
-    if(ship && !ship->alive())
+    if(world.ship != nullptr && !world.ship->alive())
     {
-      ship = nullptr;
+      world.ship = nullptr;
       deathDelay = 3.0;
     }
 
