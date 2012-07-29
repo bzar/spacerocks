@@ -33,6 +33,7 @@ private:
   static float const RADII[NUM_SIZES];
   static std::string const IMAGES[NUM_SIZES];
   static std::vector<TransformData> TRANSFORM;
+  static float IMAGE_SIZES[NUM_SIZES];
   static glhckTexture *TEXTURE;
 
   glhckObject* o;

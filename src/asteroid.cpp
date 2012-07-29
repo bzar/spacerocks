@@ -13,6 +13,8 @@ std::string const Asteroid::IMAGES[NUM_SIZES] = {
   "img/asteroid_4.png"
 };
 
+float Asteroid::IMAGE_SIZES[NUM_SIZES] = {16, 16, 32, 48 };
+
 std::vector<Sprite::TransformData> Asteroid::TRANSFORM;
 glhckTexture *Asteroid::TEXTURE = NULL;
 
@@ -41,7 +43,7 @@ void Asteroid::init()
 Asteroid::Asteroid(World* world, Size const size, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), size(size), v(velocity), life(size + 1)
 {
-  o = glhckSpriteNew(TEXTURE, 0, 0);
+  o = glhckSpriteNew(TEXTURE, IMAGE_SIZES[size], IMAGE_SIZES[size]);
   glhckObjectTransformCoordinates(o, &TRANSFORM[size].transform, TRANSFORM[size].degree);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
