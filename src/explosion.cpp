@@ -99,7 +99,7 @@ std::vector<Sprite::TransformData> Explosion::TRANSFORM;
 glhckTexture *Explosion::TEXTURE = NULL;
 
 Explosion::Explosion(World* world, Vec2D const& position) :
-  Sprite(world), o(0), time(0)
+  Sprite(world, 1), o(0), time(0)
 {
   if (!TEXTURE) {
     glhckAtlas *TEXTURES = glhckAtlasNew();
