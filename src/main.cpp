@@ -125,7 +125,7 @@ int gameloop(GLFWwindow& window)
   glhckObjectPositionf(background, 0, 0, -0.01);
 
   glhckText *text = glhckTextNew(800, 40);
-  unsigned int font = glhckTextNewFont(text, "/usr/share/fonts/truetype/freefont/FreeSans.ttf");
+  unsigned int font = glhckTextNewFont(text, "fonts/DejaVuSans.ttf");
 
   glhckMemoryGraph();
 

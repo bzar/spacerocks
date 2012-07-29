@@ -19,4 +19,6 @@ target_link_libraries(spacerocks glfw glhck ${GLFW_LIBRARIES})
 
 install(TARGETS spacerocks DESTINATION .)
 install(DIRECTORY img DESTINATION .)
+install(DIRECTORY fonts DESTINATION .)
 file(COPY img DESTINATION .)
+file(COPY fonts DESTINATION .)
