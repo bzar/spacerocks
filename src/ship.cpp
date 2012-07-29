@@ -3,6 +3,7 @@
 #include "explosion.h"
 #include "laser.h"
 #include "world.h"
+#include "util.h"
 
 int const Ship::ID = Entity::newEntityId();
 
@@ -153,9 +154,7 @@ void Ship::collide(Sprite const* other) {
       return;
 
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    float d1 = (asteroid->getPosition() - position).lengthSquared();
-    float d2 = (RADIUS + asteroid->getRadius()) * (RADIUS + asteroid->getRadius());
-    if(d1 < d2)
+    if(circlesIntersect(position, getRadius(), asteroid->getPosition(), asteroid->getRadius()))
     {
       Explosion* explosion = new Explosion(world, position);
       world->sprites.insert(std::shared_ptr<Explosion>(explosion));
@@ -194,6 +193,11 @@ Vec2D Ship::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
+}
+
+float Ship::getRadius() const
+{
+  return RADIUS;
 }
 
 float Ship::getAngle() const

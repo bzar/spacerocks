@@ -28,10 +28,13 @@ public:
   virtual void collide(Sprite const* other);
 
   Vec2D getPosition() const;
+  float getRadius() const;
 
 private:
   static std::string const IMAGE;
   static glhckTexture* TEXTURE;
+  static int const RADIUS = 3;
+
   glhckObject* o;
   float life;
   Vec2D v;

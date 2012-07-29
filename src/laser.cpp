@@ -1,6 +1,6 @@
 #include "laser.h"
 #include "asteroid.h"
-#include <iostream>
+#include "util.h"
 
 int const Laser::ID = Entity::newEntityId();
 std::string const Laser::IMAGE = "img/laser.png";
@@ -62,7 +62,7 @@ void Laser::collide(Sprite const* other) {
 
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if((asteroid->getPosition() - position).lengthSquared() < asteroid->getRadius() * asteroid->getRadius())
+    if(circlesIntersect(position, getRadius(), asteroid->getPosition(), asteroid->getRadius()))
     {
       life = 0;
     }
@@ -76,3 +76,7 @@ Vec2D Laser::getPosition() const
   return {pos->x, pos->y};
 }
 
+float Laser::getRadius() const
+{
+  return RADIUS;
+}

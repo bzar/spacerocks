@@ -2,6 +2,7 @@
 #include "laser.h"
 #include "spark.h"
 #include "world.h"
+#include "util.h"
 #include <cstdlib>
 
 int const Asteroid::ID = Entity::newEntityId();
@@ -93,9 +94,7 @@ void Asteroid::collide(Sprite const* other) {
 
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    float d1 = (asteroid->getPosition() - position).lengthSquared();
-    float d2 = (asteroid->getRadius() + getRadius()) * (asteroid->getRadius() + getRadius());
-    if(d1 < d2)
+    if(circlesIntersect(position, getRadius(), asteroid->getPosition(), asteroid->getRadius()))
     {
       v = (position - asteroid->getPosition()).uniti().scalei(v.length());
     }
@@ -104,9 +103,7 @@ void Asteroid::collide(Sprite const* other) {
 
   if(other->getEntityId() == Laser::ID) {
     Laser const* laser = static_cast<Laser const*>(other);
-    float d1 = (laser->getPosition() - position).lengthSquared();
-    float d2 = getRadius() * getRadius();
-    if(d1 < d2)
+    if(circlesIntersect(position, getRadius(), laser->getPosition(), laser->getRadius()))
     {
       life -= 0.5;
 

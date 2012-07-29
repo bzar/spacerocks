@@ -32,6 +32,7 @@ public:
 
   Vec2D getVelocity() const;
   Vec2D getPosition() const;
+  float getRadius() const;
   float getAngle() const;
 
 private:
@@ -45,7 +46,7 @@ private:
   static glhckTexture *TEXTURE;
   static glhckTexture *SHIELD_TEXTURE;
 
-  static const int RADIUS = 16;
+  static int const RADIUS = 16;
 
   glhckObject* o;
   glhckObject* shield;
