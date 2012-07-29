@@ -9,11 +9,13 @@
 
 #include "timer.h"
 #include "world.h"
+#include "vec2d.h"
+
 #include "asteroid.h"
 #include "ship.h"
 #include "laser.h"
 #include "spark.h"
-#include "vec2d.h"
+#include "explosion.h"
 
 int const WIDTH = 800;
 int const HEIGHT = 480;
@@ -67,6 +69,12 @@ int gameloop(GLFWwindow& window)
   kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
   glhckRenderSetProjection(&proj);
 
+  Ship::init();
+  Asteroid::init();
+  Laser::init();
+  Explosion::init();
+  Spark::init();
+
   struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
     {Asteroid::LARGE,  {-200, 0}, {10, 0}},
     {Asteroid::MEDIUM, {-100, 0}, {5, 5}},
@@ -107,7 +115,6 @@ int gameloop(GLFWwindow& window)
   Runtime runtime = { true };
   glfwSetWindowUserPointer(window, &runtime);
 
-  double laserCooldown = 0;
   Timer timer;
 
   while(runtime.running)
@@ -121,25 +128,13 @@ int gameloop(GLFWwindow& window)
 
     if(ship != nullptr)
     {
-      ship->turningLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
-      ship->turningRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
-      ship->accelerating(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
-
-      if(laserCooldown <= 0 && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-      {
-        Vec2D v(0, 1200);
-        v.rotatei(ship->getAngle());
-        Vec2D p = v.normal().uniti().scalei(12);
-        std::shared_ptr<Laser> laser1(new Laser(&world, 0.25, ship->getPosition() + p, v));
-        std::shared_ptr<Laser> laser2(new Laser(&world, 0.25, ship->getPosition() - p, v));
-        world.sprites.insert(laser1);
-        world.sprites.insert(laser2);
-        laserCooldown = 0.15;
-      }
+      ship->turnLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
+      ship->turnRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
+      ship->accelerate(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
+      ship->shoot(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
     }
 
     double delta = timer.getDeltaTime();
-    laserCooldown -= delta;
 
     for(auto i : world.sprites)
     {

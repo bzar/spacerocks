@@ -5,13 +5,14 @@ int const Spark::ID = Entity::newEntityId();
 std::string const Spark::IMAGE = "img/spark.png";
 glhckTexture* Spark::TEXTURE = nullptr;
 
+void Spark::init()
+{
+  TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
+}
+
 Spark::Spark(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), life(life), v(velocity)
 {
-  if(TEXTURE == nullptr)
-  {
-    TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
-  }
   o = glhckSpriteNew(TEXTURE, 0, 0);
   glhckObjectScalef(o, 0.5f, 0.5f, 0.5f);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);

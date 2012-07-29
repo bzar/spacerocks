@@ -11,6 +11,8 @@
 class Explosion : public Sprite
 {
 public:
+  static void init();
+
   Explosion(World* world, Vec2D const& position);
   ~Explosion();
 

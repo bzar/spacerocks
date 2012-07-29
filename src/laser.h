@@ -13,6 +13,8 @@ class Asteroid;
 class Laser : public Sprite
 {
 public:
+  static void init();
+
   Laser(World* world, float const life, Vec2D const& position, Vec2D const& velocity);
   ~Laser();
 

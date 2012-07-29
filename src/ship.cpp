@@ -1,6 +1,7 @@
 #include "ship.h"
 #include "asteroid.h"
 #include "explosion.h"
+#include "laser.h"
 #include "world.h"
 
 int const Ship::ID = Entity::newEntityId();
@@ -14,31 +15,32 @@ std::string const Ship::IMAGES[NUM_IMAGES] = {
 std::vector<Sprite::TransformData> Ship::TRANSFORM;
 glhckTexture *Ship::TEXTURE = NULL;
 
-Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), v(velocity),
-  turnLeft(false), turnRight(false), accelerate(false), dead(false)
+void Ship::init()
 {
-  if (!TEXTURE) {
-    glhckAtlas *TEXTURES = glhckAtlasNew();
-    for(int i = 0; i < NUM_IMAGES; ++i)
-    {
-      glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
-      glhckAtlasInsertTexture(TEXTURES, texture);
-      glhckTextureFree(texture);
-    }
-    glhckAtlasPack(TEXTURES, true, false);
+  glhckAtlas *TEXTURES = glhckAtlasNew();
+  for(int i = 0; i < NUM_IMAGES; ++i)
+  {
+    glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
+    glhckAtlasInsertTexture(TEXTURES, texture);
+    glhckTextureFree(texture);
+  }
+  glhckAtlasPack(TEXTURES, true, false);
 
-    for(int i = 0; i < NUM_IMAGES; ++i)
-    {
-      TransformData t;
-      glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
-      TRANSFORM.push_back(t);
-    }
-
-    TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
-    glhckAtlasFree(TEXTURES);
+  for(int i = 0; i < NUM_IMAGES; ++i)
+  {
+    TransformData t;
+    glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
+    TRANSFORM.push_back(t);
   }
 
+  TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
+  glhckAtlasFree(TEXTURES);
+}
+
+Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
+  Sprite(world), o(0), v(velocity),
+  turningLeft(false), turningRight(false), accelerating(false), shooting(false), laserCooldown(0), dead(false)
+{
   o = glhckSpriteNew(TEXTURE, 32, 32);
   glhckObjectScalef(o, 0.75, 0.75, 0.75);
   glhckObjectTransformCoordinates(o, &TRANSFORM[DEFAULT].transform, TRANSFORM[DEFAULT].degree);
@@ -60,10 +62,10 @@ void Ship::render()
 
 void Ship::update(float delta)
 {
-  if(turnLeft) glhckObjectRotatef(o, 0, 0, delta * 120);
-  if(turnRight) glhckObjectRotatef(o, 0, 0, delta * -120);
+  if(turningLeft) glhckObjectRotatef(o, 0, 0, delta * 120);
+  if(turningRight) glhckObjectRotatef(o, 0, 0, delta * -120);
 
-  if(accelerate)
+  if(accelerating)
   {
     kmScalar angle = glhckObjectGetRotation(o)->z;
     Vec2D acceleration(0, 120 *  delta);
@@ -72,13 +74,13 @@ void Ship::update(float delta)
   }
 
   ImageType t = DEFAULT;
-  if(accelerate) {
-    t = turnLeft && !turnRight ? LEFT_ACCELERATING :
-        turnRight && !turnLeft ? RIGHT_ACCELERATING :
+  if(accelerating) {
+    t = turningLeft && !turningRight ? LEFT_ACCELERATING :
+        turningRight && !turningLeft ? RIGHT_ACCELERATING :
         ACCELERATING;
   } else {
-    t = turnLeft && !turnRight ? LEFT :
-        turnRight && !turnLeft ? RIGHT :
+    t = turningLeft && !turningRight ? LEFT :
+        turningRight && !turningLeft ? RIGHT :
         DEFAULT;
   }
 
@@ -99,6 +101,21 @@ void Ship::update(float delta)
   } else if(pos->y > 240) {
      glhckObjectMovef(o, 0, -480, 0);
   }
+
+  laserCooldown = laserCooldown > 0 ? laserCooldown - delta : 0.0f;
+
+  if(shooting && laserCooldown <= 0)
+  {
+    Vec2D v(0, 1200);
+    v.rotatei(getAngle());
+    Vec2D p = v.normal().uniti().scalei(12);
+    std::shared_ptr<Laser> laser1(new Laser(world, 0.25, getPosition() + p, v));
+    std::shared_ptr<Laser> laser2(new Laser(world, 0.25, getPosition() - p, v));
+    world->sprites.insert(laser1);
+    world->sprites.insert(laser2);
+    laserCooldown = 0.15;
+  }
+
 }
 
 bool Ship::alive() const
@@ -113,7 +130,9 @@ void Ship::collide(Sprite const* other) {
 
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if((asteroid->getPosition() - position).lengthSquared() < asteroid->getRadius() * asteroid->getRadius())
+    float d1 = (asteroid->getPosition() - position).lengthSquared();
+    float d2 = (RADIUS + asteroid->getRadius()) * (RADIUS + asteroid->getRadius());
+    if(d1 < d2)
     {
       Explosion* explosion = new Explosion(world, position);
       world->sprites.insert(std::shared_ptr<Explosion>(explosion));
@@ -123,19 +142,24 @@ void Ship::collide(Sprite const* other) {
   }
 }
 
-void Ship::turningLeft(bool const value)
+void Ship::turnLeft(bool const value)
 {
-  turnLeft = value;
+  turningLeft = value;
 }
 
-void Ship::turningRight(bool const value)
+void Ship::turnRight(bool const value)
 {
-  turnRight = value;
+  turningRight = value;
 }
 
-void Ship::accelerating(bool const value)
+void Ship::accelerate(bool const value)
 {
-  accelerate = value;
+  accelerating = value;
+}
+
+void Ship::shoot(bool const value)
+{
+  shooting = value;
 }
 
 Vec2D Ship::getVelocity() const

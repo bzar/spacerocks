@@ -11,6 +11,8 @@
 class Spark : public Sprite
 {
 public:
+  static void init();
+
   Spark(World* world, float const life, Vec2D const& position, Vec2D const& velocity);
   ~Spark();
 

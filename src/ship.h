@@ -11,6 +11,8 @@
 class Ship : public Sprite
 {
 public:
+  static void init();
+
   Ship(World* world, Vec2D const& position, Vec2D const& velocity);
   ~Ship();
 
@@ -23,9 +25,10 @@ public:
 
   virtual void collide(Sprite const* other);
 
-  void turningLeft(bool const value);
-  void turningRight(bool const value);
-  void accelerating(bool const value);
+  void turnLeft(bool const value);
+  void turnRight(bool const value);
+  void accelerate(bool const value);
+  void shoot(bool const value);
 
   Vec2D getVelocity() const;
   Vec2D getPosition() const;
@@ -39,14 +42,17 @@ private:
   static std::string const IMAGES[NUM_IMAGES];
   static std::vector<TransformData> TRANSFORM;
   static glhckTexture *TEXTURE;
+  static const int RADIUS = 16;
 
   glhckObject* o;
   Vec2D v;
 
-  bool turnLeft;
-  bool turnRight;
-  bool accelerate;
+  bool turningLeft;
+  bool turningRight;
+  bool accelerating;
+  bool shooting;
 
+  float laserCooldown;
   bool dead;
 };
 #endif

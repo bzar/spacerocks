@@ -98,30 +98,31 @@ std::string const Explosion::IMAGES[NUM_IMAGES] = {
 std::vector<Sprite::TransformData> Explosion::TRANSFORM;
 glhckTexture *Explosion::TEXTURE = NULL;
 
+void Explosion::init()
+{
+  glhckAtlas *TEXTURES = glhckAtlasNew();
+  for(int i = 0; i < NUM_IMAGES; ++i)
+  {
+    glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
+    glhckAtlasInsertTexture(TEXTURES, texture);
+    glhckTextureFree(texture);
+  }
+  glhckAtlasPack(TEXTURES, true, false);
+
+  for(int i = 0; i < NUM_IMAGES; ++i)
+  {
+    TransformData t;
+    glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
+    TRANSFORM.push_back(t);
+  }
+
+  TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
+  glhckAtlasFree(TEXTURES);
+}
+
 Explosion::Explosion(World* world, Vec2D const& position) :
   Sprite(world, 1), o(0), time(0)
 {
-  if (!TEXTURE) {
-    glhckAtlas *TEXTURES = glhckAtlasNew();
-    for(int i = 0; i < NUM_IMAGES; ++i)
-    {
-      glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
-      glhckAtlasInsertTexture(TEXTURES, texture);
-      glhckTextureFree(texture);
-    }
-    glhckAtlasPack(TEXTURES, false, false);
-
-    for(int i = 0; i < NUM_IMAGES; ++i)
-    {
-      TransformData t;
-      glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
-      TRANSFORM.push_back(t);
-    }
-
-    TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
-    glhckAtlasFree(TEXTURES);
-  }
-
   o = glhckSpriteNew(TEXTURE, 160, 120);
   glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
 

@@ -6,13 +6,14 @@ int const Laser::ID = Entity::newEntityId();
 std::string const Laser::IMAGE = "img/laser.png";
 glhckTexture* Laser::TEXTURE = nullptr;
 
+void Laser::init()
+{
+  TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
+}
+
 Laser::Laser(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), life(life), v(velocity)
 {
-  if(TEXTURE == nullptr)
-  {
-    TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
-  }
   o = glhckSpriteNew(TEXTURE, 0, 0);
   glhckObjectScalef(o, 0.5f, 0.5f, 0.5f);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
