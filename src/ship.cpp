@@ -12,8 +12,11 @@ std::string const Ship::IMAGES[NUM_IMAGES] = {
   "img/ship_right.png", "img/ship_right_accelerating.png",
 };
 
+std::string const Ship::SHIELD_IMAGE = "img/shield.png";
+
 std::vector<Sprite::TransformData> Ship::TRANSFORM;
 glhckTexture *Ship::TEXTURE = NULL;
+glhckTexture *Ship::SHIELD_TEXTURE = NULL;
 
 void Ship::init()
 {
@@ -35,17 +38,23 @@ void Ship::init()
 
   TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
   glhckAtlasFree(TEXTURES);
+
+  SHIELD_TEXTURE = glhckTextureNew(SHIELD_IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
 }
 
 Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), v(velocity),
-  turningLeft(false), turningRight(false), accelerating(false), shooting(false), laserCooldown(0), dead(false)
+  Sprite(world), o(0), shield(0), v(velocity),
+  turningLeft(false), turningRight(false), accelerating(false), shooting(false),
+  shieldLeft(4), laserCooldown(0), dead(false)
 {
   o = glhckSpriteNew(TEXTURE, 32, 32);
+  shield = glhckSpriteNew(SHIELD_TEXTURE, 48, 48);
+
   glhckObjectScalef(o, 0.75, 0.75, 0.75);
   glhckObjectTransformCoordinates(o, &TRANSFORM[DEFAULT].transform, TRANSFORM[DEFAULT].degree);
 
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  glhckObjectSetMaterialFlags(shield, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 
@@ -58,6 +67,11 @@ Ship::~Ship()
 void Ship::render()
 {
   glhckObjectRender(o);
+
+  if(shieldLeft > 0)
+  {
+    glhckObjectRender(shield);
+  }
 }
 
 void Ship::update(float delta)
@@ -116,6 +130,12 @@ void Ship::update(float delta)
     laserCooldown = 0.15;
   }
 
+  if(shieldLeft > 0)
+  {
+    shieldLeft -= delta;
+    glhckObjectPosition(shield, glhckObjectGetPosition(o));
+  }
+
 }
 
 bool Ship::alive() const
@@ -129,6 +149,9 @@ void Ship::collide(Sprite const* other) {
   Vec2D position{pos->x, pos->y};
 
   if(other->getEntityId() == Asteroid::ID) {
+    if(shieldLeft > 0)
+      return;
+
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     float d1 = (asteroid->getPosition() - position).lengthSquared();
     float d2 = (RADIUS + asteroid->getRadius()) * (RADIUS + asteroid->getRadius());

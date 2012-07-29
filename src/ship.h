@@ -40,11 +40,15 @@ private:
                    RIGHT, RIGHT_ACCELERATING,
                    NUM_IMAGES };
   static std::string const IMAGES[NUM_IMAGES];
+  static std::string const SHIELD_IMAGE;
   static std::vector<TransformData> TRANSFORM;
   static glhckTexture *TEXTURE;
+  static glhckTexture *SHIELD_TEXTURE;
+
   static const int RADIUS = 16;
 
   glhckObject* o;
+  glhckObject* shield;
   Vec2D v;
 
   bool turningLeft;
@@ -52,6 +56,7 @@ private:
   bool accelerating;
   bool shooting;
 
+  float shieldLeft;
   float laserCooldown;
   bool dead;
 };

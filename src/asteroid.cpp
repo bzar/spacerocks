@@ -27,7 +27,7 @@ void Asteroid::init()
     glhckAtlasInsertTexture(TEXTURES, texture);
     glhckTextureFree(texture);
   }
-  glhckAtlasPack(TEXTURES, true, false);
+  glhckAtlasPack(TEXTURES, true, true);
 
   for(int i = 0; i < NUM_SIZES; ++i)
   {
