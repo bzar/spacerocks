@@ -63,6 +63,15 @@ static int windowCloseCallback(GLFWwindow window)
   return GL_FALSE;
 }
 
+static void windowResizeCallback(GLFWwindow window, int width, int height)
+{
+  glhckDisplayResize(width, height);
+
+  kmMat4 proj;
+  kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
+  glhckRenderSetProjection(&proj);
+}
+
 int gameloop(GLFWwindow& window)
 {
   kmMat4 proj;
@@ -114,6 +123,7 @@ int gameloop(GLFWwindow& window)
 
   Runtime runtime = { true };
   glfwSetWindowUserPointer(window, &runtime);
+  glfwSetWindowSizeCallback(windowResizeCallback);
 
   Timer timer;
 
@@ -183,7 +193,7 @@ int gameloop(GLFWwindow& window)
        << "FPS: " << timer.getFPS()
        << ", total: " << timer.getTotalTime()
        << "s, frame: " << timer.getTicks();
-    glhckTextDraw(text, font, 20, 5, 465, ss.str().data(), NULL);
+    glhckTextDraw(text, font, 20, 5, 25, ss.str().data(), NULL);
     glhckTextRender(text);
 
 
