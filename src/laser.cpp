@@ -1,6 +1,7 @@
 #include "laser.h"
 #include "asteroid.h"
 #include "util.h"
+#include "ufo.h"
 
 int const Laser::ID = Entity::newEntityId();
 std::string const Laser::IMAGE = "img/laser.png";
@@ -63,6 +64,15 @@ void Laser::collide(Sprite const* other) {
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(circlesIntersect(position, getRadius(), asteroid->getPosition(), asteroid->getRadius()))
+    {
+      life = 0;
+    }
+    return;
+  }
+
+  if(other->getEntityId() == Ufo::ID) {
+    Ufo const* ufo = static_cast<Ufo const*>(other);
+    if(circlesIntersect(position, getRadius(), ufo->getPosition(), ufo->getRadius()))
     {
       life = 0;
     }

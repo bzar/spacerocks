@@ -16,6 +16,7 @@
 #include "laser.h"
 #include "spark.h"
 #include "explosion.h"
+#include "ufo.h"
 
 int const WIDTH = 800;
 int const HEIGHT = 480;
@@ -83,6 +84,7 @@ int gameloop(GLFWwindow& window)
   Laser::init();
   Explosion::init();
   Spark::init();
+  Ufo::init();
 
   struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
     {Asteroid::LARGE,  {-200, 0}, {10, 0}},
@@ -111,6 +113,9 @@ int gameloop(GLFWwindow& window)
 
   std::shared_ptr<Ship> ship(new Ship(&world, {0, -200}, {0, 0}));
   world.sprites.insert(ship);
+
+  std::shared_ptr<Ufo> ufo(new Ufo(&world, {0, 0}));
+  world.sprites.insert(ufo);
 
   glhckObject* background = glhckSpriteNewFromFile("img/background.png", 0, 0, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectScalef(background, 0.5f, 0.5f, 0.5f);

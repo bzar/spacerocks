@@ -48,10 +48,9 @@ Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
   shieldLeft(4), laserCooldown(0), dead(false)
 {
-  o = glhckSpriteNew(TEXTURE, 32, 32);
+  o = glhckSpriteNew(TEXTURE, 24, 24);
   shield = glhckSpriteNew(SHIELD_TEXTURE, 48, 48);
 
-  glhckObjectScalef(o, 0.75, 0.75, 0.75);
   glhckObjectTransformCoordinates(o, &TRANSFORM[DEFAULT].transform, TRANSFORM[DEFAULT].degree);
 
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);

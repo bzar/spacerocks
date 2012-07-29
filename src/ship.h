@@ -46,7 +46,7 @@ private:
   static glhckTexture *TEXTURE;
   static glhckTexture *SHIELD_TEXTURE;
 
-  static int const RADIUS = 16;
+  static int const RADIUS = 24;
 
   glhckObject* o;
   glhckObject* shield;
