@@ -1,4 +1,7 @@
 #include "ship.h"
+#include "asteroid.h"
+#include "explosion.h"
+#include "world.h"
 
 int const Ship::ID = Entity::newEntityId();
 
@@ -8,14 +11,14 @@ std::string const Ship::IMAGES[NUM_IMAGES] = {
   "img/ship_right.png", "img/ship_right_accelerating.png",
 };
 
-std::vector<TransformData> Ship::TRANSFORM;
-glhckTexture *Ship::ATLAS_TEXTURE = NULL;
+std::vector<Sprite::TransformData> Ship::TRANSFORM;
+glhckTexture *Ship::TEXTURE = NULL;
 
 Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), v(velocity),
-  turnLeft(false), turnRight(false), accelerate(false)
+  turnLeft(false), turnRight(false), accelerate(false), dead(false)
 {
-  if (!ATLAS_TEXTURE) {
+  if (!TEXTURE) {
     glhckAtlas *TEXTURES = glhckAtlasNew();
     for(int i = 0; i < NUM_IMAGES; ++i)
     {
@@ -32,13 +35,13 @@ Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
       TRANSFORM.push_back(t);
     }
 
-    ATLAS_TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
+    TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
     glhckAtlasFree(TEXTURES);
   }
 
-  o = glhckSpriteNew(ATLAS_TEXTURE, 32, 32);
+  o = glhckSpriteNew(TEXTURE, 32, 32);
   glhckObjectScalef(o, 0.75, 0.75, 0.75);
-  glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
+  glhckObjectTransformCoordinates(o, &TRANSFORM[DEFAULT].transform, TRANSFORM[DEFAULT].degree);
 
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
@@ -95,6 +98,28 @@ void Ship::update(float delta)
      glhckObjectMovef(o, 0, 480, 0);
   } else if(pos->y > 240) {
      glhckObjectMovef(o, 0, -480, 0);
+  }
+}
+
+bool Ship::alive() const
+{
+  return !dead;
+}
+
+
+void Ship::collide(Sprite const* other) {
+  kmVec3 const* pos = glhckObjectGetPosition(o);
+  Vec2D position{pos->x, pos->y};
+
+  if(other->getEntityId() == Asteroid::ID) {
+    Asteroid const* asteroid = static_cast<Asteroid const*>(other);
+    if((asteroid->getPosition() - position).lengthSquared() < asteroid->getRadius() * asteroid->getRadius())
+    {
+      Explosion* explosion = new Explosion(world, position);
+      world->sprites.insert(std::shared_ptr<Explosion>(explosion));
+      dead = true;
+    }
+    return;
   }
 }
 

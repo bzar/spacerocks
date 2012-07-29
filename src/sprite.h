@@ -2,6 +2,7 @@
 #define SPRITE_HH
 
 #include "entity.h"
+#include "GL/glhck.h"
 
 struct World;
 
@@ -15,6 +16,12 @@ public:
   virtual bool alive() const { return true; };
 
 protected:
+  struct TransformData
+  {
+    kmVec4 transform;
+    short degree;
+  };
+
   World* world;
 };
 #endif

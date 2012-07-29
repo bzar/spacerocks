@@ -21,8 +21,6 @@ public:
   void update(float delta);
   bool alive() const;
 
-  virtual void collide(Sprite const* other);
-
 private:
   static std::string const IMAGE;
   static glhckTexture* TEXTURE;

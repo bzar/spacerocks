@@ -5,16 +5,8 @@
 #include "GL/glhck.h"
 #include "vec2d.h"
 
-#include <map>
 #include <string>
 #include <vector>
-
-class TransformData
-{
-public:
-  kmVec4 transform;
-  short degree;
-};
 
 class Ship : public Sprite
 {
@@ -27,6 +19,9 @@ public:
 
   void render();
   void update(float delta);
+  bool alive() const;
+
+  virtual void collide(Sprite const* other);
 
   void turningLeft(bool const value);
   void turningRight(bool const value);
@@ -43,7 +38,7 @@ private:
                    NUM_IMAGES };
   static std::string const IMAGES[NUM_IMAGES];
   static std::vector<TransformData> TRANSFORM;
-  static glhckTexture *ATLAS_TEXTURE;
+  static glhckTexture *TEXTURE;
 
   glhckObject* o;
   Vec2D v;
@@ -51,5 +46,7 @@ private:
   bool turnLeft;
   bool turnRight;
   bool accelerate;
+
+  bool dead;
 };
 #endif

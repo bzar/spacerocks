@@ -92,7 +92,7 @@ int gameloop(GLFWwindow& window)
     world.sprites.insert(asteroid);
   }
 
-  std::shared_ptr<Ship> ship(new Ship(&world, {0, 0}, {0, 0}));
+  std::shared_ptr<Ship> ship(new Ship(&world, {0, -200}, {0, 0}));
   world.sprites.insert(ship);
 
   glhckObject* background = glhckSpriteNewFromFile("img/background.png", 0, 0, GLHCK_TEXTURE_DEFAULTS);
@@ -119,20 +119,23 @@ int gameloop(GLFWwindow& window)
       runtime.running = false;
     }
 
-    ship->turningLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
-    ship->turningRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
-    ship->accelerating(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
-
-    if(laserCooldown <= 0 && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+    if(ship != nullptr)
     {
-      Vec2D v(0, 1200);
-      v.rotatei(ship->getAngle());
-      Vec2D p = v.normal().uniti().scalei(12);
-      std::shared_ptr<Laser> laser1(new Laser(&world, 0.25, ship->getPosition() + p, v));
-      std::shared_ptr<Laser> laser2(new Laser(&world, 0.25, ship->getPosition() - p, v));
-      world.sprites.insert(laser1);
-      world.sprites.insert(laser2);
-      laserCooldown = 0.15;
+      ship->turningLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
+      ship->turningRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
+      ship->accelerating(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
+
+      if(laserCooldown <= 0 && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+      {
+        Vec2D v(0, 1200);
+        v.rotatei(ship->getAngle());
+        Vec2D p = v.normal().uniti().scalei(12);
+        std::shared_ptr<Laser> laser1(new Laser(&world, 0.25, ship->getPosition() + p, v));
+        std::shared_ptr<Laser> laser2(new Laser(&world, 0.25, ship->getPosition() - p, v));
+        world.sprites.insert(laser1);
+        world.sprites.insert(laser2);
+        laserCooldown = 0.15;
+      }
     }
 
     double delta = timer.getDeltaTime();
@@ -152,6 +155,11 @@ int gameloop(GLFWwindow& window)
           i->collide(j.get());
         }
       }
+    }
+
+    if(ship && !ship->alive())
+    {
+      ship = nullptr;
     }
 
     std::forward_list<std::shared_ptr<Sprite>> deadParticles;

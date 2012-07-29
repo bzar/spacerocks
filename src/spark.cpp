@@ -53,7 +53,3 @@ bool Spark::alive() const
 {
   return life > 0;
 }
-
-void Spark::collide(Sprite const* other) {
-
-}
