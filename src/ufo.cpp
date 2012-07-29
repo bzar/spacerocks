@@ -88,8 +88,7 @@ bool Ufo::alive() const
 }
 
 void Ufo::collide(Sprite const* other) {
-  kmVec3 const* pos = glhckObjectGetPosition(o);
-  Vec2D position{pos->x, pos->y};
+  Vec2D position = getPosition();
 
   if(other->getEntityId() == Laser::ID) {
     Laser const* laser = static_cast<Laser const*>(other);

@@ -43,8 +43,7 @@ bool UfoLaser::alive() const
 }
 
 void UfoLaser::collide(Sprite const* other) {
-  kmVec3 const* pos = glhckObjectGetPosition(o);
-  Vec2D position{pos->x, pos->y};
+  Vec2D position = getPosition();
 
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);

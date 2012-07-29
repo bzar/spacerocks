@@ -35,6 +35,8 @@ public:
   float getRadius() const;
   float getAngle() const;
 
+  void die();
+
 private:
   enum ImageType { DEFAULT, ACCELERATING,
                    LEFT, LEFT_ACCELERATING,

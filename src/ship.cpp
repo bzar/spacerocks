@@ -4,6 +4,8 @@
 #include "laser.h"
 #include "world.h"
 #include "util.h"
+#include "ufo.h"
+#include "ufolaser.h"
 
 int const Ship::ID = Entity::newEntityId();
 
@@ -145,8 +147,7 @@ bool Ship::alive() const
 
 
 void Ship::collide(Sprite const* other) {
-  kmVec3 const* pos = glhckObjectGetPosition(o);
-  Vec2D position{pos->x, pos->y};
+  Vec2D position = getPosition();
 
   if(other->getEntityId() == Asteroid::ID) {
     if(shieldLeft > 0)
@@ -155,12 +156,35 @@ void Ship::collide(Sprite const* other) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(circlesIntersect(position, getRadius(), asteroid->getPosition(), asteroid->getRadius()))
     {
-      Explosion* explosion = new Explosion(world, position);
-      world->sprites.insert(std::shared_ptr<Explosion>(explosion));
-      dead = true;
+      die();
     }
     return;
   }
+
+  if(other->getEntityId() == UfoLaser::ID) {
+    if(shieldLeft > 0)
+      return;
+
+    UfoLaser const* ufoLaser = static_cast<UfoLaser const*>(other);
+    if(circlesIntersect(position, getRadius(), ufoLaser->getPosition(), ufoLaser->getRadius()))
+    {
+      die();
+    }
+    return;
+  }
+
+  if(other->getEntityId() == Ufo::ID) {
+    if(shieldLeft > 0)
+      return;
+
+    Ufo const* ufo = static_cast<Ufo const*>(other);
+    if(circlesIntersect(position, getRadius(), ufo->getPosition(), ufo->getRadius()))
+    {
+      die();
+    }
+    return;
+  }
+
 }
 
 void Ship::turnLeft(bool const value)
@@ -205,4 +229,9 @@ float Ship::getAngle() const
   return rot->z / 360;
 }
 
-
+void Ship::die()
+{
+  Explosion* explosion = new Explosion(world, getPosition());
+  world->sprites.insert(std::shared_ptr<Explosion>(explosion));
+  dead = true;
+}
