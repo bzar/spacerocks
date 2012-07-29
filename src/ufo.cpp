@@ -113,6 +113,8 @@ void Ufo::collide(Sprite const* other) {
       }
       else
       {
+        world->score += 100;
+
         Explosion* explosion = new Explosion(world, position);
         world->sprites.insert(std::shared_ptr<Explosion>(explosion));
       }

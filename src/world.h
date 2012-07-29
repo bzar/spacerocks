@@ -29,6 +29,7 @@ public:
 typedef std::set<std::shared_ptr<Sprite>, ZComparator> SpriteSet;
 struct World {
   Ship* ship;
+  int score;
   SpriteSet sprites;
 };
 

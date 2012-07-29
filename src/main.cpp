@@ -105,7 +105,7 @@ int gameloop(GLFWwindow& window)
     {Asteroid::LARGE,  { 200, 50}, {0, 1}}
   };
 
-  World world = {nullptr, SpriteSet()};
+  World world = {nullptr, 0, SpriteSet()};
 
   for(auto d : asteroids)
   {
@@ -208,9 +208,10 @@ int gameloop(GLFWwindow& window)
 
     std::ostringstream ss;
     ss << std::setprecision(2) << std::fixed
-       << "FPS: " << timer.getFPS()
-       << ", total: " << timer.getTotalTime()
-       << "s, frame: " << timer.getTicks();
+       << "Score: " << world.score
+       << " | FPS: " << timer.getFPS()
+       << " | total: " << timer.getTotalTime()
+       << "s | frame: " << timer.getTicks();
     glhckTextDraw(text, font, 20, 5, 25, ss.str().data(), NULL);
     glhckTextRender(text);
 

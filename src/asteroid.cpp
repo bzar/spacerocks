@@ -124,6 +124,8 @@ void Asteroid::collide(Sprite const* other) {
       }
       else
       {
+        world->score += size * 10;
+
         int r = static_cast<int>(getRadius());
         for(int i = 0; i < 2 * r; ++i)
         {
