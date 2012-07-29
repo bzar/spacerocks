@@ -126,6 +126,7 @@ int gameloop(GLFWwindow& window)
   glfwSetWindowSizeCallback(windowResizeCallback);
 
   Timer timer;
+  float deathDelay = 0;
 
   while(runtime.running)
   {
@@ -136,6 +137,8 @@ int gameloop(GLFWwindow& window)
       runtime.running = false;
     }
 
+    double delta = timer.getDeltaTime();
+
     if(ship != nullptr)
     {
       ship->turnLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
@@ -143,8 +146,15 @@ int gameloop(GLFWwindow& window)
       ship->accelerate(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
       ship->shoot(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
     }
-
-    double delta = timer.getDeltaTime();
+    else
+    {
+      deathDelay -= delta;
+      if(deathDelay <= 0)
+      {
+        ship.reset(new Ship(&world, {0, 0}, {0, 0}));
+        world.sprites.insert(ship);
+      }
+    }
 
     for(auto i : world.sprites)
     {
@@ -165,6 +175,7 @@ int gameloop(GLFWwindow& window)
     if(ship && !ship->alive())
     {
       ship = nullptr;
+      deathDelay = 3.0;
     }
 
     std::forward_list<std::shared_ptr<Sprite>> deadParticles;
