@@ -1,5 +1,8 @@
 #include "asteroid.h"
-#include <iostream>
+#include "laser.h"
+#include "spark.h"
+#include "world.h"
+#include <cstdlib>
 
 int const Asteroid::ID = Entity::newEntityId();
 float const Asteroid::RADII[NUM_SIZES] = {8, 16, 32, 48};
@@ -10,8 +13,8 @@ std::string const Asteroid::IMAGES[NUM_SIZES] = {
   "img/asteroid_4.png"
 };
 
-Asteroid::Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity) :
-  o(0), size(size), v(velocity)
+Asteroid::Asteroid(World* world, Size const size, Vec2D const& position, Vec2D const& velocity) :
+  Sprite(world), o(0), size(size), v(velocity), life(size + 1)
 {
   o = glhckSpriteNewFromFile(IMAGES[size].data(), 0, 0, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
@@ -48,7 +51,15 @@ void Asteroid::update(float delta)
   }
 }
 
+bool Asteroid::alive() const
+{
+  return life > 0;
+}
+
 void Asteroid::collide(Sprite const* other) {
+  if(!alive())
+    return;
+
   kmVec3 const* pos = glhckObjectGetPosition(o);
   Vec2D position{pos->x, pos->y};
 
@@ -59,6 +70,62 @@ void Asteroid::collide(Sprite const* other) {
     if(d1 < d2)
     {
       v = (position - asteroid->getPosition()).uniti().scalei(v.length());
+    }
+    return;
+  }
+
+  if(other->getEntityId() == Laser::ID) {
+    Laser const* laser = static_cast<Laser const*>(other);
+    float d1 = (laser->getPosition() - position).lengthSquared();
+    float d2 = getRadius() * getRadius();
+    if(d1 < d2)
+    {
+      life -= 0.5;
+
+      if(alive())
+      {
+        Vec2D hitDirection = (laser->getPosition() - position).uniti();
+        Vec2D hitPosition = position + hitDirection.scale(getRadius());
+        Vec2D hitNormal = hitDirection.normal();
+
+        for(int i = 0; i < 10; ++i)
+        {
+          float pLife = 0.1 + (rand() % 1000) / 10000.0f;
+          float speed = 120 + (rand() % 40);
+          Vec2D dev = hitNormal.scale(((rand() % 2000) - 1000) / 10.0f);
+          Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
+          Spark* spark = new Spark(world, pLife, startPos, hitDirection.scale(speed) + dev);
+          world->sprites.insert(std::shared_ptr<Spark>(spark));
+        }
+      }
+      else
+      {
+        int r = static_cast<int>(getRadius());
+        for(int i = 0; i < 2 * r; ++i)
+        {
+          float pLife = 0.25 + (rand() % 2500) / 10000.0f;
+          float speed = 120 + (rand() % 100);
+          Vec2D direction(((rand() % 2000) - 1000) / 1000.0f, ((rand() % 2000) - 1000) / 1000.0f);
+          Vec2D velocity = direction.scale(speed);
+          Vec2D startPos = position + direction.scale(rand() % r);
+          Spark* spark = new Spark(world, pLife, startPos, velocity);
+          world->sprites.insert(std::shared_ptr<Spark>(spark));
+        }
+
+        if(size > TINY)
+        {
+          for(int i = 0; i < 2; ++i)
+          {
+            float speed = 10 + (rand() % 50);
+            Vec2D direction(((rand() % 2000) - 1000) / 1000.0f, ((rand() % 2000) - 1000) / 1000.0f);
+            Vec2D velocity = direction.scale(speed);
+            Vec2D startPos = position + direction.scale(rand() % r);
+            Asteroid* asteroid = new Asteroid(world, static_cast<Size>(size - 1), startPos, velocity);
+            world->sprites.insert(std::shared_ptr<Asteroid>(asteroid));
+          }
+        }
+      }
+
     }
     return;
   }

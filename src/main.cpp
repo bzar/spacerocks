@@ -4,15 +4,15 @@
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
-#include <set>
-#include <memory>
 #include <sstream>
 #include <forward_list>
 
 #include "timer.h"
+#include "world.h"
 #include "asteroid.h"
 #include "ship.h"
 #include "laser.h"
+#include "spark.h"
 #include "vec2d.h"
 
 int const WIDTH = 800;
@@ -67,8 +67,6 @@ int gameloop(GLFWwindow& window)
   kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
   glhckRenderSetProjection(&proj);
 
-  std::set<std::shared_ptr<Sprite>> sprites;
-
   struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
     {Asteroid::LARGE,  {-200, 0}, {10, 0}},
     {Asteroid::MEDIUM, {-100, 0}, {5, 5}},
@@ -86,14 +84,16 @@ int gameloop(GLFWwindow& window)
     {Asteroid::LARGE,  { 200, 50}, {0, 1}}
   };
 
+  World world;
+
   for(auto d : asteroids)
   {
-    std::shared_ptr<Asteroid> asteroid(new Asteroid(d.s, d.p, d.v));
-    sprites.insert(asteroid);
+    std::shared_ptr<Asteroid> asteroid(new Asteroid(&world, d.s, d.p, d.v));
+    world.sprites.insert(asteroid);
   }
 
-  std::shared_ptr<Ship> ship(new Ship({0, 0}, {0, 0}));
-  sprites.insert(ship);
+  std::shared_ptr<Ship> ship(new Ship(&world, {0, 0}, {0, 0}));
+  world.sprites.insert(ship);
 
   glhckObject* background = glhckSpriteNewFromFile("img/background.png", 0, 0, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectScalef(background, 0.5f, 0.5f, 0.5f);
@@ -128,24 +128,24 @@ int gameloop(GLFWwindow& window)
       Vec2D v(0, 1200);
       v.rotatei(ship->getAngle());
       Vec2D p = v.normal().uniti().scalei(12);
-      std::shared_ptr<Laser> laser1(new Laser(0.25, ship->getPosition() + p, v));
-      std::shared_ptr<Laser> laser2(new Laser(0.25, ship->getPosition() - p, v));
-      sprites.insert(laser1);
-      sprites.insert(laser2);
+      std::shared_ptr<Laser> laser1(new Laser(&world, 0.25, ship->getPosition() + p, v));
+      std::shared_ptr<Laser> laser2(new Laser(&world, 0.25, ship->getPosition() - p, v));
+      world.sprites.insert(laser1);
+      world.sprites.insert(laser2);
       laserCooldown = 0.15;
     }
 
     double delta = timer.getDeltaTime();
     laserCooldown -= delta;
 
-    for(auto i : sprites)
+    for(auto i : world.sprites)
     {
       i->update(delta);
     }
 
-    for(auto i : sprites)
+    for(auto i : world.sprites)
     {
-      for(auto j : sprites)
+      for(auto j : world.sprites)
       {
         if(i != j)
         {
@@ -155,7 +155,7 @@ int gameloop(GLFWwindow& window)
     }
 
     std::forward_list<std::shared_ptr<Sprite>> deadParticles;
-    for(auto i : sprites)
+    for(auto i : world.sprites)
     {
       if(!i->alive())
       {
@@ -165,12 +165,12 @@ int gameloop(GLFWwindow& window)
 
     for(auto i : deadParticles)
     {
-      sprites.erase(i);
+      world.sprites.erase(i);
     }
 
     glhckObjectRender(background);
 
-    for(auto i : sprites)
+    for(auto i : world.sprites)
     {
       i->render();
     }

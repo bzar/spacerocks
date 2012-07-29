@@ -11,7 +11,7 @@ class Asteroid : public Sprite
 {
 public:
   enum Size { TINY, SMALL, MEDIUM, LARGE, NUM_SIZES };
-  Asteroid(Size const size, Vec2D const& position, Vec2D const& velocity);
+  Asteroid(World* world, Size const size, Vec2D const& position, Vec2D const& velocity);
   ~Asteroid();
 
   static int const ID;
@@ -20,6 +20,7 @@ public:
   void render();
   void update(float delta);
 
+  bool alive() const;
   virtual void collide(Sprite const* other);
 
   Vec2D getPosition() const;
@@ -33,5 +34,6 @@ private:
   glhckObject* o;
   Size size;
   Vec2D v;
+  float life;
 };
 #endif

@@ -11,8 +11,8 @@ std::string const Ship::IMAGES[NUM_IMAGES] = {
 std::vector<TransformData> Ship::TRANSFORM;
 glhckTexture *Ship::ATLAS_TEXTURE = NULL;
 
-Ship::Ship(Vec2D const& position, Vec2D const& velocity) :
-  Sprite(), o(0), v(velocity),
+Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
+  Sprite(world), o(0), v(velocity),
   turnLeft(false), turnRight(false), accelerate(false)
 {
   if (!ATLAS_TEXTURE) {

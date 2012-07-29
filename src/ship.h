@@ -19,7 +19,7 @@ public:
 class Ship : public Sprite
 {
 public:
-  Ship(Vec2D const& position, Vec2D const& velocity);
+  Ship(World* world, Vec2D const& position, Vec2D const& velocity);
   ~Ship();
 
   static int const ID;

@@ -1,5 +1,5 @@
-#ifndef LASER_HH
-#define LASER_HH
+#ifndef SPARK_HH
+#define SPARK_HH
 
 #include "sprite.h"
 #include "GL/glhck.h"
@@ -8,13 +8,11 @@
 #include <map>
 #include <string>
 
-class Asteroid;
-
-class Laser : public Sprite
+class Spark : public Sprite
 {
 public:
-  Laser(World* world, float const life, Vec2D const& position, Vec2D const& velocity);
-  ~Laser();
+  Spark(World* world, float const life, Vec2D const& position, Vec2D const& velocity);
+  ~Spark();
 
   static int const ID;
   int getEntityId() const { return ID; }
@@ -24,8 +22,6 @@ public:
   bool alive() const;
 
   virtual void collide(Sprite const* other);
-
-  Vec2D getPosition() const;
 
 private:
   static std::string const IMAGE;

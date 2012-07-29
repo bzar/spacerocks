@@ -1,12 +1,11 @@
-#include "laser.h"
-#include "asteroid.h"
+#include "spark.h"
 #include <iostream>
 
-int const Laser::ID = Entity::newEntityId();
-std::string const Laser::IMAGE = "img/laser.png";
-glhckTexture* Laser::TEXTURE = nullptr;
+int const Spark::ID = Entity::newEntityId();
+std::string const Spark::IMAGE = "img/spark.png";
+glhckTexture* Spark::TEXTURE = nullptr;
 
-Laser::Laser(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
+Spark::Spark(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), life(life), v(velocity)
 {
   if(TEXTURE == nullptr)
@@ -20,17 +19,17 @@ Laser::Laser(World* world, float const life, Vec2D const& position, Vec2D const&
   glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);
 }
 
-Laser::~Laser()
+Spark::~Spark()
 {
   glhckObjectFree(o);
 }
 
-void Laser::render()
+void Spark::render()
 {
   glhckObjectRender(o);
 }
 
-void Laser::update(float delta)
+void Spark::update(float delta)
 {
   life -= delta;
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
@@ -50,28 +49,11 @@ void Laser::update(float delta)
   }
 }
 
-bool Laser::alive() const
+bool Spark::alive() const
 {
   return life > 0;
 }
 
-void Laser::collide(Sprite const* other) {
-  kmVec3 const* pos = glhckObjectGetPosition(o);
-  Vec2D position{pos->x, pos->y};
+void Spark::collide(Sprite const* other) {
 
-  if(other->getEntityId() == Asteroid::ID) {
-    Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if((asteroid->getPosition() - position).lengthSquared() < asteroid->getRadius() * asteroid->getRadius())
-    {
-      life = 0;
-    }
-    return;
-  }
 }
-
-Vec2D Laser::getPosition() const
-{
-  kmVec3 const* pos = glhckObjectGetPosition(o);
-  return {pos->x, pos->y};
-}
-
