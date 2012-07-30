@@ -4,5 +4,5 @@
 #include "vec2d.h"
 
 bool circlesIntersect(Vec2D const& p1, float const r1, Vec2D const& p2, float const r2);
-
+float randFloat(float const minValue, float const maxValue);
 #endif

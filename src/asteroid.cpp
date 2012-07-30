@@ -114,9 +114,9 @@ void Asteroid::collide(Sprite const* other) {
 
         for(int i = 0; i < 10; ++i)
         {
-          float pLife = 0.1 + (rand() % 1000) / 10000.0f;
-          float speed = 120 + (rand() % 40);
-          Vec2D dev = hitNormal.scale(((rand() % 2000) - 1000) / 10.0f);
+          float pLife = randFloat(0.1, 0.2);
+          float speed = randFloat(120, 160);
+          Vec2D dev = hitNormal.scale(randFloat(-100, 100));
           Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
           Spark* spark = new Spark(world, pLife, startPos, hitDirection.scale(speed) + dev);
           world->sprites.insert(std::shared_ptr<Spark>(spark));
@@ -129,9 +129,9 @@ void Asteroid::collide(Sprite const* other) {
         int r = static_cast<int>(getRadius());
         for(int i = 0; i < 2 * r; ++i)
         {
-          float pLife = 0.25 + (rand() % 2500) / 10000.0f;
-          float speed = 120 + (rand() % 100);
-          Vec2D direction(((rand() % 2000) - 1000) / 1000.0f, ((rand() % 2000) - 1000) / 1000.0f);
+          float pLife = randFloat(0.25, 0.5);
+          float speed = randFloat(120, 220);
+          Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
           Vec2D velocity = direction.scale(speed);
           Vec2D startPos = position + direction.scale(rand() % r);
           Spark* spark = new Spark(world, pLife, startPos, velocity);
@@ -142,8 +142,8 @@ void Asteroid::collide(Sprite const* other) {
         {
           for(int i = 0; i < 2; ++i)
           {
-            float speed = 10 + (rand() % 50);
-            Vec2D direction(((rand() % 2000) - 1000) / 1000.0f, ((rand() % 2000) - 1000) / 1000.0f);
+            float speed = randFloat(10, 60);
+            Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
             Vec2D velocity = direction.scale(speed);
             Vec2D startPos = position + direction.scale(rand() % r);
             Asteroid* asteroid = new Asteroid(world, static_cast<Size>(size - 1), startPos, velocity);

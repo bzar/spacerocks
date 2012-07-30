@@ -22,7 +22,8 @@
 int const WIDTH = 800;
 int const HEIGHT = 480;
 
-int const UFO_SCORE_INTERVAL = 500;
+int const UFO_SCORE_INTERVAL_MIN = 400;
+int const UFO_SCORE_INTERVAL_MAX = 1000;
 float const DEATH_DELAY = 3.0f;
 float const UFO_DELAY = 2.0f;
 
@@ -136,7 +137,7 @@ int gameloop(GLFWwindow& window)
   Timer timer;
   float deathDelay = 0;
   float ufoDelay = 0;
-  int nextUfoScore = UFO_SCORE_INTERVAL;
+  int nextUfoScore = UFO_SCORE_INTERVAL_MIN + rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN);
 
   while(runtime.running)
   {
@@ -172,14 +173,19 @@ int gameloop(GLFWwindow& window)
 
       if(ufoDelay <= 0)
       {
-        std::shared_ptr<Ufo> ufo(new Ufo(&world, {0, 0}));
+        int edge = rand() % 4;
+        int d = rand() % (edge % 2 ? 480 : 800);
+        Vec2D position(edge % 2 ? d : edge == 0 ? 0 : 800, !(edge % 2) ? d : edge == 1 ? 0 : 480);
+        position -= Vec2D(400, 240);
+        std::shared_ptr<Ufo> ufo(new Ufo(&world, position, position.neg(),
+                                         rand() % 3, rand() % 90, 10.0f));
         world.sprites.insert(ufo);
       }
     }
 
     if(world.score >= nextUfoScore)
     {
-      nextUfoScore += UFO_SCORE_INTERVAL;
+      nextUfoScore += UFO_SCORE_INTERVAL_MIN + rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN);
       ufoDelay = UFO_DELAY;
     }
 

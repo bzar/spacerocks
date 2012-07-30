@@ -6,6 +6,8 @@
 #include "spark.h"
 #include "ufolaser.h"
 
+float const TAU = 2 * 3.14159265;
+
 int const Ufo::ID = Entity::newEntityId();
 
 int const Ufo::ANIMATION_FRAMES[NUM_FRAMES] = {1, 1, 1, 1, 1, 1, 1, 1, 2, 3};
@@ -44,14 +46,15 @@ void Ufo::init()
   glhckAtlasFree(TEXTURES);
 }
 
-Ufo::Ufo(World* world, Vec2D const& position) :
-  Sprite(world, 1), o(0), time(0), life(3)
+Ufo::Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
+         int freq, float amplitude, float duration) :
+  Sprite(world, 1), o(0), startPosition(startPosition), endPosition(endPosition),
+  freq(freq), amplitude(amplitude), duration(duration), time(0), life(3)
 {
   o = glhckSpriteNew(TEXTURE, 24, 24);
   glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
-
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
-  glhckObjectPositionf(o, position.x, position.y, 0);
+  glhckObjectPositionf(o, startPosition.x, startPosition.y, 0);
 }
 
 Ufo::~Ufo()
@@ -72,19 +75,29 @@ void Ufo::update(float delta)
   glhckObjectTransformCoordinates(o, &TRANSFORM[frame].transform, TRANSFORM[frame].degree);
   glhckObjectRotatef(o, 0, 0, delta * 180);
 
+  Vec2D journey = endPosition - startPosition;
+  float deviation = amplitude * sin(freq * TAU * time / duration);
+  Vec2D position = startPosition
+    + journey.scale(time / duration)
+    + journey.normal().uniti().scale(deviation);
+  glhckObjectPositionf(o, position.x, position.y, 0);
+
   bool timeToShoot = static_cast<int>((time - delta) / SHOOT_INTERVAL) !=
     static_cast<int>(time / SHOOT_INTERVAL);
+
   if(timeToShoot && world->ship != nullptr)
   {
-    Vec2D velocity = (world->ship->getPosition() - getPosition()).uniti().scale(600);
-    UfoLaser* laser = new UfoLaser(world, 5.0, getPosition(), velocity);
+    Vec2D direction = (world->ship->getPosition() - getPosition()).uniti();
+    direction += direction.normal().scalei(randFloat(-0.3, 0.3));
+    Vec2D velocity = direction.scale(600);
+    UfoLaser* laser = new UfoLaser(world, 5.0f, getPosition(), velocity);
     world->sprites.insert(std::shared_ptr<UfoLaser>(laser));
   }
 }
 
 bool Ufo::alive() const
 {
-  return life > 0;
+  return life > 0 && time < duration;
 }
 
 void Ufo::collide(Sprite const* other) {
@@ -104,9 +117,9 @@ void Ufo::collide(Sprite const* other) {
 
         for(int i = 0; i < 10; ++i)
         {
-          float pLife = 0.1 + (rand() % 1000) / 10000.0f;
+          float pLife = 0.1 + randFloat(0, 0.1);
           float speed = 120 + (rand() % 40);
-          Vec2D dev = hitNormal.scale(((rand() % 2000) - 1000) / 10.0f);
+          Vec2D dev = hitNormal.scale(randFloat(-100, 100));
           Spark* spark = new Spark(world, pLife, hitPosition, hitDirection.scale(speed) + dev);
           world->sprites.insert(std::shared_ptr<Spark>(spark));
         }

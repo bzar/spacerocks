@@ -13,7 +13,8 @@ class Ufo : public Sprite
 public:
   static void init();
 
-  Ufo(World* world, Vec2D const& position);
+  Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
+      int freq, float amplitude, float duration);
   ~Ufo();
 
   static int const ID;
@@ -40,8 +41,14 @@ private:
   static int const RADIUS = 24;
   static float const SHOOT_INTERVAL;
 
-  float time;
   glhckObject* o;
+
+  Vec2D startPosition;
+  Vec2D endPosition;
+  int freq;
+  float amplitude;
+  float duration;
+  float time;
   float life;
 };
 
