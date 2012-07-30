@@ -1,5 +1,6 @@
 #include "util.h"
 #include <cstdlib>
+#include <stdexcept>
 
 bool circlesIntersect(Vec2D const& p1, float const r1, Vec2D const& p2, float const r2)
 {
@@ -24,6 +25,12 @@ bool circleLineIntersect(Vec2D const& p, float const r, Vec2D const& l1, Vec2D c
   {
     return l2p.lengthSquared() <= (r + lr) * (r + lr);
   }
+}
+
+bool lineLineIntersect(Vec2D const& l11, Vec2D const& l12, float const l1r,
+                       Vec2D const& l21, Vec2D const& l22, float const l2r)
+{
+  throw std::runtime_error("Not implemented!");
 }
 
 float randFloat(float const minValue, float const maxValue)

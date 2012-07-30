@@ -49,7 +49,7 @@ void Ufo::init()
 Ufo::Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
          int freq, float amplitude, float duration) :
   Sprite(world, 1), o(0), startPosition(startPosition), endPosition(endPosition),
-  freq(freq), amplitude(amplitude), duration(duration), time(0), life(3)
+  freq(freq), amplitude(amplitude), duration(duration), time(0), life(3), shape(startPosition, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 16, 16);
   glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
@@ -93,6 +93,8 @@ void Ufo::update(float delta)
     UfoLaser* laser = new UfoLaser(world, 5.0f, getPosition(), velocity);
     world->sprites.insert(std::shared_ptr<UfoLaser>(laser));
   }
+
+  shape.center = getPosition();
 }
 
 bool Ufo::alive() const
@@ -100,19 +102,24 @@ bool Ufo::alive() const
   return life > 0 && time < duration;
 }
 
+CircleShape const* Ufo::getShape() const
+{
+  return &shape;
+}
+
 void Ufo::collide(Sprite const* other) {
   Vec2D position = getPosition();
 
   if(other->getEntityId() == Laser::ID) {
     Laser const* laser = static_cast<Laser const*>(other);
-    if(circleLineIntersect(position, getRadius(), laser->getFront(), laser->getBack(), laser->getRadius()))
+    if(shape.collidesWith(laser->getShape()))
     {
       life -= 0.5;
 
       if(alive())
       {
         Vec2D hitDirection = (laser->getPosition() - position).uniti();
-        Vec2D hitPosition = position + hitDirection.scale(getRadius());
+        Vec2D hitPosition = position + hitDirection.scale(RADIUS);
         Vec2D hitNormal = hitDirection.normal();
 
         for(int i = 0; i < 10; ++i)
@@ -141,9 +148,3 @@ Vec2D Ufo::getPosition() const
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
 }
-
-float Ufo::getRadius() const
-{
-  return RADIUS;
-}
-

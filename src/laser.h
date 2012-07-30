@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "GL/glhck.h"
 #include "vec2d.h"
+#include "lineshape.h"
 
 #include <map>
 #include <string>
@@ -24,13 +25,11 @@ public:
   void render();
   void update(float delta);
   bool alive() const;
+  virtual LineShape const* getShape() const;
 
   virtual void collide(Sprite const* other);
 
   Vec2D getPosition() const;
-  Vec2D getFront() const;
-  Vec2D getBack() const;
-  float getRadius() const;
 
 private:
   static std::string const IMAGE;
@@ -41,6 +40,7 @@ private:
   glhckObject* o;
   float life;
   Vec2D v;
+  LineShape shape;
 };
 
 #endif

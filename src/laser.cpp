@@ -13,7 +13,7 @@ void Laser::init()
 }
 
 Laser::Laser(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), life(life), v(velocity)
+  Sprite(world), o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 2, 8);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
@@ -49,6 +49,11 @@ void Laser::update(float delta)
   } else if(pos->y > 240) {
      glhckObjectMovef(o, 0, -480, 0);
   }
+
+  Vec2D position(pos->x, pos->y);
+  Vec2D r = v.unit().scale(LENGTH/2.0f - RADIUS);
+  shape.p1 = position + r;
+  shape.p2 = position - r;
 }
 
 bool Laser::alive() const
@@ -56,12 +61,16 @@ bool Laser::alive() const
   return life > 0;
 }
 
-void Laser::collide(Sprite const* other) {
-  Vec2D position = getPosition();
+LineShape const* Laser::getShape() const
+{
+  return &shape;
+}
 
+
+void Laser::collide(Sprite const* other) {
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if(circleLineIntersect(asteroid->getPosition(), asteroid->getRadius(), getFront(), getBack(), getRadius()))
+    if(shape.collidesWith(asteroid->getShape()))
     {
       life = 0;
     }
@@ -70,7 +79,7 @@ void Laser::collide(Sprite const* other) {
 
   if(other->getEntityId() == Ufo::ID) {
     Ufo const* ufo = static_cast<Ufo const*>(other);
-    if(circleLineIntersect(ufo->getPosition(), ufo->getRadius(), getFront(), getBack(), getRadius()))
+    if(shape.collidesWith(ufo->getShape()))
     {
       life = 0;
     }
@@ -82,19 +91,4 @@ Vec2D Laser::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
-}
-
-Vec2D Laser::getFront() const
-{
-  return getPosition() + v.unit().scale(LENGTH/2.0f - RADIUS);
-}
-
-Vec2D Laser::getBack() const
-{
-  return getPosition() - v.unit().scale(LENGTH/2.0f - RADIUS);
-}
-
-float Laser::getRadius() const
-{
-  return RADIUS;
 }

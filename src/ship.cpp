@@ -48,7 +48,7 @@ void Ship::init()
 Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), shield(0), v(velocity),
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
-  shieldLeft(4), laserCooldown(0), dead(false)
+  shieldLeft(4), laserCooldown(0), dead(false), shape(position, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 16, 16);
   shield = glhckSpriteNew(SHIELD_TEXTURE, 24, 24);
@@ -122,11 +122,11 @@ void Ship::update(float delta)
 
   if(shooting && laserCooldown <= 0)
   {
-    Vec2D v(0, 1200);
-    v.rotatei(getAngle());
-    Vec2D p = v.normal().uniti().scalei(8);
-    std::shared_ptr<Laser> laser1(new Laser(world, 0.25, getPosition() + p, v));
-    std::shared_ptr<Laser> laser2(new Laser(world, 0.25, getPosition() - p, v));
+    Vec2D velocity(0, 1200);
+    velocity.rotatei(glhckObjectGetRotation(o)->z / 360);
+    Vec2D p = velocity.normal().uniti().scalei(8);
+    std::shared_ptr<Laser> laser1(new Laser(world, 0.25, getPosition() + p, velocity));
+    std::shared_ptr<Laser> laser2(new Laser(world, 0.25, getPosition() - p, velocity));
     world->sprites.insert(laser1);
     world->sprites.insert(laser2);
     laserCooldown = 0.15;
@@ -138,11 +138,17 @@ void Ship::update(float delta)
     glhckObjectPosition(shield, glhckObjectGetPosition(o));
   }
 
+  shape.center = getPosition();
 }
 
 bool Ship::alive() const
 {
   return !dead;
+}
+
+CircleShape const* Ship::getShape() const
+{
+  return &shape;
 }
 
 
@@ -154,7 +160,7 @@ void Ship::collide(Sprite const* other) {
       return;
 
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if(circlesIntersect(position, getRadius(), asteroid->getPosition(), asteroid->getRadius()))
+    if(shape.collidesWith(asteroid->getShape()))
     {
       die();
     }
@@ -166,7 +172,7 @@ void Ship::collide(Sprite const* other) {
       return;
 
     UfoLaser const* ufoLaser = static_cast<UfoLaser const*>(other);
-    if(circlesIntersect(position, getRadius(), ufoLaser->getPosition(), ufoLaser->getRadius()))
+    if(shape.collidesWith(ufoLaser->getShape()))
     {
       die();
     }
@@ -178,7 +184,7 @@ void Ship::collide(Sprite const* other) {
       return;
 
     Ufo const* ufo = static_cast<Ufo const*>(other);
-    if(circlesIntersect(position, getRadius(), ufo->getPosition(), ufo->getRadius()))
+    if(shape.collidesWith(ufo->getShape()))
     {
       die();
     }
@@ -216,17 +222,6 @@ Vec2D Ship::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
-}
-
-float Ship::getRadius() const
-{
-  return RADIUS;
-}
-
-float Ship::getAngle() const
-{
-  kmVec3 const* rot = glhckObjectGetRotation(o);
-  return rot->z / 360;
 }
 
 void Ship::die()

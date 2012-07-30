@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "GL/glhck.h"
 #include "vec2d.h"
+#include "circleshape.h"
 
 #include <string>
 #include <vector>
@@ -22,6 +23,7 @@ public:
   void render();
   void update(float delta);
   bool alive() const;
+  virtual CircleShape const* getShape() const;
 
   virtual void collide(Sprite const* other);
 
@@ -32,8 +34,6 @@ public:
 
   Vec2D getVelocity() const;
   Vec2D getPosition() const;
-  float getRadius() const;
-  float getAngle() const;
 
   void die();
 
@@ -62,5 +62,7 @@ private:
   float shieldLeft;
   float laserCooldown;
   bool dead;
+  CircleShape shape;
+
 };
 #endif

@@ -42,7 +42,7 @@ void Asteroid::init()
 }
 
 Asteroid::Asteroid(World* world, Size const size, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), size(size), v(velocity), life(size + 1)
+  Sprite(world), o(0), size(size), v(velocity), life(size + 1), shape(position, RADII[size])
 {
   o = glhckSpriteNew(TEXTURE, IMAGE_SIZES[size], IMAGE_SIZES[size]);
   glhckObjectTransformCoordinates(o, &TRANSFORM[size].transform, TRANSFORM[size].degree);
@@ -78,11 +78,18 @@ void Asteroid::update(float delta)
   } else if(pos->y > 240) {
      glhckObjectMovef(o, 0, -480, 0);
   }
+
+  shape.center = getPosition();
 }
 
 bool Asteroid::alive() const
 {
   return life > 0;
+}
+
+CircleShape const* Asteroid::getShape() const
+{
+  return &shape;
 }
 
 void Asteroid::collide(Sprite const* other) {
@@ -93,7 +100,7 @@ void Asteroid::collide(Sprite const* other) {
 
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if(circlesIntersect(position, getRadius(), asteroid->getPosition(), asteroid->getRadius()))
+    if(shape.collidesWith(asteroid->getShape()))
     {
       v = (position - asteroid->getPosition()).uniti().scalei(v.length());
     }
@@ -102,14 +109,14 @@ void Asteroid::collide(Sprite const* other) {
 
   if(other->getEntityId() == Laser::ID) {
     Laser const* laser = static_cast<Laser const*>(other);
-    if(circleLineIntersect(position, getRadius(), laser->getFront(), laser->getBack(), laser->getRadius()))
+    if(shape.collidesWith(laser->getShape()))
     {
       life -= 0.5;
 
       if(alive())
       {
         Vec2D hitDirection = (laser->getPosition() - position).uniti();
-        Vec2D hitPosition = position + hitDirection.scale(getRadius());
+        Vec2D hitPosition = position + hitDirection.scale(RADII[size]);
         Vec2D hitNormal = hitDirection.normal();
 
         for(int i = 0; i < 10; ++i)
@@ -126,7 +133,7 @@ void Asteroid::collide(Sprite const* other) {
       {
         world->score += (size + 1) * 10;
 
-        int r = static_cast<int>(getRadius());
+        int r = static_cast<int>(RADII[size]);
         for(int i = 0; i < 2 * r; ++i)
         {
           float pLife = randFloat(0.25, 0.5);
@@ -161,9 +168,4 @@ Vec2D Asteroid::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
-}
-
-float Asteroid::getRadius() const
-{
-  return RADII[size];
 }

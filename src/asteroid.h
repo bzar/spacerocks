@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "GL/glhck.h"
 #include "vec2d.h"
+#include "circleshape.h"
 
 #include <string>
 #include <vector>
@@ -24,10 +25,10 @@ public:
   void update(float delta);
 
   bool alive() const;
+  virtual CircleShape const* getShape() const;
   virtual void collide(Sprite const* other);
 
   Vec2D getPosition() const;
-  float getRadius() const;
 
 private:
   static float const RADII[NUM_SIZES];
@@ -40,5 +41,6 @@ private:
   Size size;
   Vec2D v;
   float life;
+  CircleShape shape;
 };
 #endif

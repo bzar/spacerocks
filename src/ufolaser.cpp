@@ -12,7 +12,7 @@ void UfoLaser::init()
 }
 
 UfoLaser::UfoLaser(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), life(life), v(velocity)
+  Sprite(world), o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 2, 8);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
@@ -34,6 +34,8 @@ void UfoLaser::update(float delta)
 {
   life -= delta;
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
+  shape.p1 = getPosition() + v.unit().scale(LENGTH/2.0f - RADIUS);
+  shape.p2 = getPosition() - v.unit().scale(LENGTH/2.0f - RADIUS);
 }
 
 bool UfoLaser::alive() const
@@ -41,12 +43,18 @@ bool UfoLaser::alive() const
   return life > 0;
 }
 
+LineShape const* UfoLaser::getShape() const
+{
+  return &shape;
+}
+
+
 void UfoLaser::collide(Sprite const* other) {
   Vec2D position = getPosition();
 
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if(circlesIntersect(position, getRadius(), asteroid->getPosition(), asteroid->getRadius()))
+    if(shape.collidesWith(asteroid->getShape()))
     {
       life = 0;
     }
@@ -58,9 +66,4 @@ Vec2D UfoLaser::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
-}
-
-float UfoLaser::getRadius() const
-{
-  return RADIUS;
 }

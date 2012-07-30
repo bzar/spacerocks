@@ -2,6 +2,7 @@
 #define SPRITE_HH
 
 #include "entity.h"
+#include "shape.h"
 #include "GL/glhck.h"
 
 struct World;
@@ -14,6 +15,7 @@ public:
   virtual void update(float delta) = 0;
   virtual void collide(Sprite const* other) {};
   virtual bool alive() const { return true; };
+  virtual Shape const* getShape() const { return nullptr; };
 
   int getZIndex() const { return zIndex; }
 
