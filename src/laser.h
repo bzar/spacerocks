@@ -30,11 +30,13 @@ public:
   Vec2D getPosition() const;
   Vec2D getFront() const;
   Vec2D getBack() const;
+  float getRadius() const;
 
 private:
   static std::string const IMAGE;
   static glhckTexture* TEXTURE;
   static int const LENGTH = 8;
+  static int const RADIUS = 1;
 
   glhckObject* o;
   float life;

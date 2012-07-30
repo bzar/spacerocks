@@ -105,7 +105,7 @@ void Ufo::collide(Sprite const* other) {
 
   if(other->getEntityId() == Laser::ID) {
     Laser const* laser = static_cast<Laser const*>(other);
-    if(circleLineIntersect(position, getRadius(), laser->getFront(), laser->getBack()))
+    if(circleLineIntersect(position, getRadius(), laser->getFront(), laser->getBack(), laser->getRadius()))
     {
       life -= 0.5;
 

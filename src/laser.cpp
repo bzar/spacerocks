@@ -61,7 +61,7 @@ void Laser::collide(Sprite const* other) {
 
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if(circleLineIntersect(asteroid->getPosition(), asteroid->getRadius(), getFront(), getBack()))
+    if(circleLineIntersect(asteroid->getPosition(), asteroid->getRadius(), getFront(), getBack(), getRadius()))
     {
       life = 0;
     }
@@ -70,7 +70,7 @@ void Laser::collide(Sprite const* other) {
 
   if(other->getEntityId() == Ufo::ID) {
     Ufo const* ufo = static_cast<Ufo const*>(other);
-    if(circleLineIntersect(ufo->getPosition(), ufo->getRadius(), getFront(), getBack()))
+    if(circleLineIntersect(ufo->getPosition(), ufo->getRadius(), getFront(), getBack(), getRadius()))
     {
       life = 0;
     }
@@ -86,10 +86,15 @@ Vec2D Laser::getPosition() const
 
 Vec2D Laser::getFront() const
 {
-  return getPosition() + v.unit().scale(LENGTH/2.0f);
+  return getPosition() + v.unit().scale(LENGTH/2.0f - RADIUS);
 }
 
 Vec2D Laser::getBack() const
 {
-  return getPosition() - v.unit().scale(LENGTH/2.0f);
+  return getPosition() - v.unit().scale(LENGTH/2.0f - RADIUS);
+}
+
+float Laser::getRadius() const
+{
+  return RADIUS;
 }
