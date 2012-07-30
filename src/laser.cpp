@@ -15,8 +15,7 @@ void Laser::init()
 Laser::Laser(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), life(life), v(velocity)
 {
-  o = glhckSpriteNew(TEXTURE, 0, 0);
-  glhckObjectScalef(o, 0.5f, 0.5f, 0.5f);
+  o = glhckSpriteNew(TEXTURE, 2, 8);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);
@@ -62,7 +61,7 @@ void Laser::collide(Sprite const* other) {
 
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if(circlesIntersect(position, getRadius(), asteroid->getPosition(), asteroid->getRadius()))
+    if(circleLineIntersect(asteroid->getPosition(), asteroid->getRadius(), getFront(), getBack()))
     {
       life = 0;
     }
@@ -71,7 +70,7 @@ void Laser::collide(Sprite const* other) {
 
   if(other->getEntityId() == Ufo::ID) {
     Ufo const* ufo = static_cast<Ufo const*>(other);
-    if(circlesIntersect(position, getRadius(), ufo->getPosition(), ufo->getRadius()))
+    if(circleLineIntersect(ufo->getPosition(), ufo->getRadius(), getFront(), getBack()))
     {
       life = 0;
     }
@@ -85,7 +84,12 @@ Vec2D Laser::getPosition() const
   return {pos->x, pos->y};
 }
 
-float Laser::getRadius() const
+Vec2D Laser::getFront() const
 {
-  return RADIUS;
+  return getPosition() + v.unit().scale(LENGTH/2.0f);
+}
+
+Vec2D Laser::getBack() const
+{
+  return getPosition() - v.unit().scale(LENGTH/2.0f);
 }

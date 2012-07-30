@@ -6,7 +6,7 @@
 #include <cstdlib>
 
 int const Asteroid::ID = Entity::newEntityId();
-float const Asteroid::RADII[NUM_SIZES] = {8, 16, 32, 48};
+float const Asteroid::RADII[NUM_SIZES] = {4, 8, 16, 24};
 std::string const Asteroid::IMAGES[NUM_SIZES] = {
   "img/asteroid_1.png",
   "img/asteroid_2.png",
@@ -14,7 +14,7 @@ std::string const Asteroid::IMAGES[NUM_SIZES] = {
   "img/asteroid_4.png"
 };
 
-float Asteroid::IMAGE_SIZES[NUM_SIZES] = {16, 16, 32, 48 };
+float Asteroid::IMAGE_SIZES[NUM_SIZES] = {8, 8, 16, 24 };
 
 std::vector<Sprite::TransformData> Asteroid::TRANSFORM;
 glhckTexture *Asteroid::TEXTURE = NULL;
@@ -102,7 +102,7 @@ void Asteroid::collide(Sprite const* other) {
 
   if(other->getEntityId() == Laser::ID) {
     Laser const* laser = static_cast<Laser const*>(other);
-    if(circlesIntersect(position, getRadius(), laser->getPosition(), laser->getRadius()))
+    if(circleLineIntersect(position, getRadius(), laser->getFront(), laser->getBack()))
     {
       life -= 0.5;
 

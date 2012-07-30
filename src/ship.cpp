@@ -50,8 +50,8 @@ Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
   shieldLeft(4), laserCooldown(0), dead(false)
 {
-  o = glhckSpriteNew(TEXTURE, 24, 24);
-  shield = glhckSpriteNew(SHIELD_TEXTURE, 48, 48);
+  o = glhckSpriteNew(TEXTURE, 16, 16);
+  shield = glhckSpriteNew(SHIELD_TEXTURE, 24, 24);
 
   glhckObjectTransformCoordinates(o, &TRANSFORM[DEFAULT].transform, TRANSFORM[DEFAULT].degree);
 
@@ -124,7 +124,7 @@ void Ship::update(float delta)
   {
     Vec2D v(0, 1200);
     v.rotatei(getAngle());
-    Vec2D p = v.normal().uniti().scalei(12);
+    Vec2D p = v.normal().uniti().scalei(8);
     std::shared_ptr<Laser> laser1(new Laser(world, 0.25, getPosition() + p, v));
     std::shared_ptr<Laser> laser2(new Laser(world, 0.25, getPosition() - p, v));
     world->sprites.insert(laser1);

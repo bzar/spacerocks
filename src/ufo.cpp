@@ -51,7 +51,7 @@ Ufo::Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
   Sprite(world, 1), o(0), startPosition(startPosition), endPosition(endPosition),
   freq(freq), amplitude(amplitude), duration(duration), time(0), life(3)
 {
-  o = glhckSpriteNew(TEXTURE, 24, 24);
+  o = glhckSpriteNew(TEXTURE, 16, 16);
   glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, startPosition.x, startPosition.y, 0);
@@ -105,7 +105,7 @@ void Ufo::collide(Sprite const* other) {
 
   if(other->getEntityId() == Laser::ID) {
     Laser const* laser = static_cast<Laser const*>(other);
-    if(circlesIntersect(position, getRadius(), laser->getPosition(), laser->getRadius()))
+    if(circleLineIntersect(position, getRadius(), laser->getFront(), laser->getBack()))
     {
       life -= 0.5;
 

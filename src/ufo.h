@@ -38,7 +38,7 @@ private:
   static std::vector<TransformData> TRANSFORM;
   static glhckTexture *TEXTURE;
 
-  static int const RADIUS = 24;
+  static int const RADIUS = 16;
   static float const SHOOT_INTERVAL;
 
   glhckObject* o;

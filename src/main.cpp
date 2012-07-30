@@ -23,13 +23,18 @@ int const WIDTH = 800;
 int const HEIGHT = 480;
 
 int const UFO_SCORE_INTERVAL_MIN = 400;
-int const UFO_SCORE_INTERVAL_MAX = 1000;
+int const UFO_SCORE_INTERVAL_MAX = 800;
 float const DEATH_DELAY = 3.0f;
 float const UFO_DELAY = 2.0f;
 
 struct Runtime {
   bool running;
 };
+
+int getUfoInterval()
+{
+  return UFO_SCORE_INTERVAL_MIN + (rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN));
+}
 
 static int windowCloseCallback(GLFWwindow window);
 int gameloop(GLFWwindow& window);
@@ -137,7 +142,7 @@ int gameloop(GLFWwindow& window)
   Timer timer;
   float deathDelay = 0;
   float ufoDelay = 0;
-  int nextUfoScore = UFO_SCORE_INTERVAL_MIN + rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN);
+  int nextUfoScore = getUfoInterval();
 
   while(runtime.running)
   {
@@ -185,7 +190,7 @@ int gameloop(GLFWwindow& window)
 
     if(world.score >= nextUfoScore)
     {
-      nextUfoScore += UFO_SCORE_INTERVAL_MIN + rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN);
+      nextUfoScore += getUfoInterval();
       ufoDelay = UFO_DELAY;
     }
 
