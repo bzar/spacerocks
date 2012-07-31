@@ -10,7 +10,10 @@ std::string const Powerup::IMAGES[NUM_TYPES] = {
   "img/powerup_rapidfire.png",
   "img/powerup_spread.png",
   "img/powerup_continuous.png",
-  "img/powerup_plasma.png"
+  "img/powerup_plasma.png",
+  "img/powerup_extralife.png",
+  "img/powerup_loselife.png",
+  "img/powerup_shield.png"
 };
 
 std::vector<Sprite::TransformData> Powerup::TRANSFORM;

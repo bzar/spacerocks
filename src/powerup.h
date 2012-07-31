@@ -14,7 +14,7 @@ class Powerup : public Sprite
 public:
   static void init();
 
-  enum Type { RAPID, SPREAD, CONTINUOUS, PLASMA, NUM_TYPES };
+  enum Type { RAPID, SPREAD, CONTINUOUS, PLASMA, EXTRALIFE, LOSELIFE, SHIELD, NUM_TYPES };
   Powerup(World* world, Type const type, Vec2D const& position, Vec2D const& velocity);
   ~Powerup();
 
