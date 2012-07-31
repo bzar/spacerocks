@@ -15,7 +15,7 @@ public:
   static void init();
 
   Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
-      int freq, float amplitude, float duration);
+      float freq, float amplitude, float duration);
   ~Ufo();
 
   static int const ID;
@@ -46,7 +46,7 @@ private:
 
   Vec2D startPosition;
   Vec2D endPosition;
-  int freq;
+  float freq;
   float amplitude;
   float duration;
   float time;

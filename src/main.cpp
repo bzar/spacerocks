@@ -10,6 +10,7 @@
 #include "timer.h"
 #include "world.h"
 #include "vec2d.h"
+#include "util.h"
 
 #include "asteroid.h"
 #include "ship.h"
@@ -178,12 +179,14 @@ int gameloop(GLFWwindow& window)
 
       if(ufoDelay <= 0)
       {
-        int edge = rand() % 4;
-        int d = rand() % (edge % 2 ? 480 : 800);
-        Vec2D position(edge % 2 ? d : edge == 0 ? 0 : 800, !(edge % 2) ? d : edge == 1 ? 0 : 480);
+        bool horizontal = rand() % 2;
+        bool direction = rand() % 2;
+        int d = rand() % (horizontal ? 480 : 800);
+        Vec2D position(!horizontal ? d : direction ? 0 : 800,
+                        horizontal ? d : direction ? 0 : 480);
         position -= Vec2D(400, 240);
         std::shared_ptr<Ufo> ufo(new Ufo(&world, position, position.neg(),
-                                         rand() % 3, rand() % 90, 10.0f));
+                                         randFloat(0, 5), randFloat(10, 100), 15.0f));
         world.sprites.insert(ufo);
       }
     }

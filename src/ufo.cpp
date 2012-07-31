@@ -22,7 +22,7 @@ std::string const Ufo::IMAGES[NUM_IMAGES] = {
 std::vector<Sprite::TransformData> Ufo::TRANSFORM;
 glhckTexture *Ufo::TEXTURE = NULL;
 
-float const Ufo::SHOOT_INTERVAL = 1.5;
+float const Ufo::SHOOT_INTERVAL = 2.5;
 
 void Ufo::init()
 {
@@ -47,7 +47,7 @@ void Ufo::init()
 }
 
 Ufo::Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
-         int freq, float amplitude, float duration) :
+         float freq, float amplitude, float duration) :
   Sprite(world, 1), o(0), startPosition(startPosition), endPosition(endPosition),
   freq(freq), amplitude(amplitude), duration(duration), time(0), life(3), shape(startPosition, RADIUS)
 {
