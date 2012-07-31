@@ -89,7 +89,12 @@ int getUfoInterval()
   return UFO_SCORE_INTERVAL_MIN + (rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN));
 }
 
-void initLevel(World* world, int n)
+float lerp(float a, float b, float x)
+{
+  return (x > 1.0f ? 1.0f : x < 0.0f ? 0.0f : x) * (b - a) + a;
+}
+
+void initLevel(World& world)
 {
   int const ASTEROID_VALUES[Asteroid::NUM_SIZES] = {
     1,
@@ -97,15 +102,20 @@ void initLevel(World* world, int n)
     3 + 2*2 + 4*1,
     4 + 2*3 + 4*2 + 8*1,
   };
+
+  world.level.minAsteroidSpeed = lerp(10, 20, world.level.n/40.0);
+  world.level.maxAsteroidSpeed = lerp(20, 60, world.level.n/40.0);
+  world.level.ufoDuration = lerp(20, 10, world.level.n/40.0);
+  world.level.ufoAccuracy = lerp(0.6, 0.9, world.level.n/60.0);
+  world.level.ufoShootInterval = lerp(3.0, 1.5, world.level.n/60.0);
+
   int levelsPerNextSize = 4;
   float minAsteroidDistance = 100;
   float maxAsteroidDistance = 200;
-  float minAsteroidSpeed = 10;
-  float maxAsteroidSpeed = 20 + n;
   int maxAsteroidSize = Asteroid::NUM_SIZES - 1;
-  int minAsteroidSize = maxAsteroidSize - n / levelsPerNextSize;
+  int minAsteroidSize = maxAsteroidSize - world.level.n / levelsPerNextSize;
   minAsteroidSize = minAsteroidSize < 0 ? 0 : minAsteroidSize;
-  int asteroidValue = (n + 2) * ASTEROID_VALUES[maxAsteroidSize];
+  int asteroidValue = (world.level.n + 2) * ASTEROID_VALUES[maxAsteroidSize];
 
   while(asteroidValue > 0)
   {
@@ -131,9 +141,9 @@ void initLevel(World* world, int n)
       .scalei(randFloat(minAsteroidDistance, maxAsteroidDistance));
     Vec2D velocity = Vec2D(0, 1)
       .rotatei(randFloat(0, 1))
-      .scalei(randFloat(minAsteroidSpeed, maxAsteroidSpeed));
-    Asteroid* asteroid = new Asteroid(world, size, position, velocity);
-    world->sprites.insert(std::shared_ptr<Asteroid>(asteroid));
+      .scalei(randFloat(world.level.minAsteroidSpeed, world.level.maxAsteroidSpeed));
+    Asteroid* asteroid = new Asteroid(&world, size, position, velocity);
+    world.sprites.insert(std::shared_ptr<Asteroid>(asteroid));
   }
 }
 
@@ -156,10 +166,9 @@ int gameloop(GLFWwindow& window)
   Ufo::init();
   UfoLaser::init();
 
-  World world = {nullptr, 0, SpriteSet()};
+  World world = {nullptr, 0, SpriteSet(), {0, 0, 0, 0, 0, 0}};
 
-  int level = 0;
-  initLevel(&world, level);
+  initLevel(world);
 
   world.ship = new Ship(&world, {0, 0}, {0, 0});
   world.sprites.insert(std::shared_ptr<Ship>(world.ship));
@@ -223,7 +232,7 @@ int gameloop(GLFWwindow& window)
                         horizontal ? d : direction ? 0 : 480);
         position -= Vec2D(400, 240);
         std::shared_ptr<Ufo> ufo(new Ufo(&world, position, position.neg(),
-                                         randFloat(0, 5), randFloat(10, 100), 15.0f, 0.7f));
+                                         randFloat(0, 5), randFloat(10, 100)));
         world.sprites.insert(ufo);
       }
     }
@@ -279,8 +288,9 @@ int gameloop(GLFWwindow& window)
 
     if(victory)
     {
+      world.level.n += 1;
       world.ship->reset();
-      initLevel(&world, ++level);
+      initLevel(world);
     }
 
     glhckObjectRender(background);
@@ -292,7 +302,7 @@ int gameloop(GLFWwindow& window)
 
     std::ostringstream ss;
     ss << std::setprecision(2) << std::fixed
-       << "Level: " << (level + 1)
+       << "Level: " << (world.level.n + 1)
        << " | Score: " << world.score
        << " | FPS: " << timer.getFPS()
        << " | total: " << timer.getTotalTime()

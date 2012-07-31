@@ -27,10 +27,23 @@ public:
 };
 
 typedef std::set<std::shared_ptr<Sprite>, ZComparator> SpriteSet;
-struct World {
+
+struct Level
+{
+  int n;
+  float minAsteroidSpeed;
+  float maxAsteroidSpeed;
+  float ufoDuration;
+  float ufoAccuracy;
+  float ufoShootInterval;
+};
+
+struct World
+{
   Ship* ship;
   int score;
   SpriteSet sprites;
+  Level level;
 };
 
 #endif

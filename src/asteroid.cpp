@@ -149,7 +149,7 @@ void Asteroid::collide(Sprite const* other) {
         {
           for(int i = 0; i < 2; ++i)
           {
-            float speed = randFloat(10, 60);
+            float speed = randFloat(world->level.minAsteroidSpeed, world->level.maxAsteroidSpeed);
             Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
             Vec2D velocity = direction.scale(speed);
             Vec2D startPos = position + direction.scale(rand() % r);

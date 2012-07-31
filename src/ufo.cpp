@@ -22,8 +22,6 @@ std::string const Ufo::IMAGES[NUM_IMAGES] = {
 std::vector<Sprite::TransformData> Ufo::TRANSFORM;
 glhckTexture *Ufo::TEXTURE = NULL;
 
-float const Ufo::SHOOT_INTERVAL = 2.5;
-
 void Ufo::init()
 {
   glhckAtlas *TEXTURES = glhckAtlasNew();
@@ -47,9 +45,12 @@ void Ufo::init()
 }
 
 Ufo::Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
-         float freq, float amplitude, float duration, float accuracy) :
+         float freq, float amplitude) :
   Sprite(world, 1), o(0), startPosition(startPosition), endPosition(endPosition),
-  freq(freq), amplitude(amplitude), duration(duration), accuracy(accuracy),
+  freq(freq), amplitude(amplitude),
+  duration(world->level.ufoDuration),
+  accuracy(world->level.ufoAccuracy),
+  shootInterval(world->level.ufoShootInterval),
   time(0), life(3), shape(startPosition, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 16, 16);
@@ -83,8 +84,8 @@ void Ufo::update(float delta)
     + journey.normal().uniti().scale(deviation);
   glhckObjectPositionf(o, position.x, position.y, 0);
 
-  bool timeToShoot = static_cast<int>((time - delta) / SHOOT_INTERVAL) !=
-    static_cast<int>(time / SHOOT_INTERVAL);
+  bool timeToShoot = static_cast<int>((time - delta) / shootInterval) !=
+    static_cast<int>(time / shootInterval);
 
   if(timeToShoot && world->ship != nullptr)
   {

@@ -15,7 +15,7 @@ public:
   static void init();
 
   Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
-      float freq, float amplitude, float duration, float accuracy);
+      float freq, float amplitude);
   ~Ufo();
 
   static int const ID;
@@ -40,7 +40,6 @@ private:
   static glhckTexture *TEXTURE;
 
   static int const RADIUS = 16;
-  static float const SHOOT_INTERVAL;
 
   glhckObject* o;
 
@@ -50,6 +49,7 @@ private:
   float amplitude;
   float duration;
   float accuracy;
+  float shootInterval;
   float time;
   float life;
   CircleShape shape;
