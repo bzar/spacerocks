@@ -20,6 +20,7 @@
 #include "explosion.h"
 #include "ufo.h"
 #include "ufolaser.h"
+#include "powerup.h"
 
 int const WIDTH = 800;
 int const HEIGHT = 480;
@@ -165,6 +166,7 @@ int gameloop(GLFWwindow& window)
   Spark::init();
   Ufo::init();
   UfoLaser::init();
+  Powerup::init();
 
   World world = {nullptr, 0, SpriteSet(), {0, 0, 0, 0, 0, 0}};
 

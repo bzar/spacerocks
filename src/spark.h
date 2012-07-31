@@ -5,7 +5,6 @@
 #include "GL/glhck.h"
 #include "vec2d.h"
 
-#include <map>
 #include <string>
 
 class Spark : public Sprite

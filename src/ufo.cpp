@@ -5,6 +5,7 @@
 #include "world.h"
 #include "spark.h"
 #include "ufolaser.h"
+#include "powerup.h"
 
 float const TAU = 2 * 3.14159265;
 
@@ -111,6 +112,9 @@ CircleShape const* Ufo::getShape() const
 }
 
 void Ufo::collide(Sprite const* other) {
+  if(!alive())
+    return;
+
   Vec2D position = getPosition();
 
   if(other->getEntityId() == Laser::ID) {
@@ -137,6 +141,11 @@ void Ufo::collide(Sprite const* other) {
       else
       {
         world->score += 100;
+
+        Powerup::Type powerupType = static_cast<Powerup::Type>(randInt(0, Powerup::NUM_TYPES));
+        Vec2D velocity = Vec2D(0, 1).rotatei(randFloat(0, 1)).scalei(randFloat(30, 80));
+        Powerup* powerup = new Powerup(world, powerupType, position, velocity);
+        world->sprites.insert(std::shared_ptr<Powerup>(powerup));
 
         Explosion* explosion = new Explosion(world, position);
         world->sprites.insert(std::shared_ptr<Explosion>(explosion));
