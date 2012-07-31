@@ -213,6 +213,13 @@ void Ship::shoot(bool const value)
   shooting = value;
 }
 
+void Ship::reset()
+{
+  glhckObjectPositionf(o, 0, 0, 0);
+  glhckObjectRotationf(o, 0, 0, 0);
+  v = {0, 0};
+}
+
 Vec2D Ship::getVelocity() const
 {
   return v;

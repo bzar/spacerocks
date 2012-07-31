@@ -19,6 +19,10 @@ Laser::Laser(World* world, float const life, Vec2D const& position, Vec2D const&
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);
+
+  Vec2D r = v.unit().scale(LENGTH/2.0f - RADIUS);
+  shape.p1 = position + r;
+  shape.p2 = position - r;
 }
 
 Laser::~Laser()

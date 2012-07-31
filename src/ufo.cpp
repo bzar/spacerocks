@@ -47,9 +47,10 @@ void Ufo::init()
 }
 
 Ufo::Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
-         float freq, float amplitude, float duration) :
+         float freq, float amplitude, float duration, float accuracy) :
   Sprite(world, 1), o(0), startPosition(startPosition), endPosition(endPosition),
-  freq(freq), amplitude(amplitude), duration(duration), time(0), life(3), shape(startPosition, RADIUS)
+  freq(freq), amplitude(amplitude), duration(duration), accuracy(accuracy),
+  time(0), life(3), shape(startPosition, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 16, 16);
   glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
@@ -71,12 +72,12 @@ void Ufo::render()
 void Ufo::update(float delta)
 {
   time += delta;
-  int frame = ANIMATION_FRAMES[static_cast<int>(time * FPS) % NUM_FRAMES];
+  int const frame = ANIMATION_FRAMES[static_cast<int>(time * FPS) % NUM_FRAMES];
   glhckObjectTransformCoordinates(o, &TRANSFORM[frame].transform, TRANSFORM[frame].degree);
   glhckObjectRotatef(o, 0, 0, delta * 180);
 
   Vec2D journey = endPosition - startPosition;
-  float deviation = amplitude * sin(freq * TAU * time / duration);
+  float const deviation = amplitude * sin(freq * TAU * time / duration);
   Vec2D position = startPosition
     + journey.scale(time / duration)
     + journey.normal().uniti().scale(deviation);
@@ -88,7 +89,8 @@ void Ufo::update(float delta)
   if(timeToShoot && world->ship != nullptr)
   {
     Vec2D direction = (world->ship->getPosition() - getPosition()).uniti();
-    direction += direction.normal().scalei(randFloat(-0.3, 0.3));
+    float const spread = (1 - accuracy)/2;
+    direction.rotatei(randFloat(-spread, spread));
     Vec2D velocity = direction.scale(600);
     UfoLaser* laser = new UfoLaser(world, 5.0f, getPosition(), velocity);
     world->sprites.insert(std::shared_ptr<UfoLaser>(laser));

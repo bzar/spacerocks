@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <sstream>
 #include <forward_list>
+#include <random>
 
 #include "timer.h"
 #include "world.h"
@@ -32,12 +33,10 @@ struct Runtime {
   bool running;
 };
 
-int getUfoInterval()
-{
-  return UFO_SCORE_INTERVAL_MIN + (rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN));
-}
-
-static int windowCloseCallback(GLFWwindow window);
+int windowCloseCallback(GLFWwindow window);
+void windowResizeCallback(GLFWwindow window, int width, int height);
+int getUfoInterval();
+void initLevel(World* world, int n);
 int gameloop(GLFWwindow& window);
 
 int main(int argc, char** argv)
@@ -69,14 +68,14 @@ int main(int argc, char** argv)
 }
 
 
-static int windowCloseCallback(GLFWwindow window)
+int windowCloseCallback(GLFWwindow window)
 {
   Runtime* runtime = static_cast<Runtime*>(glfwGetWindowUserPointer(window));
   runtime->running = false;
   return GL_FALSE;
 }
 
-static void windowResizeCallback(GLFWwindow window, int width, int height)
+void windowResizeCallback(GLFWwindow window, int width, int height)
 {
   glhckDisplayResize(width, height);
 
@@ -85,8 +84,66 @@ static void windowResizeCallback(GLFWwindow window, int width, int height)
   glhckRenderSetProjection(&proj);
 }
 
+int getUfoInterval()
+{
+  return UFO_SCORE_INTERVAL_MIN + (rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN));
+}
+
+void initLevel(World* world, int n)
+{
+  int const ASTEROID_VALUES[Asteroid::NUM_SIZES] = {
+    1,
+    2 + 2*1,
+    3 + 2*2 + 4*1,
+    4 + 2*3 + 4*2 + 8*1,
+  };
+  int levelsPerNextSize = 4;
+  float minAsteroidDistance = 100;
+  float maxAsteroidDistance = 200;
+  float minAsteroidSpeed = 10;
+  float maxAsteroidSpeed = 20 + n;
+  int maxAsteroidSize = Asteroid::NUM_SIZES - 1;
+  int minAsteroidSize = maxAsteroidSize - n / levelsPerNextSize;
+  minAsteroidSize = minAsteroidSize < 0 ? 0 : minAsteroidSize;
+  int asteroidValue = (n + 2) * ASTEROID_VALUES[maxAsteroidSize];
+
+  while(asteroidValue > 0)
+  {
+    Asteroid::Size size = Asteroid::TINY;
+    if(asteroidValue >= ASTEROID_VALUES[minAsteroidSize])
+    {
+      size = static_cast<Asteroid::Size>(randInt(minAsteroidSize, maxAsteroidSize));
+    }
+    else
+    {
+      for(int i = Asteroid::NUM_SIZES - 1; i >= 0; --i)
+      {
+        if(asteroidValue >= ASTEROID_VALUES[i])
+        {
+          size = static_cast<Asteroid::Size>(i);
+        }
+      }
+    }
+
+    asteroidValue -= ASTEROID_VALUES[size];
+    Vec2D position = Vec2D(0, 1)
+      .rotatei(randFloat(0, 1))
+      .scalei(randFloat(minAsteroidDistance, maxAsteroidDistance));
+    Vec2D velocity = Vec2D(0, 1)
+      .rotatei(randFloat(0, 1))
+      .scalei(randFloat(minAsteroidSpeed, maxAsteroidSpeed));
+    Asteroid* asteroid = new Asteroid(world, size, position, velocity);
+    world->sprites.insert(std::shared_ptr<Asteroid>(asteroid));
+  }
+}
+
 int gameloop(GLFWwindow& window)
 {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<unsigned> seedGenerator;
+  srand(seedGenerator(gen));
+
   kmMat4 proj;
   kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
   glhckRenderSetProjection(&proj);
@@ -99,32 +156,12 @@ int gameloop(GLFWwindow& window)
   Ufo::init();
   UfoLaser::init();
 
-  struct { Asteroid::Size s; Vec2D p; Vec2D v; } asteroids[] = {
-    {Asteroid::LARGE,  {-200, 0}, {10, 0}},
-    {Asteroid::MEDIUM, {-100, 0}, {5, 5}},
-    {Asteroid::SMALL,  { -50, 0}, {0, 0}},
-    {Asteroid::TINY,   {  0, 0}, {50, 20}},
-    {Asteroid::SMALL,  {  50, 0}, {0, 0}},
-    {Asteroid::MEDIUM, { 100, 0}, {-5, -5}},
-    {Asteroid::LARGE,  { 200, 0}, {0, 10}},
-    {Asteroid::LARGE,  {-200, 50}, {10, 0}},
-    {Asteroid::MEDIUM, {-100, 50}, {5, 5}},
-    {Asteroid::SMALL,  { -50, 50}, {0, 0}},
-    {Asteroid::TINY,   {  0, 50}, {0, 0}},
-    {Asteroid::SMALL,  {  50, 50}, {0, 0}},
-    {Asteroid::MEDIUM, { 100, 50}, {-5, -5}},
-    {Asteroid::LARGE,  { 200, 50}, {0, 1}}
-  };
-
   World world = {nullptr, 0, SpriteSet()};
 
-  for(auto d : asteroids)
-  {
-    std::shared_ptr<Asteroid> asteroid(new Asteroid(&world, d.s, d.p, d.v));
-    world.sprites.insert(asteroid);
-  }
+  int level = 0;
+  initLevel(&world, level);
 
-  world.ship = new Ship(&world, {0, -200}, {0, 0});
+  world.ship = new Ship(&world, {0, 0}, {0, 0});
   world.sprites.insert(std::shared_ptr<Ship>(world.ship));
 
   glhckObject* background = glhckSpriteNewFromFile("img/background.png", 0, 0, GLHCK_TEXTURE_DEFAULTS);
@@ -186,7 +223,7 @@ int gameloop(GLFWwindow& window)
                         horizontal ? d : direction ? 0 : 480);
         position -= Vec2D(400, 240);
         std::shared_ptr<Ufo> ufo(new Ufo(&world, position, position.neg(),
-                                         randFloat(0, 5), randFloat(10, 100), 15.0f));
+                                         randFloat(0, 5), randFloat(10, 100), 15.0f, 0.7f));
         world.sprites.insert(ufo);
       }
     }
@@ -219,18 +256,31 @@ int gameloop(GLFWwindow& window)
       deathDelay = DEATH_DELAY;
     }
 
-    std::forward_list<std::shared_ptr<Sprite>> deadParticles;
+    bool victory = ufoDelay <= 0 && world.ship != nullptr;
+
+    std::forward_list<std::shared_ptr<Sprite>> deadSprites;
     for(auto i : world.sprites)
     {
       if(!i->alive())
       {
-        deadParticles.push_front(i);
+        deadSprites.push_front(i);
       }
+
+      victory = victory
+        && i->getEntityId() != Asteroid::ID
+        && i->getEntityId() != Ufo::ID
+        && i->getEntityId() != UfoLaser::ID;
     }
 
-    for(auto i : deadParticles)
+    for(auto i : deadSprites)
     {
       world.sprites.erase(i);
+    }
+
+    if(victory)
+    {
+      world.ship->reset();
+      initLevel(&world, ++level);
     }
 
     glhckObjectRender(background);
@@ -242,13 +292,13 @@ int gameloop(GLFWwindow& window)
 
     std::ostringstream ss;
     ss << std::setprecision(2) << std::fixed
-       << "Score: " << world.score
+       << "Level: " << (level + 1)
+       << " | Score: " << world.score
        << " | FPS: " << timer.getFPS()
        << " | total: " << timer.getTotalTime()
        << "s | frame: " << timer.getTicks();
     glhckTextDraw(text, font, 20, 5, 25, ss.str().data(), NULL);
     glhckTextRender(text);
-
 
     glfwSwapBuffers();
     glhckClear();

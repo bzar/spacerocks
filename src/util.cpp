@@ -33,8 +33,13 @@ bool lineLineIntersect(Vec2D const& l11, Vec2D const& l12, float const l1r,
   throw std::runtime_error("Not implemented!");
 }
 
+float randInt(int const minValue, int const maxValue)
+{
+  return rand() % (maxValue - minValue + 1) + minValue;
+}
+
 float randFloat(float const minValue, float const maxValue)
 {
   int const M = 1024*1024;
-  return (rand() % M) * (maxValue - minValue) / M + minValue;
+  return (rand() % (M + 1)) * (maxValue - minValue) / M + minValue;
 }
