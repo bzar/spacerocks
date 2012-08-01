@@ -145,7 +145,7 @@ void Ship::update(float delta)
       {
         Vec2D velocity = direction.scale(1200);
         velocity.rotatei(spreadAngle * i / (shots - 1) - spreadAngle / 2);
-        std::shared_ptr<Shot> shot(new Shot(world, 0.25, getPosition(), velocity));
+        std::shared_ptr<Shot> shot(new Shot(world, 0.20, getPosition(), velocity));
         world->sprites.insert(shot);
       }
       weaponCooldown = weaponCooldown = lerp(0.8, 0.3, (world->player.weapon[SPREAD] - 1)/8.0);
