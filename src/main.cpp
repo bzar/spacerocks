@@ -170,8 +170,8 @@ int gameloop(GLFWwindow& window)
   World world = newWorld();
   world.player.lives = 3;
   world.player.weapon[Ship::RAPID] = 1;
-  world.player.weapon[Ship::SPREAD] = 4;
-  world.player.weapon[Ship::PLASMA] = 1;
+  world.player.weapon[Ship::SPREAD] = 8;
+  world.player.weapon[Ship::PLASMA] = 8;
   initLevel(world);
 
   world.ship = new Ship(&world, {0, 0}, {0, 0});
