@@ -14,6 +14,8 @@ class Ship : public Sprite
 public:
   static void init();
 
+  enum Weapon { RAPID, SPREAD, CONTINUOUS, PLASMA, NUM_WEAPONS };
+
   Ship(World* world, Vec2D const& position, Vec2D const& velocity);
   ~Ship();
 
@@ -35,7 +37,7 @@ public:
 
   Vec2D getVelocity() const;
   Vec2D getPosition() const;
-
+  void setWeapon(Weapon const value);
   void die();
 
 private:
@@ -61,7 +63,8 @@ private:
   bool shooting;
 
   float shieldLeft;
-  float laserCooldown;
+  float weaponCooldown;
+  Weapon weapon;
   bool dead;
   CircleShape shape;
 

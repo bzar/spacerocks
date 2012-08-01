@@ -1,41 +1,36 @@
-#include "laser.h"
+#include "shot.h"
 #include "asteroid.h"
 #include "util.h"
 #include "ufo.h"
 
-int const Laser::ID = Entity::newEntityId();
-std::string const Laser::IMAGE = "img/laser2.png";
-glhckTexture* Laser::TEXTURE = nullptr;
+int const Shot::ID = Entity::newEntityId();
+std::string const Shot::IMAGE = "img/shot.png";
+glhckTexture* Shot::TEXTURE = nullptr;
 
-void Laser::init()
+void Shot::init()
 {
   TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
 }
 
-Laser::Laser(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
+Shot::Shot(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
+  Sprite(world), o(0), life(life), v(velocity), shape(position, RADIUS)
 {
-  o = glhckSpriteNew(TEXTURE, 2, 8);
+  o = glhckSpriteNew(TEXTURE, 4, 4);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
-  glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);
-
-  Vec2D r = v.unit().scale(LENGTH/2.0f - RADIUS);
-  shape.p1 = position + r;
-  shape.p2 = position - r;
 }
 
-Laser::~Laser()
+Shot::~Shot()
 {
   glhckObjectFree(o);
 }
 
-void Laser::render()
+void Shot::render()
 {
   glhckObjectRender(o);
 }
 
-void Laser::update(float delta)
+void Shot::update(float delta)
 {
   life -= delta;
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
@@ -54,24 +49,21 @@ void Laser::update(float delta)
      glhckObjectMovef(o, 0, -480, 0);
   }
 
-  Vec2D position(pos->x, pos->y);
-  Vec2D r = v.unit().scale(LENGTH/2.0f - RADIUS);
-  shape.p1 = position + r;
-  shape.p2 = position - r;
+  shape.center = getPosition();
 }
 
-bool Laser::alive() const
+bool Shot::alive() const
 {
   return life > 0;
 }
 
-LineShape const* Laser::getShape() const
+CircleShape const* Shot::getShape() const
 {
   return &shape;
 }
 
 
-void Laser::collide(Sprite const* other) {
+void Shot::collide(Sprite const* other) {
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))
@@ -91,7 +83,7 @@ void Laser::collide(Sprite const* other) {
   }
 }
 
-Vec2D Laser::getPosition() const
+Vec2D Shot::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};

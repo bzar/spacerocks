@@ -9,21 +9,7 @@
 class ZComparator
 {
 public:
-  bool operator()(std::shared_ptr<Sprite> const& a, std::shared_ptr<Sprite> const& b)
-  {
-    if(a->getZIndex() == b->getZIndex() && a->getEntityId() == b->getEntityId())
-    {
-      return a < b;
-    }
-    else if(a->getZIndex() == b->getZIndex())
-    {
-      return a->getEntityId() < b->getEntityId();
-    }
-    else
-    {
-      a->getZIndex() < b->getZIndex();
-    }
-  }
+  bool operator()(std::shared_ptr<Sprite> const& a, std::shared_ptr<Sprite> const& b);
 };
 
 typedef std::set<std::shared_ptr<Sprite>, ZComparator> SpriteSet;
@@ -38,12 +24,21 @@ struct Level
   float ufoShootInterval;
 };
 
+struct Player
+{
+  int lives;
+  int weapon[Ship::NUM_WEAPONS];
+};
+
 struct World
 {
   Ship* ship;
   int score;
   SpriteSet sprites;
   Level level;
+  Player player;
 };
+
+World newWorld();
 
 #endif

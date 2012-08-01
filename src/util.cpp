@@ -43,3 +43,9 @@ float randFloat(float const minValue, float const maxValue)
   int const M = 1024*1024;
   return (rand() % (M + 1)) * (maxValue - minValue) / M + minValue;
 }
+
+float lerp(float a, float b, float x)
+{
+  return (x > 1.0f ? 1.0f : x < 0.0f ? 0.0f : x) * (b - a) + a;
+}
+

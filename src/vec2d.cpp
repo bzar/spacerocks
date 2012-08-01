@@ -9,7 +9,7 @@ Vec2D::Vec2D(float const& x, float const& y) : x(x), y(y)
 Vec2D::Vec2D(Vec2D const& other) : x(other.x), y(other.y)
 {
 }
-  
+
 Vec2D Vec2D::add(Vec2D const& other) const
 {
   return Vec2D(x + other.x, y + other.y);
@@ -37,20 +37,20 @@ Vec2D& Vec2D::addi(Vec2D const& other)
 Vec2D& Vec2D::subtracti(Vec2D const& other)
 {
   x -= other.x;
-  y -= other.y;  
+  y -= other.y;
   return *this;
 }
 Vec2D& Vec2D::scalei(float const& scalar)
 {
   x *= scalar;
-  y *= scalar;  
-  return *this;  
+  y *= scalar;
+  return *this;
 }
 Vec2D& Vec2D::negi()
 {
   x = -x;
-  y = -y;  
-  return *this;  
+  y = -y;
+  return *this;
 }
 
 Vec2D Vec2D::unit() const
@@ -116,7 +116,7 @@ Vec2D& Vec2D::rotatei(float const& amount)
   float cs = cos(amount * TAU);
   float tx = x;
   x = x * cs - y * sn;
-  y = tx * sn + y * cs;  
+  y = tx * sn + y * cs;
   return *this;
 }
 Vec2D& Vec2D::rotateAroundi(Vec2D const& other, float const& amount)
@@ -156,7 +156,7 @@ float Vec2D::angle() const
 float Vec2D::rotationTo(Vec2D const& other) const
 {
   float myAngle = angle();
-  float otherAngle = other.angle();  
+  float otherAngle = other.angle();
   if(myAngle > otherAngle)
   {
     return myAngle - (otherAngle + 1.0);

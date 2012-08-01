@@ -10,4 +10,5 @@ bool lineLineIntersect(Vec2D const& l11, Vec2D const& l12, float const l1r,
 
 float randInt(int const minValue, int const maxValue);
 float randFloat(float const minValue, float const maxValue);
+float lerp(float a, float b, float x);
 #endif

@@ -16,6 +16,8 @@
 #include "asteroid.h"
 #include "ship.h"
 #include "laser.h"
+#include "shot.h"
+#include "plasma.h"
 #include "spark.h"
 #include "explosion.h"
 #include "ufo.h"
@@ -90,11 +92,6 @@ int getUfoInterval()
   return UFO_SCORE_INTERVAL_MIN + (rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN));
 }
 
-float lerp(float a, float b, float x)
-{
-  return (x > 1.0f ? 1.0f : x < 0.0f ? 0.0f : x) * (b - a) + a;
-}
-
 void initLevel(World& world)
 {
   int const ASTEROID_VALUES[Asteroid::NUM_SIZES] = {
@@ -162,17 +159,23 @@ int gameloop(GLFWwindow& window)
   Ship::init();
   Asteroid::init();
   Laser::init();
+  Shot::init();
+  Plasma::init();
   Explosion::init();
   Spark::init();
   Ufo::init();
   UfoLaser::init();
   Powerup::init();
 
-  World world = {nullptr, 0, SpriteSet(), {0, 0, 0, 0, 0, 0}};
-
+  World world = newWorld();
+  world.player.lives = 3;
+  world.player.weapon[Ship::RAPID] = 1;
+  world.player.weapon[Ship::SPREAD] = 4;
+  world.player.weapon[Ship::PLASMA] = 1;
   initLevel(world);
 
   world.ship = new Ship(&world, {0, 0}, {0, 0});
+  world.ship->setWeapon(Ship::RAPID);
   world.sprites.insert(std::shared_ptr<Ship>(world.ship));
 
   glhckObject* background = glhckSpriteNewFromFile("img/background.png", 0, 0, GLHCK_TEXTURE_DEFAULTS);

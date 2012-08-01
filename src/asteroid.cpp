@@ -1,5 +1,7 @@
 #include "asteroid.h"
 #include "laser.h"
+#include "shot.h"
+#include "plasma.h"
 #include "spark.h"
 #include "world.h"
 #include "util.h"
@@ -107,15 +109,48 @@ void Asteroid::collide(Sprite const* other) {
     return;
   }
 
-  if(other->getEntityId() == Laser::ID) {
-    Laser const* laser = static_cast<Laser const*>(other);
-    if(shape.collidesWith(laser->getShape()))
-    {
-      life -= 0.5;
+  if(other->getEntityId() == Laser::ID
+    || other->getEntityId() == Shot::ID
+    || other->getEntityId() == Plasma::ID)
+  {
+    bool collide = false;
+    Vec2D p;
 
+    if(other->getEntityId() == Laser::ID) {
+      Laser const* laser = static_cast<Laser const*>(other);
+      if(shape.collidesWith(laser->getShape()))
+      {
+        life -= 0.5;
+        p = laser->getPosition();
+        collide = true;
+      }
+    }
+
+    if(other->getEntityId() == Shot::ID) {
+      Shot const* shot = static_cast<Shot const*>(other);
+      if(shape.collidesWith(shot->getShape()))
+      {
+        life -= 0.5;
+        p = shot->getPosition();
+        collide = true;
+      }
+    }
+
+    if(other->getEntityId() == Plasma::ID) {
+      Plasma const* plasma = static_cast<Plasma const*>(other);
+      if(shape.collidesWith(plasma->getShape()))
+      {
+        life -= 1.0;
+        p = plasma->getPosition();
+        collide = true;
+      }
+    }
+
+    if(collide)
+    {
       if(alive())
       {
-        Vec2D hitDirection = (laser->getPosition() - position).uniti();
+        Vec2D hitDirection = (p - position).uniti();
         Vec2D hitPosition = position + hitDirection.scale(RADII[size]);
         Vec2D hitNormal = hitDirection.normal();
 
@@ -131,35 +166,11 @@ void Asteroid::collide(Sprite const* other) {
       }
       else
       {
-        world->score += (size + 1) * 10;
-
-        int r = static_cast<int>(RADII[size]);
-        for(int i = 0; i < 2 * r; ++i)
-        {
-          float pLife = randFloat(0.25, 0.5);
-          float speed = randFloat(120, 220);
-          Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
-          Vec2D velocity = direction.scale(speed);
-          Vec2D startPos = position + direction.scale(rand() % r);
-          Spark* spark = new Spark(world, pLife, startPos, velocity);
-          world->sprites.insert(std::shared_ptr<Spark>(spark));
-        }
-
-        if(size > TINY)
-        {
-          for(int i = 0; i < 2; ++i)
-          {
-            float speed = randFloat(world->level.minAsteroidSpeed, world->level.maxAsteroidSpeed);
-            Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
-            Vec2D velocity = direction.scale(speed);
-            Vec2D startPos = position + direction.scale(rand() % r);
-            Asteroid* asteroid = new Asteroid(world, static_cast<Size>(size - 1), startPos, velocity);
-            world->sprites.insert(std::shared_ptr<Asteroid>(asteroid));
-          }
-        }
+        die();
       }
 
     }
+
     return;
   }
 }
@@ -168,4 +179,40 @@ Vec2D Asteroid::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
+}
+
+float Asteroid::getLife() const
+{
+  return life;
+}
+
+void Asteroid::die()
+{
+  Vec2D position = getPosition();
+  world->score += (size + 1) * 10;
+
+  int r = static_cast<int>(RADII[size]);
+  for(int i = 0; i < 2 * r; ++i)
+  {
+    float pLife = randFloat(0.25, 0.5);
+    float speed = randFloat(120, 220);
+    Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
+    Vec2D velocity = direction.scale(speed);
+    Vec2D startPos = position + direction.scale(rand() % r);
+    Spark* spark = new Spark(world, pLife, startPos, velocity);
+    world->sprites.insert(std::shared_ptr<Spark>(spark));
+  }
+
+  if(size > TINY)
+  {
+    for(int i = 0; i < 2; ++i)
+    {
+      float speed = randFloat(world->level.minAsteroidSpeed, world->level.maxAsteroidSpeed);
+      Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
+      Vec2D velocity = direction.scale(speed);
+      Vec2D startPos = position + direction.scale(rand() % r);
+      Asteroid* asteroid = new Asteroid(world, static_cast<Size>(size - 1), startPos, velocity);
+      world->sprites.insert(std::shared_ptr<Asteroid>(asteroid));
+    }
+  }
 }

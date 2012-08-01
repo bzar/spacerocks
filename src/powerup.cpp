@@ -111,3 +111,8 @@ Vec2D Powerup::getPosition() const
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
 }
+
+Powerup::Type Powerup::getType() const
+{
+  return type;
+}

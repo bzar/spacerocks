@@ -29,6 +29,8 @@ public:
   virtual void collide(Sprite const* other);
 
   Vec2D getPosition() const;
+  float getLife() const;
+  void die();
 
 private:
   static float const RADII[NUM_SIZES];

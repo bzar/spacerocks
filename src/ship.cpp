@@ -2,10 +2,13 @@
 #include "asteroid.h"
 #include "explosion.h"
 #include "laser.h"
+#include "shot.h"
+#include "plasma.h"
 #include "world.h"
 #include "util.h"
 #include "ufo.h"
 #include "ufolaser.h"
+#include "powerup.h"
 
 int const Ship::ID = Entity::newEntityId();
 
@@ -48,7 +51,7 @@ void Ship::init()
 Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), shield(0), v(velocity),
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
-  shieldLeft(4), laserCooldown(0), dead(false), shape(position, RADIUS)
+  shieldLeft(4), weaponCooldown(0), weapon(RAPID), dead(false), shape(position, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 16, 16);
   shield = glhckSpriteNew(SHIELD_TEXTURE, 24, 24);
@@ -118,24 +121,53 @@ void Ship::update(float delta)
      glhckObjectMovef(o, 0, -480, 0);
   }
 
-  laserCooldown = laserCooldown > 0 ? laserCooldown - delta : 0.0f;
+  weaponCooldown = weaponCooldown > 0 ? weaponCooldown - delta : 0.0f;
 
-  if(shooting && laserCooldown <= 0)
+  if(shooting && weaponCooldown <= 0)
   {
-    Vec2D velocity(0, 1200);
-    velocity.rotatei(glhckObjectGetRotation(o)->z / 360);
-    Vec2D p = velocity.normal().uniti().scalei(8);
-    std::shared_ptr<Laser> laser1(new Laser(world, 0.25, getPosition() + p, velocity));
-    std::shared_ptr<Laser> laser2(new Laser(world, 0.25, getPosition() - p, velocity));
-    world->sprites.insert(laser1);
-    world->sprites.insert(laser2);
-    laserCooldown = 0.15;
+    Vec2D direction = Vec2D(0, 1).rotatei(glhckObjectGetRotation(o)->z / 360);
+
+    if(weapon == RAPID && world->player.weapon[RAPID])
+    {
+      Vec2D velocity = direction.scale(1200);
+      Vec2D p = velocity.normal().uniti().scalei(8);
+      std::shared_ptr<Laser> laser1(new Laser(world, 0.25, getPosition() + p, velocity));
+      std::shared_ptr<Laser> laser2(new Laser(world, 0.25, getPosition() - p, velocity));
+      world->sprites.insert(laser1);
+      world->sprites.insert(laser2);
+      weaponCooldown = lerp(0.3, 0.05, (world->player.weapon[RAPID] - 1)/8.0);
+    }
+    else if(weapon == SPREAD && world->player.weapon[SPREAD])
+    {
+      float spreadAngle = lerp(0.05, 0.45, (world->player.weapon[SPREAD] - 1)/8.0);
+      int shots = 2 * world->player.weapon[SPREAD] + 1;
+      for(int i = 0; i < shots; ++i)
+      {
+        Vec2D velocity = direction.scale(1200);
+        velocity.rotatei(spreadAngle * i / (shots - 1) - spreadAngle / 2);
+        std::shared_ptr<Shot> shot(new Shot(world, 0.25, getPosition(), velocity));
+        world->sprites.insert(shot);
+      }
+      weaponCooldown = weaponCooldown = lerp(0.8, 0.3, (world->player.weapon[SPREAD] - 1)/8.0);
+    }
+    else if(weapon == CONTINUOUS)
+    {
+
+    }
+    else if(weapon == PLASMA && world->player.weapon[PLASMA])
+    {
+      Vec2D velocity = direction.scale(1000);
+      float power = lerp(4, 16, (world->player.weapon[PLASMA] - 1)/8.0);
+      std::shared_ptr<Plasma> plasma(new Plasma(world, 0.5, power, getPosition(), velocity));
+      world->sprites.insert(plasma);
+      weaponCooldown = lerp(1.2, 0.8, (world->player.weapon[PLASMA] - 1)/8.0);
+    }
   }
 
+  glhckObjectPosition(shield, glhckObjectGetPosition(o));
   if(shieldLeft > 0)
   {
     shieldLeft -= delta;
-    glhckObjectPosition(shield, glhckObjectGetPosition(o));
   }
 
   shape.center = getPosition();
@@ -191,6 +223,44 @@ void Ship::collide(Sprite const* other) {
     return;
   }
 
+  if(other->getEntityId() == Powerup::ID) {
+    if(shieldLeft > 0)
+      return;
+
+    Powerup const* powerup = static_cast<Powerup const*>(other);
+    if(shape.collidesWith(powerup->getShape()))
+    {
+      if(powerup->getType() == Powerup::RAPID)
+      {
+        world->player.weapon[RAPID] += world->player.weapon[RAPID] < 8 ? 1 : 0;
+      }
+      else if(powerup->getType() == Powerup::SPREAD)
+      {
+        world->player.weapon[SPREAD] += world->player.weapon[SPREAD] < 8 ? 1 : 0;
+      }
+      else if(powerup->getType() == Powerup::CONTINUOUS)
+      {
+        world->player.weapon[CONTINUOUS] += world->player.weapon[CONTINUOUS] < 8 ? 1 : 0;
+      }
+      else if(powerup->getType() == Powerup::PLASMA)
+      {
+        world->player.weapon[PLASMA] += world->player.weapon[PLASMA] < 8 ? 1 : 0;
+      }
+      else if(powerup->getType() == Powerup::EXTRALIFE)
+      {
+        world->player.lives += 1;
+      }
+      else if(powerup->getType() == Powerup::LOSELIFE)
+      {
+        world->player.lives -= 1;
+      }
+      else if(powerup->getType() == Powerup::SHIELD)
+      {
+        shieldLeft = 5.0;
+      }
+    }
+    return;
+  }
 }
 
 void Ship::turnLeft(bool const value)
@@ -229,6 +299,11 @@ Vec2D Ship::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
+}
+
+void Ship::setWeapon(Weapon const value)
+{
+  weapon = value;
 }
 
 void Ship::die()

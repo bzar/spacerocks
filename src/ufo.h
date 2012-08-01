@@ -29,6 +29,7 @@ public:
   virtual void collide(Sprite const* other);
 
   Vec2D getPosition() const;
+  float getLife() const;
 
 private:
   static int const NUM_IMAGES = 4;

@@ -1,5 +1,7 @@
 #include "ufo.h"
 #include "laser.h"
+#include "shot.h"
+#include "plasma.h"
 #include "util.h"
 #include "explosion.h"
 #include "world.h"
@@ -117,15 +119,48 @@ void Ufo::collide(Sprite const* other) {
 
   Vec2D position = getPosition();
 
-  if(other->getEntityId() == Laser::ID) {
-    Laser const* laser = static_cast<Laser const*>(other);
-    if(shape.collidesWith(laser->getShape()))
-    {
-      life -= 0.5;
+  if(other->getEntityId() == Laser::ID
+    || other->getEntityId() == Shot::ID
+    || other->getEntityId() == Plasma::ID)
+  {
+    bool collide = false;
+    Vec2D p;
 
+    if(other->getEntityId() == Laser::ID) {
+      Laser const* laser = static_cast<Laser const*>(other);
+      if(shape.collidesWith(laser->getShape()))
+      {
+        life -= 0.5;
+        p = laser->getPosition();
+        collide = true;
+      }
+    }
+
+    if(other->getEntityId() == Shot::ID) {
+      Shot const* shot = static_cast<Shot const*>(other);
+      if(shape.collidesWith(shot->getShape()))
+      {
+        life -= 0.5;
+        p = shot->getPosition();
+        collide = true;
+      }
+    }
+
+    if(other->getEntityId() == Plasma::ID) {
+      Plasma const* plasma = static_cast<Plasma const*>(other);
+      if(shape.collidesWith(plasma->getShape()))
+      {
+        life -= 1.0;
+        p = plasma->getPosition();
+        collide = true;
+      }
+    }
+
+    if(collide)
+    {
       if(alive())
       {
-        Vec2D hitDirection = (laser->getPosition() - position).uniti();
+        Vec2D hitDirection = (p - position).uniti();
         Vec2D hitPosition = position + hitDirection.scale(RADIUS);
         Vec2D hitNormal = hitDirection.normal();
 
@@ -159,4 +194,9 @@ Vec2D Ufo::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
+}
+
+float Ufo::getLife() const
+{
+  return life;
 }
