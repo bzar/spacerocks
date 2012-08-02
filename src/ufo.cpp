@@ -177,7 +177,7 @@ void Ufo::collide(Sprite const* other) {
       {
         world->score += 100;
 
-        Powerup::Type powerupType = static_cast<Powerup::Type>(randInt(0, Powerup::NUM_TYPES));
+        Powerup::Type powerupType = static_cast<Powerup::Type>(randInt(0, Powerup::NUM_TYPES - 1));
         Vec2D velocity = Vec2D(0, 1).rotatei(randFloat(0, 1)).scalei(randFloat(30, 80));
         Powerup* powerup = new Powerup(world, powerupType, position, velocity);
         world->sprites.insert(std::shared_ptr<Powerup>(powerup));

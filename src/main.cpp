@@ -234,7 +234,7 @@ int gameloop(GLFWwindow& window)
           world.ship = new Ship(&world, {0, 0}, {0, 0});
           world.sprites.insert(std::shared_ptr<Ship>(world.ship));
 
-          for(int i = 0; i < Ship::NUM_WEAPONS - 1; ++i)
+          for(int i = 0; i < Ship::NUM_WEAPONS; ++i)
           {
             world.player.weapon[i] -= world.player.weapon[i] > 1 ? 1 : 0;
           }
