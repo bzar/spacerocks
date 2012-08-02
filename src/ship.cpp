@@ -306,6 +306,37 @@ void Ship::setWeapon(Weapon const value)
   weapon = value;
 }
 
+Ship::Weapon Ship::getWeapon() const
+{
+  return weapon;
+}
+
+void Ship::nextWeapon()
+{
+  for(int i = 1; i < NUM_WEAPONS; ++i)
+  {
+    Weapon w = static_cast<Weapon>((weapon + i) % NUM_WEAPONS);
+    if(world->player.weapon[w])
+    {
+      weapon = w;
+      break;
+    }
+  }
+}
+
+void Ship::prevWeapon()
+{
+  for(int i = NUM_WEAPONS - 1; i > 0; --i)
+  {
+    Weapon w = static_cast<Weapon>((weapon + i) % NUM_WEAPONS);
+    if(world->player.weapon[w])
+    {
+      weapon = w;
+      break;
+    }
+  }
+}
+
 void Ship::die()
 {
   Explosion* explosion = new Explosion(world, getPosition());

@@ -170,20 +170,19 @@ int gameloop(GLFWwindow& window)
   World world = newWorld();
   world.player.lives = 3;
   world.player.weapon[Ship::RAPID] = 1;
-  world.player.weapon[Ship::SPREAD] = 8;
-  world.player.weapon[Ship::PLASMA] = 8;
   initLevel(world);
 
   world.ship = new Ship(&world, {0, 0}, {0, 0});
-  world.ship->setWeapon(Ship::RAPID);
   world.sprites.insert(std::shared_ptr<Ship>(world.ship));
 
   glhckObject* background = glhckSpriteNewFromFile("img/background.png", 0, 0, GLHCK_TEXTURE_DEFAULTS);
   glhckObjectScalef(background, 0.5f, 0.5f, 0.5f);
   glhckObjectPositionf(background, 0, 0, -0.01);
 
-  glhckText *text = glhckTextNew(800, 40);
-  unsigned int font = glhckTextNewFont(text, "fonts/DejaVuSans.ttf");
+  glhckText *gameText = glhckTextNew(200, 200);
+  glhckText *fpsText = glhckTextNew(800, 40);
+  unsigned int font = glhckTextNewFont(gameText, "fonts/DejaVuSans.ttf");
+  unsigned int font2 = glhckTextNewFont(fpsText, "fonts/DejaVuSans.ttf");
 
   glhckMemoryGraph();
 
@@ -198,6 +197,9 @@ int gameloop(GLFWwindow& window)
 
   while(runtime.running)
   {
+    bool lastPrevWeaponButtonState = glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS;
+    bool lastNextWeaponButtonState = glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS;
+
     glfwPollEvents();
 
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -213,14 +215,30 @@ int gameloop(GLFWwindow& window)
       world.ship->turnRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
       world.ship->accelerate(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
       world.ship->shoot(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
+
+      if(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS && !lastPrevWeaponButtonState)
+        world.ship->prevWeapon();
+
+      if(glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && !lastNextWeaponButtonState)
+        world.ship->nextWeapon();
     }
     else
     {
       deathDelay -= delta;
       if(deathDelay <= 0)
       {
-        world.ship = new Ship(&world, {0, 0}, {0, 0});
-        world.sprites.insert(std::shared_ptr<Ship>(world.ship));
+        if(world.player.lives)
+        {
+          world.player.lives -= 1;
+
+          world.ship = new Ship(&world, {0, 0}, {0, 0});
+          world.sprites.insert(std::shared_ptr<Ship>(world.ship));
+
+          for(int i = 0; i < Ship::NUM_WEAPONS - 1; ++i)
+          {
+            world.player.weapon[i] -= world.player.weapon[i] > 1 ? 1 : 0;
+          }
+        }
       }
     }
 
@@ -305,15 +323,29 @@ int gameloop(GLFWwindow& window)
       i->render();
     }
 
+    Ship::Weapon w = world.ship != nullptr ? world.ship->getWeapon() : Ship::NUM_WEAPONS;
     std::ostringstream ss;
-    ss << std::setprecision(2) << std::fixed
-       << "Level: " << (world.level.n + 1)
+    ss << "Level: " << (world.level.n + 1)
        << " | Score: " << world.score
-       << " | FPS: " << timer.getFPS()
+       << " | Lives: " << world.player.lives
+       << " | Weapons: "
+       << (w == Ship::RAPID ? "[R" : "R") << world.player.weapon[Ship::RAPID] << (w == Ship::RAPID ? "] " : " ")
+       << (w == Ship::SPREAD ? "[S" : "S") << world.player.weapon[Ship::SPREAD] << (w == Ship::SPREAD ? "] " : " ")
+       << (w == Ship::CONTINUOUS ? "[C" : "C") << world.player.weapon[Ship::CONTINUOUS] << (w == Ship::CONTINUOUS ? "] " : " ")
+       << (w == Ship::PLASMA ? "[P" : "P") << world.player.weapon[Ship::PLASMA] << (w == Ship::PLASMA ? "] " : " ");
+
+    glhckTextDraw(gameText, font, 20, 5, 20, ss.str().data(), NULL);
+
+    ss.str("");
+    ss << std::setprecision(2) << std::fixed
+       << "FPS: " << timer.getFPS()
        << " | total: " << timer.getTotalTime()
        << "s | frame: " << timer.getTicks();
-    glhckTextDraw(text, font, 20, 5, 25, ss.str().data(), NULL);
-    glhckTextRender(text);
+
+    glhckTextDraw(fpsText, font, 14, 5, 35, ss.str().data(), NULL);
+
+    glhckTextRender(gameText);
+    glhckTextRender(fpsText);
 
     glfwSwapBuffers();
     glhckClear();

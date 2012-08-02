@@ -37,7 +37,12 @@ public:
 
   Vec2D getVelocity() const;
   Vec2D getPosition() const;
+
   void setWeapon(Weapon const value);
+  Weapon getWeapon() const;
+  void nextWeapon();
+  void prevWeapon();
+
   void die();
 
 private:
