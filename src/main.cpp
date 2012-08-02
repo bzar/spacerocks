@@ -227,7 +227,7 @@ int gameloop(GLFWwindow& window)
       deathDelay -= delta;
       if(deathDelay <= 0)
       {
-        if(world.player.lives)
+        if(world.player.lives > 0)
         {
           world.player.lives -= 1;
 
