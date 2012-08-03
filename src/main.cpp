@@ -27,6 +27,8 @@
 int const WIDTH = 800;
 int const HEIGHT = 480;
 
+int const UPDATE_ITERATIONS = 10;
+
 int const UFO_SCORE_INTERVAL_MIN = 400;
 int const UFO_SCORE_INTERVAL_MAX = 800;
 float const DEATH_DELAY = 3.0f;
@@ -197,123 +199,142 @@ int gameloop(GLFWwindow& window)
 
   while(runtime.running)
   {
-    bool lastPrevWeaponButtonState = glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS;
-    bool lastNextWeaponButtonState = glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS;
+    double totalDelta = timer.getDeltaTime();
 
-    glfwPollEvents();
-
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    for(int iteration = 0; iteration < UPDATE_ITERATIONS; ++iteration)
     {
-      runtime.running = false;
-    }
+      double delta = totalDelta / UPDATE_ITERATIONS;
 
-    double delta = timer.getDeltaTime();
+      bool lastPrevWeaponButtonState = glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS;
+      bool lastNextWeaponButtonState = glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS;
+      bool lastF1 = glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS;
+      bool lastF2 = glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS;
+      bool lastF3 = glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS;
+      bool lastF4 = glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS;
 
-    if(world.ship != nullptr)
-    {
-      world.ship->turnLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
-      world.ship->turnRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
-      world.ship->accelerate(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
-      world.ship->shoot(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
+      glfwPollEvents();
 
-      if(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS && !lastPrevWeaponButtonState)
-        world.ship->prevWeapon();
-
-      if(glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && !lastNextWeaponButtonState)
-        world.ship->nextWeapon();
-    }
-    else
-    {
-      deathDelay -= delta;
-      if(deathDelay <= 0)
+      if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       {
-        if(world.player.lives > 0)
+        runtime.running = false;
+      }
+
+      if(world.ship != nullptr)
+      {
+        world.ship->turnLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
+        world.ship->turnRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
+        world.ship->accelerate(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
+        world.ship->shoot(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
+
+        if(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS && !lastPrevWeaponButtonState)
+          world.ship->prevWeapon();
+
+        if(glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && !lastNextWeaponButtonState)
+          world.ship->nextWeapon();
+
+        if(glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS && !lastF1)
+          world.player.weapon[Ship::RAPID] += world.player.weapon[Ship::RAPID] < 8 ? 1 : 0;
+        if(glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS && !lastF2)
+          world.player.weapon[Ship::SPREAD] += world.player.weapon[Ship::SPREAD] < 8 ? 1 : 0;
+        if(glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS && !lastF3)
+          world.player.weapon[Ship::CONTINUOUS] += world.player.weapon[Ship::CONTINUOUS] < 8 ? 1 : 0;
+        if(glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS && !lastF4)
+          world.player.weapon[Ship::PLASMA] += world.player.weapon[Ship::PLASMA] < 8 ? 1 : 0;
+
+      }
+      else
+      {
+        deathDelay -= delta;
+        if(deathDelay <= 0)
         {
-          world.player.lives -= 1;
-
-          world.ship = new Ship(&world, {0, 0}, {0, 0});
-          world.sprites.insert(std::shared_ptr<Ship>(world.ship));
-
-          for(int i = 0; i < Ship::NUM_WEAPONS; ++i)
+          if(world.player.lives > 0)
           {
-            world.player.weapon[i] -= world.player.weapon[i] > 1 ? 1 : 0;
+            world.player.lives -= 1;
+
+            world.ship = new Ship(&world, {0, 0}, {0, 0});
+            world.sprites.insert(std::shared_ptr<Ship>(world.ship));
+
+            for(int i = 0; i < Ship::NUM_WEAPONS; ++i)
+            {
+              world.player.weapon[i] -= world.player.weapon[i] > 1 ? 1 : 0;
+            }
           }
         }
       }
-    }
 
-    if(ufoDelay > 0)
-    {
-      ufoDelay -= delta;
-
-      if(ufoDelay <= 0)
+      if(ufoDelay > 0)
       {
-        bool horizontal = rand() % 2;
-        bool direction = rand() % 2;
-        int d = rand() % (horizontal ? 480 : 800);
-        Vec2D position(!horizontal ? d : direction ? 0 : 800,
-                        horizontal ? d : direction ? 0 : 480);
-        position -= Vec2D(400, 240);
-        std::shared_ptr<Ufo> ufo(new Ufo(&world, position, position.neg(),
-                                         randFloat(0, 5), randFloat(10, 100)));
-        world.sprites.insert(ufo);
-      }
-    }
+        ufoDelay -= delta;
 
-    if(world.score >= nextUfoScore)
-    {
-      nextUfoScore += getUfoInterval();
-      ufoDelay = UFO_DELAY;
-    }
-
-    for(auto i : world.sprites)
-    {
-      i->update(delta);
-    }
-
-    for(auto i : world.sprites)
-    {
-      for(auto j : world.sprites)
-      {
-        if(i != j)
+        if(ufoDelay <= 0)
         {
-          i->collide(j.get());
+          bool horizontal = rand() % 2;
+          bool direction = rand() % 2;
+          int d = rand() % (horizontal ? 480 : 800);
+          Vec2D position(!horizontal ? d : direction ? 0 : 800,
+                          horizontal ? d : direction ? 0 : 480);
+          position -= Vec2D(400, 240);
+          std::shared_ptr<Ufo> ufo(new Ufo(&world, position, position.neg(),
+                                          randFloat(0, 5), randFloat(10, 100)));
+          world.sprites.insert(ufo);
         }
       }
-    }
 
-    if(world.ship != nullptr && !world.ship->alive())
-    {
-      world.ship = nullptr;
-      deathDelay = DEATH_DELAY;
-    }
-
-    bool victory = ufoDelay <= 0 && world.ship != nullptr;
-
-    std::forward_list<std::shared_ptr<Sprite>> deadSprites;
-    for(auto i : world.sprites)
-    {
-      if(!i->alive())
+      if(world.score >= nextUfoScore)
       {
-        deadSprites.push_front(i);
+        nextUfoScore += getUfoInterval();
+        ufoDelay = UFO_DELAY;
       }
 
-      victory = victory
-        && i->getEntityId() != Asteroid::ID
-        && i->getEntityId() != Ufo::ID
-        && i->getEntityId() != UfoLaser::ID;
-    }
+      for(auto i : world.sprites)
+      {
+        i->update(delta);
+      }
 
-    for(auto i : deadSprites)
-    {
-      world.sprites.erase(i);
-    }
+      for(auto i : world.sprites)
+      {
+        for(auto j : world.sprites)
+        {
+          if(i != j)
+          {
+            i->collide(j.get());
+          }
+        }
+      }
 
-    if(victory)
-    {
-      world.level.n += 1;
-      world.ship->reset();
-      initLevel(world);
+      if(world.ship != nullptr && !world.ship->alive())
+      {
+        world.ship = nullptr;
+        deathDelay = DEATH_DELAY;
+      }
+
+      bool victory = ufoDelay <= 0 && world.ship != nullptr;
+
+      std::forward_list<std::shared_ptr<Sprite>> deadSprites;
+      for(auto i : world.sprites)
+      {
+        if(!i->alive())
+        {
+          deadSprites.push_front(i);
+        }
+
+        victory = victory
+          && i->getEntityId() != Asteroid::ID
+          && i->getEntityId() != Ufo::ID
+          && i->getEntityId() != UfoLaser::ID;
+      }
+
+      for(auto i : deadSprites)
+      {
+        world.sprites.erase(i);
+      }
+
+      if(victory)
+      {
+        world.level.n += 1;
+        world.ship->reset();
+        initLevel(world);
+      }
     }
 
     glhckObjectRender(background);

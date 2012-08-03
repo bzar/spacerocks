@@ -5,7 +5,6 @@ add_subdirectory(lib)
 
 include_directories(
   ${kazmath_SOURCE_DIR}/src
-  ${kazmath_SOURCE_DIR}/src/kazmathxx/src
   ${glhck_SOURCE_DIR}/include
   ${GLFW_SOURCE_DIR}/include
 )

@@ -8,7 +8,7 @@
 #include <cstdlib>
 
 int const Asteroid::ID = Entity::newEntityId();
-float const Asteroid::RADII[NUM_SIZES] = {4, 8, 16, 24};
+float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
 std::string const Asteroid::IMAGES[NUM_SIZES] = {
   "img/asteroid_1.png",
   "img/asteroid_2.png",
