@@ -41,7 +41,7 @@ Vec2D circleLineIntersectionPoint(Vec2D const& p, float const r, Vec2D const& l1
   float s2 = (lr + r) * (lr + r) - (p - q).lengthSquared();
   float t = 1 - s2 / l1q.lengthSquared();
   t = t < 0 ? 0 : t > 1 ? 1 : t;
-  Vec2D x = l1 + l1q.scale(t + 0.01);
+  Vec2D x = l1 + l1q.scale(t);
   return x;
 }
 
