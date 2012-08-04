@@ -36,7 +36,7 @@ World::World(Player const& player, Level const& level) :
 
 void World::update(float const delta)
 {
-  if(player.ship == nullptr)
+  if(!player.ship->alive())
   {
     if(deathDelay == 0)
     {
@@ -52,14 +52,7 @@ void World::update(float const delta)
       if(player.lives > 0)
       {
         player.lives -= 1;
-
-        player.ship = new Ship(this, {0, 0}, {0, 0});
-        addSprite(player.ship);
-
-        for(int i = 0; i < Ship::NUM_WEAPONS; ++i)
-        {
-          player.weapon[i] -= player.weapon[i] > 1 ? 1 : 0;
-        }
+        player.ship->reset();
       }
     }
   }
@@ -101,12 +94,6 @@ void World::update(float const delta)
         i->collide(j.get());
       }
     }
-  }
-
-  if(player.ship != nullptr && !player.ship->alive())
-  {
-    player.ship = nullptr;
-    deathDelay = DEATH_DELAY;
   }
 
   for(Sprite* sprite : spritesToRemove)

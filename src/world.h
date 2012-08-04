@@ -2,6 +2,7 @@
 #define WORLD_HH
 
 #include <set>
+#include <map>
 #include <forward_list>
 #include <memory>
 #include "sprite.h"
@@ -32,11 +33,10 @@ public:
 
   struct Player
   {
-    Player() : ship(nullptr), lives(0), score(0), weapon({0}) {}
+    Player() : ship(nullptr), lives(0), score(0) {}
     Ship* ship;
     int lives;
     int score;
-    int weapon[Ship::NUM_WEAPONS];
   };
 
   World(Player const& player = Player(), Level const& level = Level());

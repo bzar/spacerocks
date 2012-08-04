@@ -5,8 +5,9 @@
 #include "GL/glhck.h"
 #include "vec2d.h"
 #include "circleshape.h"
-#include "beam.h"
+#include "weapon.h"
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -14,8 +15,6 @@ class Ship : public Sprite
 {
 public:
   static void init();
-
-  enum Weapon { RAPID, SPREAD, BEAM, PLASMA, NUM_WEAPONS };
 
   Ship(World* world, Vec2D const& position, Vec2D const& velocity);
   ~Ship();
@@ -39,10 +38,18 @@ public:
   Vec2D getVelocity() const;
   Vec2D getPosition() const;
 
-  void setWeapon(Weapon const value);
-  Weapon getWeapon() const;
   void nextWeapon();
   void prevWeapon();
+
+  void increaseLaserLevel() { laser.increaseLevel(); }
+  void increaseSpreadLevel() { spread.increaseLevel(); }
+  void increaseBeamLevel() { beam.increaseLevel(); }
+  void increasePlasmaLevel() { plasma.increaseLevel(); }
+
+  int getLaserLevel() { return laser.getLevel(); }
+  int getSpreadLevel() { return spread.getLevel(); }
+  int getBeamLevel() { return beam.getLevel(); }
+  int getPlasmaLevel() { return plasma.getLevel(); }
 
   void die();
 
@@ -69,10 +76,15 @@ private:
   bool shooting;
 
   float shieldLeft;
-  float weaponCooldown;
-  Weapon weapon;
+
+  Weapon* weapon;
+  LaserWeapon laser;
+  SpreadWeapon spread;
+  BeamWeapon beam;
+  PlasmaWeapon plasma;
+  std::vector<Weapon*> weapons;
+
   bool dead;
-  Beam* beam;
   CircleShape shape;
 
 };

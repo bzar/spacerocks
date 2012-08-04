@@ -41,7 +41,6 @@ GameState::GameState(Engine* engine) :
   gameText(nullptr), fpsText(nullptr), gameFont(0), fpsFont(0)
 {
   world.player.lives = 3;
-  world.player.weapon[Ship::RAPID] = 1;
   world.initLevel(0);
 
   world.player.ship = new Ship(&world, {0, 0}, {0, 0});
@@ -90,13 +89,13 @@ void GameState::input()
       world.player.ship->nextWeapon();
 
     if(glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS && !lastF1)
-      world.player.weapon[Ship::RAPID] += world.player.weapon[Ship::RAPID] < 8 ? 1 : 0;
+      world.player.ship->increaseLaserLevel();
     if(glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS && !lastF2)
-      world.player.weapon[Ship::SPREAD] += world.player.weapon[Ship::SPREAD] < 8 ? 1 : 0;
+      world.player.ship->increaseSpreadLevel();
     if(glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS && !lastF3)
-      world.player.weapon[Ship::BEAM] += world.player.weapon[Ship::BEAM] < 8 ? 1 : 0;
+      world.player.ship->increaseBeamLevel();
     if(glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS && !lastF4)
-      world.player.weapon[Ship::PLASMA] += world.player.weapon[Ship::PLASMA] < 8 ? 1 : 0;
+      world.player.ship->increasePlasmaLevel();
   }
 }
 
@@ -114,16 +113,15 @@ void GameState::render()
     i->render();
   }
 
-  Ship::Weapon w = world.player.ship != nullptr ? world.player.ship->getWeapon() : Ship::NUM_WEAPONS;
   std::ostringstream ss;
   ss << "Level: " << (world.level.n + 1)
       << " | Score: " << world.player.score
       << " | Lives: " << world.player.lives
-      << " | Weapons: "
-      << (w == Ship::RAPID ? "[R" : "R") << world.player.weapon[Ship::RAPID] << (w == Ship::RAPID ? "] " : " ")
-      << (w == Ship::SPREAD ? "[S" : "S") << world.player.weapon[Ship::SPREAD] << (w == Ship::SPREAD ? "] " : " ")
-      << (w == Ship::BEAM ? "[B" : "B") << world.player.weapon[Ship::BEAM] << (w == Ship::BEAM ? "] " : " ")
-      << (w == Ship::PLASMA ? "[P" : "P") << world.player.weapon[Ship::PLASMA] << (w == Ship::PLASMA ? "] " : " ");
+      << " | Weapons:"
+      << " L" << world.player.ship->getLaserLevel()
+      << " S" << world.player.ship->getSpreadLevel()
+      << " B" << world.player.ship->getBeamLevel()
+      << " P" << world.player.ship->getPlasmaLevel();
 
   glhckTextDraw(gameText, gameFont, 20, 5, 20, ss.str().data(), NULL);
 

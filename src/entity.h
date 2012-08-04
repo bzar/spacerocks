@@ -1,11 +1,6 @@
 #ifndef ENTITY_HH
 #define ENTITY_HH
 
-namespace
-{
-  static int nextId = 0;
-}
-
 class Entity
 {
 public:
@@ -13,6 +8,9 @@ public:
 
 protected:
   static int newEntityId() { return nextId++; }
+
+private:
+  static int nextId;
 };
 
 

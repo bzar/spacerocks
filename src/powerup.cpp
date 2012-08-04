@@ -7,7 +7,7 @@
 int const Powerup::ID = Entity::newEntityId();
 float const Powerup::RADIUS = 16;
 std::string const Powerup::IMAGES[NUM_TYPES] = {
-  "img/powerup_rapidfire.png",
+  "img/powerup_laser.png",
   "img/powerup_spread.png",
   "img/powerup_continuous.png",
   "img/powerup_plasma.png",

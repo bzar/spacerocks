@@ -1,10 +1,6 @@
 #include "ship.h"
 #include "asteroid.h"
 #include "explosion.h"
-#include "laser.h"
-#include "shot.h"
-#include "plasma.h"
-#include "beam.h"
 #include "world.h"
 #include "util.h"
 #include "ufo.h"
@@ -52,8 +48,10 @@ void Ship::init()
 Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world, 1), o(nullptr), shield(nullptr), v(velocity),
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
-  shieldLeft(4), weaponCooldown(0), weapon(RAPID), dead(false), beam(nullptr),
-  shape(position, RADIUS)
+  shieldLeft(4),
+  weapon(nullptr), laser(world), spread(world), beam(world), plasma(world),
+  weapons({&laser, &spread, &beam, &plasma}),
+  dead(false), shape(position, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 16, 16);
   shield = glhckSpriteNew(SHIELD_TEXTURE, 24, 24);
@@ -63,6 +61,9 @@ Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectSetMaterialFlags(shield, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
+
+  weapon = &laser;
+  laser.setLevel(1);
 }
 
 Ship::~Ship()
@@ -73,11 +74,14 @@ Ship::~Ship()
 
 void Ship::render()
 {
-  glhckObjectRender(o);
-
-  if(shieldLeft > 0)
+  if(!dead)
   {
-    glhckObjectRender(shield);
+    glhckObjectRender(o);
+
+    if(shieldLeft > 0)
+    {
+      glhckObjectRender(shield);
+    }
   }
 }
 
@@ -125,62 +129,15 @@ void Ship::update(float delta)
 
   shape.center = getPosition();
 
-  weaponCooldown = weaponCooldown > 0 ? weaponCooldown - delta : 0.0f;
+  for(Weapon* weapon : weapons)
+  {
+    weapon->update(delta);
+  }
 
-  if(shooting && weaponCooldown <= 0)
+  if(shooting)
   {
     Vec2D direction = Vec2D(0, 1).rotatei(glhckObjectGetRotation(o)->z / 360);
-
-    if(weapon == RAPID && world->player.weapon[RAPID])
-    {
-      Vec2D velocity = direction.scale(1200);
-      Vec2D p = velocity.normal().uniti().scalei(8);
-      Laser* laser1 = new Laser(world, 0.25, getPosition() + p, velocity);
-      Laser* laser2 = new Laser(world, 0.25, getPosition() - p, velocity);
-      world->addSprite(laser1);
-      world->addSprite(laser2);
-      weaponCooldown = lerp(0.3, 0.05, (world->player.weapon[RAPID] - 1)/8.0);
-    }
-    else if(weapon == SPREAD && world->player.weapon[SPREAD])
-    {
-      float spreadAngle = lerp(0.05, 0.45, (world->player.weapon[SPREAD] - 1)/8.0);
-      int shots = 2 * world->player.weapon[SPREAD] + 1;
-      for(int i = 0; i < shots; ++i)
-      {
-        Vec2D velocity = direction.scale(1200);
-        velocity.rotatei(spreadAngle * i / (shots - 1) - spreadAngle / 2);
-        Shot* shot = new Shot(world, 0.20, getPosition(), velocity);
-        world->addSprite(shot);
-      }
-      weaponCooldown = weaponCooldown = lerp(0.8, 0.3, (world->player.weapon[SPREAD] - 1)/8.0);
-    }
-    else if(weapon == BEAM && world->player.weapon[BEAM])
-    {
-      Vec2D beamVector = direction.scale(world->player.weapon[BEAM] * 32);
-      if(!beam)
-      {
-        beam = new Beam(world, shape.center, beamVector);
-        world->addSprite(beam);
-      }
-      else
-      {
-        beam->setBasePosition(shape.center);
-        beam->setPositionDelta(beamVector);
-      }
-    }
-    else if(weapon == PLASMA && world->player.weapon[PLASMA])
-    {
-      Vec2D velocity = direction.scale(1000);
-      float power = lerp(4, 16, (world->player.weapon[PLASMA] - 1)/8.0);
-      Plasma* plasma = new Plasma(world, 0.5, power, getPosition(), velocity);
-      world->addSprite(plasma);
-      weaponCooldown = lerp(1.2, 0.8, (world->player.weapon[PLASMA] - 1)/8.0);
-    }
-  }
-  else if(beam)
-  {
-    world->removeSprite(beam);
-    beam = nullptr;
+    weapon->shoot(getPosition(), direction);
   }
 
   glhckObjectPosition(shield, glhckObjectGetPosition(o));
@@ -247,21 +204,21 @@ void Ship::collide(Sprite const* other) {
     Powerup const* powerup = static_cast<Powerup const*>(other);
     if(shape.collidesWith(powerup->getShape()))
     {
-      if(powerup->getType() == Powerup::RAPID)
+      if(powerup->getType() == Powerup::LASER)
       {
-        world->player.weapon[RAPID] += world->player.weapon[RAPID] < 8 ? 1 : 0;
+        laser.increaseLevel();
       }
       else if(powerup->getType() == Powerup::SPREAD)
       {
-        world->player.weapon[SPREAD] += world->player.weapon[SPREAD] < 8 ? 1 : 0;
+        spread.increaseLevel();
       }
       else if(powerup->getType() == Powerup::BEAM)
       {
-        world->player.weapon[BEAM] += world->player.weapon[BEAM] < 8 ? 1 : 0;
+        beam.increaseLevel();
       }
       else if(powerup->getType() == Powerup::PLASMA)
       {
-        world->player.weapon[PLASMA] += world->player.weapon[PLASMA] < 8 ? 1 : 0;
+        plasma.increaseLevel();
       }
       else if(powerup->getType() == Powerup::EXTRALIFE)
       {
@@ -297,11 +254,19 @@ void Ship::accelerate(bool const value)
 
 void Ship::shoot(bool const value)
 {
-  shooting = value;
+  if(shooting != value)
+  {
+    if(value)
+      weapon->startShooting();
+    else
+      weapon->stopShooting();
+    shooting = value;
+  }
 }
 
 void Ship::reset()
 {
+  dead = false;
   glhckObjectPositionf(o, 0, 0, 0);
   glhckObjectRotationf(o, 0, 0, 0);
   v = {0, 0};
@@ -318,22 +283,22 @@ Vec2D Ship::getPosition() const
   return {pos->x, pos->y};
 }
 
-void Ship::setWeapon(Weapon const value)
-{
-  weapon = value;
-}
-
-Ship::Weapon Ship::getWeapon() const
-{
-  return weapon;
-}
-
 void Ship::nextWeapon()
 {
-  for(int i = 1; i < NUM_WEAPONS; ++i)
+  int current = 0;
+  for(int i = 0; i < weapons.size(); ++i)
   {
-    Weapon w = static_cast<Weapon>((weapon + i) % NUM_WEAPONS);
-    if(world->player.weapon[w])
+    if(weapons.at(i) == weapon)
+    {
+      current = i;
+      break;
+    }
+  }
+
+  for(int i = 1; i < weapons.size(); ++i)
+  {
+    Weapon* w = weapons.at((current + i) % weapons.size());
+    if(w->getLevel() > 0)
     {
       weapon = w;
       break;
@@ -343,10 +308,20 @@ void Ship::nextWeapon()
 
 void Ship::prevWeapon()
 {
-  for(int i = NUM_WEAPONS - 1; i > 0; --i)
+  int current = 0;
+  for(int i = 0; i < weapons.size(); ++i)
   {
-    Weapon w = static_cast<Weapon>((weapon + i) % NUM_WEAPONS);
-    if(world->player.weapon[w])
+    if(weapons.at(i) == weapon)
+    {
+      current = i;
+      break;
+    }
+  }
+
+  for(int i = weapons.size() - 1; i > 0 ; --i)
+  {
+    Weapon* w = weapons.at((current + i) % weapons.size());
+    if(w->getLevel() > 0)
     {
       weapon = w;
       break;
@@ -357,13 +332,11 @@ void Ship::prevWeapon()
 void Ship::die()
 {
   Explosion* explosion = new Explosion(world, getPosition());
-  world->removeSprite(this);
-  world->player.ship = nullptr;
   world->addSprite(explosion);
   dead = true;
-  if(beam)
+
+  for(Weapon* w : weapons)
   {
-    world->removeSprite(beam);
-    beam = nullptr;
+    w->decreaseLevel();
   }
 }
