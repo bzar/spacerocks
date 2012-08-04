@@ -20,7 +20,6 @@ public:
 
   void render();
   void update(float delta);
-  bool alive() const;
 
 private:
   static std::string const IMAGE;

@@ -1,4 +1,5 @@
 #include "ufolaser.h"
+#include "world.h"
 #include "asteroid.h"
 #include "util.h"
 
@@ -37,14 +38,12 @@ void UfoLaser::render()
 void UfoLaser::update(float delta)
 {
   life -= delta;
+  if(life <= 0)
+    world->removeSprite(this);
+
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
   shape.p1 = getPosition() + v.unit().scale(LENGTH/2.0f - RADIUS);
   shape.p2 = getPosition() - v.unit().scale(LENGTH/2.0f - RADIUS);
-}
-
-bool UfoLaser::alive() const
-{
-  return life > 0;
 }
 
 LineShape const* UfoLaser::getShape() const
@@ -61,6 +60,7 @@ void UfoLaser::collide(Sprite const* other) {
     if(shape.collidesWith(asteroid->getShape()))
     {
       life = 0;
+      world->removeSprite(this);
     }
     return;
   }

@@ -14,7 +14,7 @@ class Powerup : public Sprite
 public:
   static void init();
 
-  enum Type { RAPID, SPREAD, CONTINUOUS, PLASMA, EXTRALIFE, LOSELIFE, SHIELD, NUM_TYPES };
+  enum Type { RAPID, SPREAD, BEAM, PLASMA, EXTRALIFE, LOSELIFE, SHIELD, NUM_TYPES };
   Powerup(World* world, Type const type, Vec2D const& position, Vec2D const& velocity);
   ~Powerup();
 
@@ -24,7 +24,6 @@ public:
   void render();
   void update(float delta);
 
-  bool alive() const;
   virtual CircleShape const* getShape() const;
   virtual void collide(Sprite const* other);
 

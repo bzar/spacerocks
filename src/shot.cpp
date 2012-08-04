@@ -1,4 +1,5 @@
 #include "shot.h"
+#include "world.h"
 #include "asteroid.h"
 #include "util.h"
 #include "ufo.h"
@@ -33,6 +34,9 @@ void Shot::render()
 void Shot::update(float delta)
 {
   life -= delta;
+  if(life <= 0)
+    world->removeSprite(this);
+
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
   // FIXME: Do proper wrapping
@@ -52,11 +56,6 @@ void Shot::update(float delta)
   shape.center = getPosition();
 }
 
-bool Shot::alive() const
-{
-  return life > 0;
-}
-
 CircleShape const* Shot::getShape() const
 {
   return &shape;
@@ -64,11 +63,15 @@ CircleShape const* Shot::getShape() const
 
 
 void Shot::collide(Sprite const* other) {
+  if(life <= 0)
+    return;
+
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))
     {
       life = 0;
+      world->removeSprite(this);
     }
     return;
   }
@@ -78,6 +81,7 @@ void Shot::collide(Sprite const* other) {
     if(shape.collidesWith(ufo->getShape()))
     {
       life = 0;
+      world->removeSprite(this);
     }
     return;
   }

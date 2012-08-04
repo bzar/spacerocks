@@ -1,5 +1,5 @@
 #include "spark.h"
-#include <iostream>
+#include "world.h"
 
 int const Spark::ID = Entity::newEntityId();
 std::string const Spark::IMAGE = "img/spark.png";
@@ -33,6 +33,9 @@ void Spark::render()
 void Spark::update(float delta)
 {
   life -= delta;
+  if(life <= 0)
+    world->removeSprite(this);
+
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
   // FIXME: Do proper wrapping
@@ -48,9 +51,4 @@ void Spark::update(float delta)
   } else if(pos->y > 240) {
      glhckObjectMovef(o, 0, -480, 0);
   }
-}
-
-bool Spark::alive() const
-{
-  return life > 0;
 }

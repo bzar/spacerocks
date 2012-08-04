@@ -63,6 +63,9 @@ void Powerup::render()
 void Powerup::update(float delta)
 {
   life -= delta;
+  if(life <= 0)
+    world->removeSprite(this);
+
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
   // FIXME: Do proper wrapping
@@ -82,20 +85,12 @@ void Powerup::update(float delta)
   shape.center = getPosition();
 }
 
-bool Powerup::alive() const
-{
-  return life > 0;
-}
-
 CircleShape const* Powerup::getShape() const
 {
   return &shape;
 }
 
 void Powerup::collide(Sprite const* other) {
-  if(!alive())
-    return;
-
   if(other->getEntityId() == Ship::ID) {
     Ship const* ship = static_cast<Ship const*>(other);
     if(shape.collidesWith(ship->getShape()))

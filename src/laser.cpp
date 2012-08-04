@@ -1,6 +1,7 @@
 #include "laser.h"
 #include "asteroid.h"
 #include "util.h"
+#include "world.h"
 #include "ufo.h"
 
 int const Laser::ID = Entity::newEntityId();
@@ -38,6 +39,9 @@ void Laser::render()
 void Laser::update(float delta)
 {
   life -= delta;
+  if(life <= 0)
+    world->removeSprite(this);
+
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
   // FIXME: Do proper wrapping
@@ -60,11 +64,6 @@ void Laser::update(float delta)
   shape.p2 = position - r;
 }
 
-bool Laser::alive() const
-{
-  return life > 0;
-}
-
 LineShape const* Laser::getShape() const
 {
   return &shape;
@@ -72,11 +71,15 @@ LineShape const* Laser::getShape() const
 
 
 void Laser::collide(Sprite const* other) {
+  if(life <= 0)
+    return;
+
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))
     {
       life = 0;
+      world->removeSprite(this);
     }
     return;
   }
@@ -86,6 +89,7 @@ void Laser::collide(Sprite const* other) {
     if(shape.collidesWith(ufo->getShape()))
     {
       life = 0;
+      world->removeSprite(this);
     }
     return;
   }

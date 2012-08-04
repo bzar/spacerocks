@@ -1,4 +1,5 @@
 #include "explosion.h"
+#include "world.h"
 
 int const Explosion::ID = Entity::newEntityId();
 
@@ -121,7 +122,7 @@ void Explosion::init()
 }
 
 Explosion::Explosion(World* world, Vec2D const& position) :
-  Sprite(world, 1), o(0), time(0)
+  Sprite(world, 3), o(0), time(0)
 {
   o = glhckSpriteNew(TEXTURE, 160, 120);
   glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
@@ -150,9 +151,8 @@ void Explosion::update(float delta)
   {
     glhckObjectTransformCoordinates(o, &TRANSFORM[frame].transform, TRANSFORM[frame].degree);
   }
-}
-
-bool Explosion::alive() const
-{
-  return static_cast<int>(time * FPS) < NUM_IMAGES;
+  else
+  {
+    world->removeSprite(this);
+  }
 }

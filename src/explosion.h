@@ -21,7 +21,6 @@ public:
 
   void render();
   void update(float delta);
-  bool alive() const;
 
 private:
   static int const NUM_IMAGES = 90;

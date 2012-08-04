@@ -4,6 +4,7 @@
 #include "laser.h"
 #include "shot.h"
 #include "plasma.h"
+#include "beam.h"
 #include "world.h"
 #include "util.h"
 #include "ufo.h"
@@ -49,9 +50,10 @@ void Ship::init()
 }
 
 Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), shield(0), v(velocity),
+  Sprite(world, 1), o(nullptr), shield(nullptr), v(velocity),
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
-  shieldLeft(4), weaponCooldown(0), weapon(RAPID), dead(false), shape(position, RADIUS)
+  shieldLeft(4), weaponCooldown(0), weapon(RAPID), dead(false), beam(nullptr),
+  shape(position, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 16, 16);
   shield = glhckSpriteNew(SHIELD_TEXTURE, 24, 24);
@@ -121,6 +123,8 @@ void Ship::update(float delta)
      glhckObjectMovef(o, 0, -480, 0);
   }
 
+  shape.center = getPosition();
+
   weaponCooldown = weaponCooldown > 0 ? weaponCooldown - delta : 0.0f;
 
   if(shooting && weaponCooldown <= 0)
@@ -131,10 +135,10 @@ void Ship::update(float delta)
     {
       Vec2D velocity = direction.scale(1200);
       Vec2D p = velocity.normal().uniti().scalei(8);
-      std::shared_ptr<Laser> laser1(new Laser(world, 0.25, getPosition() + p, velocity));
-      std::shared_ptr<Laser> laser2(new Laser(world, 0.25, getPosition() - p, velocity));
-      world->sprites.insert(laser1);
-      world->sprites.insert(laser2);
+      Laser* laser1 = new Laser(world, 0.25, getPosition() + p, velocity);
+      Laser* laser2 = new Laser(world, 0.25, getPosition() - p, velocity);
+      world->addSprite(laser1);
+      world->addSprite(laser2);
       weaponCooldown = lerp(0.3, 0.05, (world->player.weapon[RAPID] - 1)/8.0);
     }
     else if(weapon == SPREAD && world->player.weapon[SPREAD])
@@ -145,23 +149,38 @@ void Ship::update(float delta)
       {
         Vec2D velocity = direction.scale(1200);
         velocity.rotatei(spreadAngle * i / (shots - 1) - spreadAngle / 2);
-        std::shared_ptr<Shot> shot(new Shot(world, 0.20, getPosition(), velocity));
-        world->sprites.insert(shot);
+        Shot* shot = new Shot(world, 0.20, getPosition(), velocity);
+        world->addSprite(shot);
       }
       weaponCooldown = weaponCooldown = lerp(0.8, 0.3, (world->player.weapon[SPREAD] - 1)/8.0);
     }
-    else if(weapon == CONTINUOUS)
+    else if(weapon == BEAM)
     {
-
+      Vec2D beamVector = direction.scale(world->player.weapon[BEAM] * 32);
+      if(!beam)
+      {
+        beam = new Beam(world, shape.center, beamVector);
+        world->addSprite(beam);
+      }
+      else
+      {
+        beam->setBasePosition(shape.center);
+        beam->setPositionDelta(beamVector);
+      }
     }
     else if(weapon == PLASMA && world->player.weapon[PLASMA])
     {
       Vec2D velocity = direction.scale(1000);
       float power = lerp(4, 16, (world->player.weapon[PLASMA] - 1)/8.0);
-      std::shared_ptr<Plasma> plasma(new Plasma(world, 0.5, power, getPosition(), velocity));
-      world->sprites.insert(plasma);
+      Plasma* plasma = new Plasma(world, 0.5, power, getPosition(), velocity);
+      world->addSprite(plasma);
       weaponCooldown = lerp(1.2, 0.8, (world->player.weapon[PLASMA] - 1)/8.0);
     }
+  }
+  else if(beam)
+  {
+    world->removeSprite(beam);
+    beam = nullptr;
   }
 
   glhckObjectPosition(shield, glhckObjectGetPosition(o));
@@ -169,8 +188,6 @@ void Ship::update(float delta)
   {
     shieldLeft -= delta;
   }
-
-  shape.center = getPosition();
 }
 
 bool Ship::alive() const
@@ -238,9 +255,9 @@ void Ship::collide(Sprite const* other) {
       {
         world->player.weapon[SPREAD] += world->player.weapon[SPREAD] < 8 ? 1 : 0;
       }
-      else if(powerup->getType() == Powerup::CONTINUOUS)
+      else if(powerup->getType() == Powerup::BEAM)
       {
-        world->player.weapon[CONTINUOUS] += world->player.weapon[CONTINUOUS] < 8 ? 1 : 0;
+        world->player.weapon[BEAM] += world->player.weapon[BEAM] < 8 ? 1 : 0;
       }
       else if(powerup->getType() == Powerup::PLASMA)
       {
@@ -340,6 +357,13 @@ void Ship::prevWeapon()
 void Ship::die()
 {
   Explosion* explosion = new Explosion(world, getPosition());
-  world->sprites.insert(std::shared_ptr<Explosion>(explosion));
+  world->removeSprite(this);
+  world->player.ship = nullptr;
+  world->addSprite(explosion);
   dead = true;
+  if(beam)
+  {
+    world->removeSprite(beam);
+    beam = nullptr;
+  }
 }

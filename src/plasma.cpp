@@ -1,4 +1,5 @@
 #include "plasma.h"
+#include "world.h"
 #include "asteroid.h"
 #include "util.h"
 #include "ufo.h"
@@ -36,6 +37,7 @@ void Plasma::render()
 void Plasma::update(float delta)
 {
   life -= delta;
+
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
   // FIXME: Do proper wrapping
@@ -59,11 +61,9 @@ void Plasma::update(float delta)
     shape.radius = getRadius();
     power = nextPower;
   }
-}
 
-bool Plasma::alive() const
-{
-  return nextPower > 0 && life > 0;
+  if(life <= 0 || power <= 0)
+    world->removeSprite(this);
 }
 
 CircleShape const* Plasma::getShape() const
@@ -73,6 +73,9 @@ CircleShape const* Plasma::getShape() const
 
 
 void Plasma::collide(Sprite const* other) {
+  if(life <= 0 || power <= 0)
+    return;
+
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))
@@ -92,6 +95,10 @@ void Plasma::collide(Sprite const* other) {
     }
     return;
   }
+
+  if(life <= 0 || power <= 0)
+    world->removeSprite(this);
+
 }
 
 Vec2D Plasma::getPosition() const

@@ -2,6 +2,7 @@
 #include "laser.h"
 #include "shot.h"
 #include "plasma.h"
+#include "beam.h"
 #include "util.h"
 #include "explosion.h"
 #include "world.h"
@@ -90,22 +91,20 @@ void Ufo::update(float delta)
   bool timeToShoot = static_cast<int>((time - delta) / shootInterval) !=
     static_cast<int>(time / shootInterval);
 
-  if(timeToShoot && world->ship != nullptr)
+  if(timeToShoot && world->player.ship != nullptr)
   {
-    Vec2D direction = (world->ship->getPosition() - getPosition()).uniti();
+    Vec2D direction = (world->player.ship->getPosition() - getPosition()).uniti();
     float const spread = (1 - accuracy)/2;
     direction.rotatei(randFloat(-spread, spread));
     Vec2D velocity = direction.scale(600);
     UfoLaser* laser = new UfoLaser(world, 5.0f, getPosition(), velocity);
-    world->sprites.insert(std::shared_ptr<UfoLaser>(laser));
+    world->addSprite(laser);
   }
 
   shape.center = getPosition();
-}
 
-bool Ufo::alive() const
-{
-  return life > 0 && time < duration;
+  if(life <= 0 || time > duration)
+    world->removeSprite(this);
 }
 
 CircleShape const* Ufo::getShape() const
@@ -114,14 +113,12 @@ CircleShape const* Ufo::getShape() const
 }
 
 void Ufo::collide(Sprite const* other) {
-  if(!alive())
-    return;
-
   Vec2D position = getPosition();
 
   if(other->getEntityId() == Laser::ID
     || other->getEntityId() == Shot::ID
-    || other->getEntityId() == Plasma::ID)
+    || other->getEntityId() == Plasma::ID
+    || other->getEntityId() == Beam::ID)
   {
     bool collide = false;
     Vec2D p;
@@ -156,9 +153,19 @@ void Ufo::collide(Sprite const* other) {
       }
     }
 
+    if(other->getEntityId() == Beam::ID) {
+      Beam const* beam = static_cast<Beam const*>(other);
+      if(shape.collidesWith(beam->getShape()))
+      {
+        life -= 0.1;
+        p = beam->getBasePosition();
+        collide = true;
+      }
+    }
+
     if(collide)
     {
-      if(alive())
+      if(life > 0)
       {
         Vec2D hitDirection = (p - position).uniti();
         Vec2D hitPosition = position + hitDirection.scale(RADIUS);
@@ -170,20 +177,21 @@ void Ufo::collide(Sprite const* other) {
           float speed = 120 + (rand() % 40);
           Vec2D dev = hitNormal.scale(randFloat(-100, 100));
           Spark* spark = new Spark(world, pLife, hitPosition, hitDirection.scale(speed) + dev);
-          world->sprites.insert(std::shared_ptr<Spark>(spark));
+          world->addSprite(spark);
         }
       }
       else
       {
-        world->score += 100;
+        world->removeSprite(this);
+        world->player.score += 100;
 
         Powerup::Type powerupType = static_cast<Powerup::Type>(randInt(0, Powerup::NUM_TYPES - 1));
         Vec2D velocity = Vec2D(0, 1).rotatei(randFloat(0, 1)).scalei(randFloat(30, 80));
         Powerup* powerup = new Powerup(world, powerupType, position, velocity);
-        world->sprites.insert(std::shared_ptr<Powerup>(powerup));
+        world->addSprite(powerup);
 
         Explosion* explosion = new Explosion(world, position);
-        world->sprites.insert(std::shared_ptr<Explosion>(explosion));
+        world->addSprite(explosion);
       }
     }
     return;

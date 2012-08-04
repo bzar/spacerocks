@@ -23,7 +23,6 @@ public:
 
   void render();
   void update(float delta);
-  bool alive() const;
   virtual CircleShape const* getShape() const;
 
   virtual void collide(Sprite const* other);

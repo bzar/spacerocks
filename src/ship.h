@@ -5,6 +5,7 @@
 #include "GL/glhck.h"
 #include "vec2d.h"
 #include "circleshape.h"
+#include "beam.h"
 
 #include <string>
 #include <vector>
@@ -14,7 +15,7 @@ class Ship : public Sprite
 public:
   static void init();
 
-  enum Weapon { RAPID, SPREAD, CONTINUOUS, PLASMA, NUM_WEAPONS };
+  enum Weapon { RAPID, SPREAD, BEAM, PLASMA, NUM_WEAPONS };
 
   Ship(World* world, Vec2D const& position, Vec2D const& velocity);
   ~Ship();
@@ -71,6 +72,7 @@ private:
   float weaponCooldown;
   Weapon weapon;
   bool dead;
+  Beam* beam;
   CircleShape shape;
 
 };
