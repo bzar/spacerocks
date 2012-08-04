@@ -74,19 +74,22 @@ Ship::~Ship()
 
 void Ship::render()
 {
-  if(!dead)
-  {
-    glhckObjectRender(o);
+  if(dead)
+    return;
 
-    if(shieldLeft > 0)
-    {
-      glhckObjectRender(shield);
-    }
+  glhckObjectRender(o);
+
+  if(shieldLeft > 0)
+  {
+    glhckObjectRender(shield);
   }
 }
 
 void Ship::update(float delta)
 {
+  if(dead)
+    return;
+
   if(turningLeft) glhckObjectRotatef(o, 0, 0, delta * 120);
   if(turningRight) glhckObjectRotatef(o, 0, 0, delta * -120);
 
@@ -159,6 +162,9 @@ CircleShape const* Ship::getShape() const
 
 
 void Ship::collide(Sprite const* other) {
+  if(dead)
+    return;
+
   Vec2D position = getPosition();
 
   if(other->getEntityId() == Asteroid::ID) {

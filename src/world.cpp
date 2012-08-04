@@ -51,6 +51,7 @@ void World::update(float const delta)
     {
       if(player.lives > 0)
       {
+        deathDelay = 0;
         player.lives -= 1;
         player.ship->reset();
       }
