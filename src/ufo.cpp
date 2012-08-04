@@ -155,9 +155,9 @@ void Ufo::collide(Sprite const* other) {
 
     if(other->getEntityId() == Beam::ID) {
       Beam const* beam = static_cast<Beam const*>(other);
-      if(shape.collidesWith(beam->getShape()))
+      if(beam->canHit() && shape.collidesWith(beam->getShape()))
       {
-        life -= 0.1;
+        life -= 0.5;
         p = beam->getBasePosition();
         collide = true;
       }

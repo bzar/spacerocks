@@ -1,6 +1,7 @@
 #include "util.h"
 #include <cstdlib>
 #include <stdexcept>
+#include <iostream>
 
 bool circlesIntersect(Vec2D const& p1, float const r1, Vec2D const& p2, float const r2)
 {
@@ -31,6 +32,17 @@ bool lineLineIntersect(Vec2D const& l11, Vec2D const& l12, float const l1r,
                        Vec2D const& l21, Vec2D const& l22, float const l2r)
 {
   throw std::runtime_error("Not implemented!");
+}
+
+Vec2D circleLineIntersectionPoint(Vec2D const& p, float const r, Vec2D const& l1, Vec2D const& l2, float const lr)
+{
+  Vec2D q = (p - l1).projectioni(l2 - l1);
+  Vec2D l1q = q - l1;
+  float s2 = (lr + r) * (lr + r) - (p - q).lengthSquared();
+  float t = 1 - s2 / l1q.lengthSquared();
+  t = t < 0 ? 0 : t > 1 ? 1 : t;
+  Vec2D x = l1 + l1q.scale(t + 0.01);
+  return x;
 }
 
 float randInt(int const minValue, int const maxValue)

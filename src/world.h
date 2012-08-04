@@ -10,6 +10,14 @@
 class World
 {
 public:
+  class ZComparator
+  {
+  public:
+    bool operator()(std::shared_ptr<Sprite> const& a, std::shared_ptr<Sprite> const& b);
+  };
+
+  typedef std::set<std::shared_ptr<Sprite>, ZComparator> Sprites;
+
   struct Level
   {
     Level() : n(0), minAsteroidSpeed(0), maxAsteroidSpeed(0), ufoDuration(0), ufoAccuracy(0), ufoShootInterval(0) {}
@@ -38,7 +46,7 @@ public:
   void initLevel(int const n);
   void addSprite(Sprite* sprite);
   void removeSprite(Sprite* sprite);
-  std::set<std::shared_ptr<Sprite>> const& getSprites();
+  Sprites const& getSprites();
 
   Level level;
   Player player;
@@ -49,19 +57,13 @@ private:
   static float const DEATH_DELAY;
   static float const UFO_DELAY;
 
-  class ZComparator
-  {
-  public:
-    bool operator()(std::shared_ptr<Sprite> const& a, std::shared_ptr<Sprite> const& b);
-  };
-
   static int getUfoInterval();
 
   float deathDelay;
   float ufoDelay;
   int nextUfoScore;
 
-  std::set<std::shared_ptr<Sprite>> sprites;
+  Sprites sprites;
   std::forward_list<Sprite*> spritesToInsert;
   std::forward_list<Sprite*> spritesToRemove;
 };

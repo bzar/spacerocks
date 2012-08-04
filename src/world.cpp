@@ -4,6 +4,8 @@
 #include "ufo.h"
 #include "ufolaser.h"
 
+#include <iostream>
+
 int const World::UFO_SCORE_INTERVAL_MIN = 400;
 int const World::UFO_SCORE_INTERVAL_MAX = 800;
 float const World::DEATH_DELAY = 3.0f;
@@ -11,17 +13,17 @@ float const World::UFO_DELAY = 2.0f;
 
 bool World::ZComparator::operator()(std::shared_ptr<Sprite> const& a, std::shared_ptr<Sprite> const& b)
 {
-  if(a->getZIndex() == b->getZIndex() && a->getEntityId() == b->getEntityId())
+  if(a->getZIndex() != b->getZIndex())
   {
-    return a < b;
+    return a->getZIndex() < b->getZIndex();
   }
-  else if(a->getZIndex() == b->getZIndex())
+  else if(a->getEntityId() != b->getEntityId())
   {
     return a->getEntityId() < b->getEntityId();
   }
   else
   {
-    a->getZIndex() > b->getZIndex();
+    return a < b;
   }
 }
 
@@ -119,13 +121,12 @@ void World::update(float const delta)
     }
   }
 
-  spritesToRemove.clear();
-
   for(Sprite* sprite : spritesToInsert)
   {
     sprites.insert(std::shared_ptr<Sprite>(sprite));
   }
 
+  spritesToRemove.clear();
   spritesToInsert.clear();
 
   bool victory = ufoDelay <= 0 && player.ship != nullptr;
@@ -214,7 +215,7 @@ void World::removeSprite(Sprite* sprite)
   spritesToRemove.push_front(sprite);
 }
 
-std::set<std::shared_ptr<Sprite>> const& World::getSprites()
+World::Sprites const& World::getSprites()
 {
   return sprites;
 }

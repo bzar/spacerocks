@@ -18,7 +18,7 @@ void Beam::init()
 }
 
 Beam::Beam(World* world, Vec2D const& basePosition, Vec2D const& positionDelta) :
-  Sprite(world), o(nullptr), tip(nullptr), hitDelay(0), recovering(false), shape({0, 0}, {0, 0}, 4)
+  Sprite(world, -1), o(nullptr), tip(nullptr), hitDelay(0), recovering(false), shape({0, 0}, {0, 0}, 4)
 {
   o = glhckSpriteNew(TEXTURE, 4, 128);
   tip = glhckSpriteNew(TIP_TEXTURE, 4, 4);
@@ -60,6 +60,8 @@ void Beam::update(float delta)
   glhckObjectRotationf(o, 0, 0, angle);
   glhckObjectRotationf(tip, 0, 0, angle);
 
+  glhckObjectScalef(o, 1, positionDelta.length()/256, 1);
+
   hitDelay = hitDelay > 0 ? hitDelay - delta : 0;
   recovering = hitDelay > 0;
 }
@@ -75,7 +77,9 @@ void Beam::collide(Sprite const* other) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))
     {
-      hitDelay = 0.40;
+      if(!recovering)
+        hitDelay = 0.10;
+      shape.p2 = circleLineIntersectionPoint(asteroid->getShape()->center, asteroid->getShape()->radius, shape.p1, shape.p2, shape.radius);
     }
     return;
   }
@@ -84,7 +88,8 @@ void Beam::collide(Sprite const* other) {
     Ufo const* ufo = static_cast<Ufo const*>(other);
     if(shape.collidesWith(ufo->getShape()))
     {
-      hitDelay = 0.40;
+      if(!recovering)
+        hitDelay = 0.10;
     }
     return;
   }
