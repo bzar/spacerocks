@@ -154,7 +154,7 @@ void Ship::update(float delta)
       }
       weaponCooldown = weaponCooldown = lerp(0.8, 0.3, (world->player.weapon[SPREAD] - 1)/8.0);
     }
-    else if(weapon == BEAM)
+    else if(weapon == BEAM && world->player.weapon[BEAM])
     {
       Vec2D beamVector = direction.scale(world->player.weapon[BEAM] * 32);
       if(!beam)

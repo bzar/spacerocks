@@ -90,6 +90,7 @@ void Beam::collide(Sprite const* other) {
     {
       if(!recovering)
         hitDelay = 0.10;
+      shape.p2 = circleLineIntersectionPoint(ufo->getShape()->center, ufo->getShape()->radius, shape.p1, shape.p2, shape.radius);
     }
     return;
   }

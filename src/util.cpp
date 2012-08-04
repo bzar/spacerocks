@@ -36,8 +36,8 @@ bool lineLineIntersect(Vec2D const& l11, Vec2D const& l12, float const l1r,
 
 Vec2D circleLineIntersectionPoint(Vec2D const& p, float const r, Vec2D const& l1, Vec2D const& l2, float const lr)
 {
-  Vec2D q = (p - l1).projectioni(l2 - l1);
-  Vec2D l1q = q - l1;
+  Vec2D l1q = (p - l1).projectioni(l2 - l1);
+  Vec2D q = l1q - l1;
   float s2 = (lr + r) * (lr + r) - (p - q).lengthSquared();
   float t = 1 - s2 / l1q.lengthSquared();
   t = t < 0 ? 0 : t > 1 ? 1 : t;
