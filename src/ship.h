@@ -6,6 +6,7 @@
 #include "vec2d.h"
 #include "circleshape.h"
 #include "weapon.h"
+#include "textureatlas.h"
 
 #include <memory>
 #include <string>
@@ -57,12 +58,9 @@ private:
   enum ImageType { DEFAULT, ACCELERATING,
                    LEFT, LEFT_ACCELERATING,
                    RIGHT, RIGHT_ACCELERATING,
-                   NUM_IMAGES };
-  static std::string const IMAGES[NUM_IMAGES];
-  static std::string const SHIELD_IMAGE;
-  static std::vector<TransformData> TRANSFORM;
-  static glhckTexture *TEXTURE;
-  static glhckTexture *SHIELD_TEXTURE;
+                   SHIELD, NUM_IMAGES };
+  static std::vector<std::string> const IMAGES;
+  static TextureAtlas atlas;
 
   static int const RADIUS = 10;
 

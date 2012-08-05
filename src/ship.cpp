@@ -9,40 +9,18 @@
 
 int const Ship::ID = Entity::newEntityId();
 
-std::string const Ship::IMAGES[NUM_IMAGES] = {
+std::vector<std::string> const Ship::IMAGES = {
   "img/ship.png", "img/ship_accelerating.png",
   "img/ship_left.png", "img/ship_left_accelerating.png",
   "img/ship_right.png", "img/ship_right_accelerating.png",
+  "img/shield.png"
 };
 
-std::string const Ship::SHIELD_IMAGE = "img/shield.png";
-
-std::vector<Sprite::TransformData> Ship::TRANSFORM;
-glhckTexture *Ship::TEXTURE = NULL;
-glhckTexture *Ship::SHIELD_TEXTURE = NULL;
+TextureAtlas Ship::atlas = TextureAtlas();
 
 void Ship::init()
 {
-  glhckAtlas *TEXTURES = glhckAtlasNew();
-  for(int i = 0; i < NUM_IMAGES; ++i)
-  {
-    glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
-    glhckAtlasInsertTexture(TEXTURES, texture);
-    glhckTextureFree(texture);
-  }
-  glhckAtlasPack(TEXTURES, true, false);
-
-  for(int i = 0; i < NUM_IMAGES; ++i)
-  {
-    TransformData t;
-    glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
-    TRANSFORM.push_back(t);
-  }
-
-  TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
-  glhckAtlasFree(TEXTURES);
-
-  SHIELD_TEXTURE = glhckTextureNew(SHIELD_IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
+  atlas = TextureAtlas(IMAGES);
 }
 
 Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
@@ -53,10 +31,11 @@ Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
   weapons({&laser, &spread, &beam, &plasma}),
   dead(false), shape(position, RADIUS)
 {
-  o = glhckSpriteNew(TEXTURE, 16, 16);
-  shield = glhckSpriteNew(SHIELD_TEXTURE, 24, 24);
+  o = glhckSpriteNew(atlas.getTexture(), 16, 16);
+  shield = glhckSpriteNew(atlas.getTexture(), 24, 24);
 
-  glhckObjectTransformCoordinates(o, &TRANSFORM[DEFAULT].transform, TRANSFORM[DEFAULT].degree);
+  glhckObjectTransformCoordinates(o, &atlas.getTransform(DEFAULT).transform, atlas.getTransform(DEFAULT).degree);
+  glhckObjectTransformCoordinates(shield, &atlas.getTransform(SHIELD).transform, atlas.getTransform(SHIELD).degree);
 
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectSetMaterialFlags(shield, GLHCK_MATERIAL_ALPHA);
@@ -112,7 +91,7 @@ void Ship::update(float delta)
         DEFAULT;
   }
 
-  glhckObjectTransformCoordinates(o, &TRANSFORM[t].transform, TRANSFORM[t].degree);
+  glhckObjectTransformCoordinates(o, &atlas.getTransform(t).transform, atlas.getTransform(t).degree);
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
 

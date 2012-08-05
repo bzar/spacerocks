@@ -6,7 +6,7 @@
 
 int const Powerup::ID = Entity::newEntityId();
 float const Powerup::RADIUS = 16;
-std::string const Powerup::IMAGES[NUM_TYPES] = {
+std::vector<std::string> const Powerup::IMAGES = {
   "img/powerup_laser.png",
   "img/powerup_spread.png",
   "img/powerup_continuous.png",
@@ -16,36 +16,18 @@ std::string const Powerup::IMAGES[NUM_TYPES] = {
   "img/powerup_shield.png"
 };
 
-std::vector<Sprite::TransformData> Powerup::TRANSFORM;
-glhckTexture *Powerup::TEXTURE = NULL;
+TextureAtlas Powerup::atlas = TextureAtlas();
 
 void Powerup::init()
 {
-  glhckAtlas *TEXTURES = glhckAtlasNew();
-  for(int i = 0; i < NUM_TYPES; ++i)
-  {
-    glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
-    glhckAtlasInsertTexture(TEXTURES, texture);
-    glhckTextureFree(texture);
-  }
-  glhckAtlasPack(TEXTURES, true, true);
-
-  for(int i = 0; i < NUM_TYPES; ++i)
-  {
-    TransformData t;
-    glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
-    TRANSFORM.push_back(t);
-  }
-
-  TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
-  glhckAtlasFree(TEXTURES);
+  atlas = TextureAtlas(IMAGES);
 }
 
 Powerup::Powerup(World* world, Type const type, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), type(type), v(velocity), life(10), shape(position, RADIUS)
 {
-  o = glhckSpriteNew(TEXTURE, 16, 16);
-  glhckObjectTransformCoordinates(o, &TRANSFORM[type].transform, TRANSFORM[type].degree);
+  o = glhckSpriteNew(atlas.getTexture(), 16, 16);
+  glhckObjectTransformCoordinates(o, &atlas.getTransform(type).transform, atlas.getTransform(type).degree);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }

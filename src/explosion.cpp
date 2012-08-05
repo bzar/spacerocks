@@ -3,7 +3,7 @@
 
 int const Explosion::ID = Entity::newEntityId();
 
-std::string const Explosion::IMAGES[NUM_IMAGES] = {
+std::vector<std::string> const Explosion::IMAGES = {
   "img/explosion/explosion1_0001.png",
   "img/explosion/explosion1_0002.png",
   "img/explosion/explosion1_0003.png",
@@ -96,36 +96,18 @@ std::string const Explosion::IMAGES[NUM_IMAGES] = {
   "img/explosion/explosion1_0090.png"
 };
 
-std::vector<Sprite::TransformData> Explosion::TRANSFORM;
-glhckTexture *Explosion::TEXTURE = NULL;
+TextureAtlas Explosion::atlas = TextureAtlas();
 
 void Explosion::init()
 {
-  glhckAtlas *TEXTURES = glhckAtlasNew();
-  for(int i = 0; i < NUM_IMAGES; ++i)
-  {
-    glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
-    glhckAtlasInsertTexture(TEXTURES, texture);
-    glhckTextureFree(texture);
-  }
-  glhckAtlasPack(TEXTURES, true, false);
-
-  for(int i = 0; i < NUM_IMAGES; ++i)
-  {
-    TransformData t;
-    glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
-    TRANSFORM.push_back(t);
-  }
-
-  TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
-  glhckAtlasFree(TEXTURES);
+  atlas = TextureAtlas(IMAGES);
 }
 
 Explosion::Explosion(World* world, Vec2D const& position) :
   Sprite(world, 3), o(0), time(0)
 {
-  o = glhckSpriteNew(TEXTURE, 160, 120);
-  glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
+  o = glhckSpriteNew(atlas.getTexture(), 160, 120);
+  glhckObjectTransformCoordinates(o, &atlas.getTransform(0).transform, atlas.getTransform(0).degree);
 
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
@@ -149,7 +131,7 @@ void Explosion::update(float delta)
 
   if(frame < NUM_IMAGES)
   {
-    glhckObjectTransformCoordinates(o, &TRANSFORM[frame].transform, TRANSFORM[frame].degree);
+    glhckObjectTransformCoordinates(o, &atlas.getTransform(frame).transform, atlas.getTransform(frame).degree);
   }
   else
   {

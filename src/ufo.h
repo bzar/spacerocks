@@ -5,6 +5,7 @@
 #include "GL/glhck.h"
 #include "vec2d.h"
 #include "circleshape.h"
+#include "textureatlas.h"
 
 #include <string>
 #include <vector>
@@ -35,10 +36,8 @@ private:
   static int const FPS = 15;
   static int const NUM_FRAMES = 10;
   static int const ANIMATION_FRAMES[NUM_FRAMES];
-  static std::string const IMAGES[NUM_IMAGES];
-  static std::vector<TransformData> TRANSFORM;
-  static glhckTexture *TEXTURE;
-
+  static std::vector<std::string> const IMAGES;
+  static TextureAtlas atlas;
   static int const RADIUS = 16;
 
   glhckObject* o;

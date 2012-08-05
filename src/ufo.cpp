@@ -16,36 +16,18 @@ int const Ufo::ID = Entity::newEntityId();
 
 int const Ufo::ANIMATION_FRAMES[NUM_FRAMES] = {1, 1, 1, 1, 1, 1, 1, 1, 2, 3};
 
-std::string const Ufo::IMAGES[NUM_IMAGES] = {
+std::vector<std::string> const Ufo::IMAGES = {
   "img/ufo_1.png",
   "img/ufo_2.png",
   "img/ufo_3.png",
   "img/ufo_4.png",
 };
 
-std::vector<Sprite::TransformData> Ufo::TRANSFORM;
-glhckTexture *Ufo::TEXTURE = NULL;
+TextureAtlas Ufo::atlas = TextureAtlas();
 
 void Ufo::init()
 {
-  glhckAtlas *TEXTURES = glhckAtlasNew();
-  for(int i = 0; i < NUM_IMAGES; ++i)
-  {
-    glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
-    glhckAtlasInsertTexture(TEXTURES, texture);
-    glhckTextureFree(texture);
-  }
-  glhckAtlasPack(TEXTURES, true, false);
-
-  for(int i = 0; i < NUM_IMAGES; ++i)
-  {
-    TransformData t;
-    glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
-    TRANSFORM.push_back(t);
-  }
-
-  TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
-  glhckAtlasFree(TEXTURES);
+  atlas = TextureAtlas(IMAGES);
 }
 
 Ufo::Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
@@ -57,8 +39,8 @@ Ufo::Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
   shootInterval(world->level.ufoShootInterval),
   time(0), life(3), shape(startPosition, RADIUS)
 {
-  o = glhckSpriteNew(TEXTURE, 16, 16);
-  glhckObjectTransformCoordinates(o, &TRANSFORM[0].transform, TRANSFORM[0].degree);
+  o = glhckSpriteNew(atlas.getTexture(), 16, 16);
+  glhckObjectTransformCoordinates(o, &atlas.getTransform(0).transform, atlas.getTransform(0).degree);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, startPosition.x, startPosition.y, 0);
 }
@@ -78,7 +60,7 @@ void Ufo::update(float delta)
 {
   time += delta;
   int const frame = ANIMATION_FRAMES[static_cast<int>(time * FPS) % NUM_FRAMES];
-  glhckObjectTransformCoordinates(o, &TRANSFORM[frame].transform, TRANSFORM[frame].degree);
+  glhckObjectTransformCoordinates(o, &atlas.getTransform(frame).transform, atlas.getTransform(frame).degree);
   glhckObjectRotatef(o, 0, 0, delta * 180);
 
   Vec2D journey = endPosition - startPosition;

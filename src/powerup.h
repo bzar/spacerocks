@@ -5,6 +5,7 @@
 #include "GL/glhck.h"
 #include "vec2d.h"
 #include "circleshape.h"
+#include "textureatlas.h"
 
 #include <string>
 #include <vector>
@@ -32,9 +33,8 @@ public:
 
 private:
   static float const RADIUS;
-  static std::string const IMAGES[NUM_TYPES];
-  static std::vector<TransformData> TRANSFORM;
-  static glhckTexture *TEXTURE;
+  static std::vector<std::string> const IMAGES;
+  static TextureAtlas atlas;
 
   glhckObject* o;
   Type type;
