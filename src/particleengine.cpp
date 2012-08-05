@@ -2,7 +2,6 @@
 
 std::vector<std::string> const ParticleEngine::IMAGES = {
   "img/spark.png",
-  "img/laser.png",
 };
 
 std::vector<float> const ParticleEngine::PARTICLE_SIZES = {
