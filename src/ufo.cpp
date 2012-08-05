@@ -6,7 +6,6 @@
 #include "util.h"
 #include "explosion.h"
 #include "world.h"
-#include "spark.h"
 #include "ufolaser.h"
 #include "powerup.h"
 
@@ -158,8 +157,8 @@ void Ufo::collide(Sprite const* other) {
           float pLife = 0.1 + randFloat(0, 0.1);
           float speed = 120 + (rand() % 40);
           Vec2D dev = hitNormal.scale(randFloat(-100, 100));
-          Spark* spark = new Spark(world, pLife, hitPosition, hitDirection.scale(speed) + dev);
-          world->addSprite(spark);
+          Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
+          world->getParticleEngine().addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
         }
       }
       else

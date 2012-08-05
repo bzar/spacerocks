@@ -15,7 +15,6 @@
 #include "shot.h"
 #include "plasma.h"
 #include "beam.h"
-#include "spark.h"
 #include "explosion.h"
 #include "ufo.h"
 #include "ufolaser.h"
@@ -31,7 +30,6 @@ void GameState::init()
   Plasma::init();
   Beam::init();
   Explosion::init();
-  Spark::init();
   Ufo::init();
   UfoLaser::init();
   Powerup::init();
@@ -48,9 +46,7 @@ GameState::GameState(Engine* engine) :
   world.player.ship = new Ship(&world, {0, 0}, {0, 0});
   world.addSprite(world.player.ship);
 
-  background = glhckSpriteNewFromFile("img/background.png", 0, 0, GLHCK_TEXTURE_DEFAULTS);
-  glhckObjectScalef(background, 0.5f, 0.5f, 0.5f);
-  glhckObjectPositionf(background, 0, 0, -0.01);
+  background = glhckSpriteNewFromFile("img/background.png", 400, 240, GLHCK_TEXTURE_DEFAULTS);
 
   gameText = glhckTextNew(200, 200);
   fpsText = glhckTextNew(800, 40);
