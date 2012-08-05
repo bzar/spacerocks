@@ -25,7 +25,7 @@ void Asteroid::init()
 }
 
 Asteroid::Asteroid(World* world, Size const size, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), size(size), v(velocity), life(size + 1), shape(position, RADII[size])
+  Sprite(world), o(0), size(size), v(velocity), life((size + 1)/2.0f), shape(position, RADII[size])
 {
   o = glhckSpriteNew(atlas.getTexture(), IMAGE_SIZES[size], IMAGE_SIZES[size]);
   glhckObjectTransformCoordinates(o, &atlas.getTransform(size).transform, atlas.getTransform(size).degree);
