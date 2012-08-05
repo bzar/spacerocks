@@ -77,7 +77,7 @@ void Powerup::collide(Sprite const* other) {
     Ship const* ship = static_cast<Ship const*>(other);
     if(shape.collidesWith(ship->getShape()))
     {
-      life = 0;
+      world->removeSprite(this);
     }
     return;
   }
