@@ -30,12 +30,15 @@ bool World::ZComparator::operator()(std::shared_ptr<Sprite> const& a, std::share
 World::World(Player const& player, Level const& level) :
   player(player), level(level),
   deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
-  sprites(), spritesToInsert(), spritesToRemove()
+  sprites(), spritesToInsert(), spritesToRemove(),
+  particleEngine()
 {
 }
 
 void World::update(float const delta)
 {
+  particleEngine.update(delta);
+
   if(!player.ship->alive())
   {
     if(deathDelay == 0)
@@ -206,6 +209,11 @@ void World::removeSprite(Sprite* sprite)
 World::Sprites const& World::getSprites()
 {
   return sprites;
+}
+
+ParticleEngine& World::getParticleEngine()
+{
+  return particleEngine;
 }
 
 int World::getUfoInterval()

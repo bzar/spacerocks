@@ -20,6 +20,7 @@
 #include "ufo.h"
 #include "ufolaser.h"
 #include "powerup.h"
+#include "particleengine.h"
 
 void GameState::init()
 {
@@ -34,6 +35,7 @@ void GameState::init()
   Ufo::init();
   UfoLaser::init();
   Powerup::init();
+  ParticleEngine::init();
 }
 
 GameState::GameState(Engine* engine) :
@@ -112,6 +114,8 @@ void GameState::render()
   {
     i->render();
   }
+
+  world.getParticleEngine().render();
 
   std::ostringstream ss;
   ss << "Level: " << (world.level.n + 1)

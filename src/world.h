@@ -7,6 +7,7 @@
 #include <memory>
 #include "sprite.h"
 #include "ship.h"
+#include "particleengine.h"
 
 class World
 {
@@ -47,6 +48,7 @@ public:
   void addSprite(Sprite* sprite);
   void removeSprite(Sprite* sprite);
   Sprites const& getSprites();
+  ParticleEngine& getParticleEngine();
 
   Level level;
   Player player;
@@ -66,6 +68,8 @@ private:
   Sprites sprites;
   std::forward_list<Sprite*> spritesToInsert;
   std::forward_list<Sprite*> spritesToRemove;
+
+  ParticleEngine particleEngine;
 };
 
 #endif

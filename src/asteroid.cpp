@@ -3,7 +3,6 @@
 #include "shot.h"
 #include "plasma.h"
 #include "beam.h"
-#include "spark.h"
 #include "world.h"
 #include "util.h"
 
@@ -148,8 +147,7 @@ void Asteroid::collide(Sprite const* other) {
           float speed = randFloat(120, 160);
           Vec2D dev = hitNormal.scale(randFloat(-100, 100));
           Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
-          Spark* spark = new Spark(world, pLife, startPos, hitDirection.scale(speed) + dev);
-          world->addSprite(spark);
+          world->getParticleEngine().addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
         }
       }
       else
@@ -189,8 +187,7 @@ void Asteroid::die()
     Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
     Vec2D velocity = direction.scale(speed);
     Vec2D startPos = position + direction.scale(rand() % r);
-    Spark* spark = new Spark(world, pLife, startPos, velocity);
-    world->addSprite(spark);
+    world->getParticleEngine().addParticle(ParticleEngine::SPARK, startPos, velocity, pLife);
   }
 
   if(size > TINY)
