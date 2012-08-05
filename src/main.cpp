@@ -73,14 +73,14 @@ int gameloop(GLFWwindow& window)
 
   Engine engine(&window);
 
+  glfwSetWindowUserPointer(window, &engine);
+  glfwSetWindowSizeCallback(windowResizeCallback);
+
   GameState::init();
   engine.addState(0, new GameState(&engine));
   engine.setState(0);
 
   glhckMemoryGraph();
-
-  glfwSetWindowUserPointer(window, &engine);
-  glfwSetWindowSizeCallback(windowResizeCallback);
 
   engine.run();
 

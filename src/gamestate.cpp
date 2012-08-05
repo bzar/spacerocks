@@ -123,7 +123,14 @@ void GameState::render()
       << " B" << world.player.ship->getBeamLevel()
       << " P" << world.player.ship->getPlasmaLevel();
 
+  glhckTextColor(gameText, 0, 0, 0, 255);
+  glhckTextDraw(gameText, gameFont, 20, 6, 21, ss.str().data(), NULL);
+  glhckTextRender(gameText);
+
+  glhckTextColor(gameText, 255, 255, 255, 255);
   glhckTextDraw(gameText, gameFont, 20, 5, 20, ss.str().data(), NULL);
+  glhckTextRender(gameText);
+
 
   ss.str("");
   ss << std::setprecision(2) << std::fixed
@@ -132,8 +139,6 @@ void GameState::render()
       << "s | frame: " << engine->getTimer().getTicks();
 
   glhckTextDraw(fpsText, fpsFont, 14, 5, 35, ss.str().data(), NULL);
-
-  glhckTextRender(gameText);
   glhckTextRender(fpsText);
 
 }

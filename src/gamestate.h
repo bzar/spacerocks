@@ -20,6 +20,8 @@ private:
   World world;
   glhckObject* background;
   glhckText *gameText;
+  glhckText *gameTextShadow;
+
   glhckText *fpsText;
   unsigned int gameFont;
   unsigned int fpsFont;
