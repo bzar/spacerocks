@@ -9,45 +9,27 @@
 
 int const Asteroid::ID = Entity::newEntityId();
 float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
-std::string const Asteroid::IMAGES[NUM_SIZES] = {
+std::vector<std::string> const Asteroid::IMAGES  = {
   "img/asteroid_1.png",
   "img/asteroid_2.png",
   "img/asteroid_3.png",
   "img/asteroid_4.png"
 };
 
-float Asteroid::IMAGE_SIZES[NUM_SIZES] = {8, 8, 16, 24 };
+float const Asteroid::IMAGE_SIZES[NUM_SIZES] = {8, 8, 16, 24 };
 
-std::vector<Sprite::TransformData> Asteroid::TRANSFORM;
-glhckTexture *Asteroid::TEXTURE = NULL;
+TextureAtlas Asteroid::atlas = TextureAtlas();
 
 void Asteroid::init()
 {
-  glhckAtlas *TEXTURES = glhckAtlasNew();
-  for(int i = 0; i < NUM_SIZES; ++i)
-  {
-    glhckTexture* texture = glhckTextureNew(IMAGES[i].data(), GLHCK_TEXTURE_DEFAULTS);
-    glhckAtlasInsertTexture(TEXTURES, texture);
-    glhckTextureFree(texture);
-  }
-  glhckAtlasPack(TEXTURES, true, true);
-
-  for(int i = 0; i < NUM_SIZES; ++i)
-  {
-    TransformData t;
-    glhckAtlasGetTransform(TEXTURES, glhckAtlasGetTextureByIndex(TEXTURES, i), &t.transform, &t.degree);
-    TRANSFORM.push_back(t);
-  }
-
-  TEXTURE = glhckTextureRef(glhckAtlasGetTexture(TEXTURES));
-  glhckAtlasFree(TEXTURES);
+  atlas = TextureAtlas(IMAGES);
 }
 
 Asteroid::Asteroid(World* world, Size const size, Vec2D const& position, Vec2D const& velocity) :
   Sprite(world), o(0), size(size), v(velocity), life(size + 1), shape(position, RADII[size])
 {
-  o = glhckSpriteNew(TEXTURE, IMAGE_SIZES[size], IMAGE_SIZES[size]);
-  glhckObjectTransformCoordinates(o, &TRANSFORM[size].transform, TRANSFORM[size].degree);
+  o = glhckSpriteNew(atlas.getTexture(), IMAGE_SIZES[size], IMAGE_SIZES[size]);
+  glhckObjectTransformCoordinates(o, &atlas.getTransform(size).transform, atlas.getTransform(size).degree);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }

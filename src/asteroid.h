@@ -5,6 +5,7 @@
 #include "GL/glhck.h"
 #include "vec2d.h"
 #include "circleshape.h"
+#include "textureatlas.h"
 
 #include <string>
 #include <vector>
@@ -33,10 +34,9 @@ public:
 
 private:
   static float const RADII[NUM_SIZES];
-  static std::string const IMAGES[NUM_SIZES];
-  static std::vector<TransformData> TRANSFORM;
-  static float IMAGE_SIZES[NUM_SIZES];
-  static glhckTexture *TEXTURE;
+  static std::vector<std::string> const IMAGES;
+  static float const IMAGE_SIZES[NUM_SIZES];
+  static TextureAtlas atlas;
 
   glhckObject* o;
   Size size;
