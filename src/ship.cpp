@@ -119,7 +119,7 @@ void Ship::update(float delta)
   if(shooting)
   {
     Vec2D direction = Vec2D(0, 1).rotatei(glhckObjectGetRotation(o)->z / 360);
-    weapon->shoot(getPosition(), direction);
+    weapon->shoot(getPosition() + direction.scale(RADIUS), direction);
   }
 
   glhckObjectPosition(shield, glhckObjectGetPosition(o));

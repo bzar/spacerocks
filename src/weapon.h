@@ -72,9 +72,11 @@ public:
   int getWeaponId() const { return ID; }
   void shoot(Vec2D const& position, Vec2D const& direction);
   void stopShooting();
+  void update(float const delta);
 
 private:
   Beam* beam;
+  float time;
 };
 
 

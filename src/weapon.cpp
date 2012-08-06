@@ -64,13 +64,13 @@ void SpreadWeapon::update(float const delta)
 
 
 
-BeamWeapon::BeamWeapon(World* world) : Weapon(world), beam(nullptr)
+BeamWeapon::BeamWeapon(World* world) : Weapon(world), beam(nullptr), time(0)
 {
 }
 
 void BeamWeapon::shoot(Vec2D const& position, Vec2D const& direction)
 {
-  Vec2D beamVector = direction.scale(level * 32);
+  Vec2D beamVector = direction.scale(level * 32 * lerp(0, 1, time*8));
   if(beam == nullptr)
   {
     beam = new Beam(world, position, beamVector);
@@ -87,8 +87,14 @@ void BeamWeapon::stopShooting()
 {
   world->removeSprite(beam);
   beam = nullptr;
+  time = 0;
 }
 
+void BeamWeapon::update(float const delta)
+{
+  if(beam != nullptr)
+    time += delta;
+}
 
 PlasmaWeapon::PlasmaWeapon(World* world) : Weapon(world), cooldown(0)
 {
