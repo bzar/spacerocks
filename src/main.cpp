@@ -77,7 +77,8 @@ int gameloop(GLFWwindow& window)
   glfwSetWindowSizeCallback(windowResizeCallback);
 
   GameState::init();
-  engine.addState(0, new GameState(&engine));
+  GameState game(&engine);
+  engine.addState(0, &game);
   engine.setState(0);
 
   glhckMemoryGraph();
