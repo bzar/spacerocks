@@ -1,7 +1,6 @@
 #include "ufolaser.h"
-#include "world.h"
 #include "asteroid.h"
-#include "util.h"
+#include "util/util.h"
 
 Entity::Id const UfoLaser::ID = Entity::newEntityId();
 std::string const UfoLaser::IMAGE = "img/ufolaser.png";

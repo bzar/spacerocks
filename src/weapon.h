@@ -1,7 +1,7 @@
 #ifndef WEAPON_HH
 #define WEAPON_HH
 
-#include "vec2d.h"
+#include "util/vec2d.h"
 #include "beam.h"
 
 class GameWorld;

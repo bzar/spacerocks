@@ -1,13 +1,13 @@
 #ifndef PARTICLEENGINE_HH
 #define PARTICLEENGINE_HH
 
+#include "ew/updatable.h"
+#include "ew/renderable.h"
 #include "GL/glhck.h"
-#include "vec2d.h"
-#include "textureatlas.h"
+#include "util/vec2d.h"
 
+#include "textureatlas.h"
 #include "gameworld.h"
-#include "renderable.h"
-#include "updatable.h"
 
 #include <vector>
 #include <array>

@@ -2,11 +2,11 @@
 #define EXPLOSION_HH
 
 #include "gameworld.h"
-#include "updatable.h"
-#include "renderable.h"
+#include "ew/updatable.h"
+#include "ew/renderable.h"
 
 #include "GL/glhck.h"
-#include "vec2d.h"
+#include "util/vec2d.h"
 #include "textureatlas.h"
 
 #include <string>

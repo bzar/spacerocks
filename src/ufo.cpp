@@ -3,12 +3,12 @@
 #include "shot.h"
 #include "plasma.h"
 #include "beam.h"
-#include "util.h"
 #include "explosion.h"
 #include "ufolaser.h"
 #include "powerup.h"
 #include "ship.h"
 #include "particleengine.h"
+#include "util/util.h"
 
 float const TAU = 2 * 3.14159265;
 

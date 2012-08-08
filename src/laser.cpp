@@ -1,8 +1,7 @@
 #include "laser.h"
 #include "asteroid.h"
-#include "util.h"
-#include "gameworld.h"
 #include "ufo.h"
+#include "util/util.h"
 
 Entity::Id const Laser::ID = Entity::newEntityId();
 std::string const Laser::IMAGE = "img/laser2.png";

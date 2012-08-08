@@ -1,7 +1,7 @@
 #ifndef GAMEWORLD_HH
 #define GAMEWORLD_HH
 
-#include "world.h"
+#include "ew/world.h"
 
 class Ship;
 class ParticleEngine;

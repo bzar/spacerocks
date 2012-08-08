@@ -2,17 +2,16 @@
 #define SHIP_HH
 
 #include "gameworld.h"
-#include "renderable.h"
-#include "updatable.h"
-#include "collidable.h"
+#include "ew/renderable.h"
+#include "ew/updatable.h"
+#include "ew/collidable.h"
 
 #include "GL/glhck.h"
-#include "vec2d.h"
-#include "circleshape.h"
+#include "util/vec2d.h"
+#include "util/circleshape.h"
 #include "weapon.h"
 #include "textureatlas.h"
 
-#include <memory>
 #include <string>
 #include <vector>
 

@@ -3,8 +3,7 @@
 #include "shot.h"
 #include "plasma.h"
 #include "beam.h"
-#include "world.h"
-#include "util.h"
+#include "util/util.h"
 #include "particleengine.h"
 
 Entity::Id const Asteroid::ID = Entity::newEntityId();

@@ -1,7 +1,7 @@
 #include "beam.h"
 #include "asteroid.h"
-#include "util.h"
 #include "ufo.h"
+#include "util/util.h"
 
 Entity::Id const Beam::ID = Entity::newEntityId();
 

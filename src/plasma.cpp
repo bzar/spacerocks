@@ -1,7 +1,7 @@
 #include "plasma.h"
 #include "asteroid.h"
-#include "util.h"
 #include "ufo.h"
+#include "util/util.h"
 
 Entity::Id const Plasma::ID = Entity::newEntityId();
 std::string const Plasma::IMAGE = "img/plasma.png";

@@ -1,7 +1,7 @@
 #include "GL/glfw3.h"
 #include "GL/glhck.h"
 
-#include "engine.h"
+#include "ew/engine.h"
 #include "gamestate.h"
 
 #include <cstdlib>

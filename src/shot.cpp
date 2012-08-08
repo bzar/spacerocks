@@ -1,8 +1,7 @@
 #include "shot.h"
-#include "world.h"
 #include "asteroid.h"
-#include "util.h"
 #include "ufo.h"
+#include "util/util.h"
 
 Entity::Id const Shot::ID = Entity::newEntityId();
 std::string const Shot::IMAGE = "img/shot.png";

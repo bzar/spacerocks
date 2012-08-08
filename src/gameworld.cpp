@@ -1,5 +1,5 @@
 #include "gameworld.h"
-#include "util.h"
+#include "util/util.h"
 #include "ship.h"
 #include "asteroid.h"
 #include "ufo.h"

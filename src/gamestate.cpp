@@ -4,10 +4,10 @@
 
 #include <iomanip>
 #include <sstream>
-#include "vec2d.h"
-#include "util.h"
+#include "util/vec2d.h"
+#include "util/util.h"
 
-#include "engine.h"
+#include "ew/engine.h"
 
 #include "asteroid.h"
 #include "ship.h"

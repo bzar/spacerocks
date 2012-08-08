@@ -1,6 +1,5 @@
 #include "weapon.h"
-#include "util.h"
-#include "gameworld.h"
+#include "util/util.h"
 
 #include "laser.h"
 #include "shot.h"

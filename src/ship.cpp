@@ -1,11 +1,10 @@
 #include "ship.h"
 #include "asteroid.h"
 #include "explosion.h"
-#include "world.h"
-#include "util.h"
 #include "ufo.h"
 #include "ufolaser.h"
 #include "powerup.h"
+#include "util/util.h"
 
 Entity::Id const Ship::ID = Entity::newEntityId();
 

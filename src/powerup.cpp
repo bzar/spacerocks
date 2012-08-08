@@ -1,7 +1,6 @@
 #include "powerup.h"
 #include "ship.h"
-#include "world.h"
-#include "util.h"
+#include "util/util.h"
 #include <cstdlib>
 
 Entity::Id const Powerup::ID = Entity::newEntityId();

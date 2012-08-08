@@ -1,7 +1,7 @@
 #ifndef GAMESTATE_HH
 #define GAMESTATE_HH
 
-#include "state.h"
+#include "ew/state.h"
 #include "gameworld.h"
 #include "GL/glhck.h"
 

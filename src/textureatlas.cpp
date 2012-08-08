@@ -1,5 +1,4 @@
 #include "textureatlas.h"
-#include <iostream>
 
 TextureAtlas::TextureAtlas() :
   texture(nullptr), transforms()
