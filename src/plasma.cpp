@@ -1,10 +1,9 @@
 #include "plasma.h"
-#include "world.h"
 #include "asteroid.h"
 #include "util.h"
 #include "ufo.h"
 
-int const Plasma::ID = Entity::newEntityId();
+Entity::Id const Plasma::ID = Entity::newEntityId();
 std::string const Plasma::IMAGE = "img/plasma.png";
 glhckTexture* Plasma::TEXTURE = nullptr;
 
@@ -13,9 +12,15 @@ void Plasma::init()
   TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
 }
 
-Plasma::Plasma(World* world, float const life, float const power,
+void Plasma::term()
+{
+  glhckTextureFree(TEXTURE);
+}
+
+Plasma::Plasma(GameWorld* world, float const life, float const power,
                Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), power(power), nextPower(power), life(life), v(velocity), shape(position, getRadius())
+  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  o(0), power(power), nextPower(power), life(life), v(velocity), shape(position, getRadius())
 {
   o = glhckSpriteNew(TEXTURE, 1, 1);
   glhckObjectScalef(o, getRadius(), getRadius(), 1);
@@ -63,7 +68,7 @@ void Plasma::update(float delta)
   }
 
   if(life <= 0 || power <= 0)
-    world->removeSprite(this);
+    world->removeEntity(this);
 }
 
 CircleShape const* Plasma::getShape() const
@@ -72,7 +77,7 @@ CircleShape const* Plasma::getShape() const
 }
 
 
-void Plasma::collide(Sprite const* other) {
+void Plasma::collide(Collidable const* other) {
   if(life <= 0 || power <= 0)
     return;
 
@@ -97,7 +102,7 @@ void Plasma::collide(Sprite const* other) {
   }
 
   if(life <= 0 || power <= 0)
-    world->removeSprite(this);
+    world->removeEntity(this);
 
 }
 

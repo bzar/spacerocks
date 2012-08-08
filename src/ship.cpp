@@ -7,7 +7,7 @@
 #include "ufolaser.h"
 #include "powerup.h"
 
-int const Ship::ID = Entity::newEntityId();
+Entity::Id const Ship::ID = Entity::newEntityId();
 
 std::vector<std::string> const Ship::IMAGES = {
   "img/ship.png", "img/ship_accelerating.png",
@@ -23,8 +23,14 @@ void Ship::init()
   atlas = TextureAtlas(IMAGES);
 }
 
-Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world, 1), o(nullptr), shield(nullptr), v(velocity),
+void Ship::term()
+{
+  atlas = TextureAtlas();
+}
+
+Ship::Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity) :
+  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  gameWorld(world), o(nullptr), shield(nullptr), v(velocity),
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
   shieldLeft(4),
   weapon(nullptr), laser(world), spread(world), beam(world), plasma(world),
@@ -48,6 +54,7 @@ Ship::Ship(World* world, Vec2D const& position, Vec2D const& velocity) :
 Ship::~Ship()
 {
   glhckObjectFree(o);
+  glhckObjectFree(shield);
 }
 
 
@@ -64,7 +71,7 @@ void Ship::render()
   }
 }
 
-void Ship::update(float delta)
+void Ship::update(float const delta)
 {
   if(dead)
     return;
@@ -140,7 +147,7 @@ CircleShape const* Ship::getShape() const
 }
 
 
-void Ship::collide(Sprite const* other) {
+void Ship::collide(Collidable const* other) {
   if(dead)
     return;
 
@@ -207,11 +214,11 @@ void Ship::collide(Sprite const* other) {
       }
       else if(powerup->getType() == Powerup::EXTRALIFE)
       {
-        world->player.lives += 1;
+        gameWorld->player.lives += 1;
       }
       else if(powerup->getType() == Powerup::LOSELIFE)
       {
-        world->player.lives -= 1;
+        gameWorld->player.lives -= 1;
       }
       else if(powerup->getType() == Powerup::SHIELD)
       {
@@ -316,8 +323,7 @@ void Ship::prevWeapon()
 
 void Ship::die()
 {
-  Explosion* explosion = new Explosion(world, getPosition());
-  world->addSprite(explosion);
+  Explosion* explosion = new Explosion(gameWorld, getPosition());
   dead = true;
 
   for(Weapon* w : weapons)

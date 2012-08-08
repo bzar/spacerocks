@@ -5,22 +5,30 @@
 #include "vec2d.h"
 #include "textureatlas.h"
 
+#include "gameworld.h"
+#include "renderable.h"
+#include "updatable.h"
+
 #include <vector>
 #include <array>
 #include <string>
 
-class ParticleEngine
+class ParticleEngine : public Renderable, public Updatable
 {
 public:
   enum ParticleType { SPARK, NUM_PARTICLE_TYPES };
 
   static void init();
+  static void term();
 
-  ParticleEngine();
+  ParticleEngine(GameWorld* world);
   ~ParticleEngine();
 
+  static Entity::Id const ID;
+  Entity::Id getEntityId() const { return ID; }
+
   void render();
-  void update(float delta);
+  void update(float const delta);
 
   void addParticle(ParticleType const type, Vec2D const& position, Vec2D const& velocity, float const life);
 

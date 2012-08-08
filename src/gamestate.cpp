@@ -36,16 +36,25 @@ void GameState::init()
   ParticleEngine::init();
 }
 
+void GameState::term()
+{
+  Ship::term();
+  Asteroid::term();
+  Laser::term();
+  Shot::term();
+  Plasma::term();
+  Beam::term();
+  Explosion::term();
+  Ufo::term();
+  UfoLaser::term();
+  Powerup::term();
+  ParticleEngine::term();
+}
+
 GameState::GameState(Engine* engine) :
   State(engine), world(), background(nullptr),
   gameText(nullptr), fpsText(nullptr), gameFont(0), fpsFont(0)
 {
-  world.player.lives = 3;
-  world.initLevel(0);
-
-  world.player.ship = new Ship(&world, {0, 0}, {0, 0});
-  world.addSprite(world.player.ship);
-
   background = glhckSpriteNewFromFile("img/background.png", 400, 240, GLHCK_TEXTURE_DEFAULTS);
 
   gameText = glhckTextNew(200, 200);
@@ -53,6 +62,13 @@ GameState::GameState(Engine* engine) :
 
   gameFont = glhckTextNewFont(gameText, "fonts/DejaVuSans.ttf");
   fpsFont = glhckTextNewFont(fpsText, "fonts/DejaVuSans.ttf");
+}
+
+GameState::~GameState()
+{
+  glhckObjectFree(background);
+  glhckTextFree(gameText);
+  glhckTextFree(fpsText);
 }
 
 void GameState::input()
@@ -106,12 +122,7 @@ void GameState::render()
 {
   glhckObjectRender(background);
 
-  for(auto i : world.getSprites())
-  {
-    i->render();
-  }
-
-  world.getParticleEngine().render();
+  world.render();
 
   std::ostringstream ss;
   ss << "Level: " << (world.level.n + 1)

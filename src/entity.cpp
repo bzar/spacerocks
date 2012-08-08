@@ -1,3 +1,3 @@
 #include "entity.h"
 
-int Entity::nextId = 0;
+Entity::Id Entity::nextId = 0;

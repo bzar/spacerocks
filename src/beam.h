@@ -1,29 +1,34 @@
 #ifndef BEAM_HH
 #define BEAM_HH
 
-#include "sprite.h"
+#include "gameworld.h"
+#include "renderable.h"
+#include "updatable.h"
+#include "collidable.h"
+
 #include "GL/glhck.h"
 #include "vec2d.h"
 #include "lineshape.h"
 
 #include <string>
 
-class Beam : public Sprite
+class Beam : public Renderable, public Updatable, public Collidable
 {
 public:
   static void init();
+  static void term();
 
-  Beam(World* world, Vec2D const& basePosition, Vec2D const& positionDelta);
+  Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDelta);
   ~Beam();
 
-  static int const ID;
-  int getEntityId() const { return ID; }
+  static Entity::Id const ID;
+  Entity::Id getEntityId() const { return ID; }
 
   void render();
-  void update(float delta);
-  virtual LineShape const* getShape() const;
+  void update(float const delta);
+  LineShape const* getShape() const;
 
-  virtual void collide(Sprite const* other);
+  void collide(Collidable const* other);
 
   void setBasePosition(Vec2D const& basePosition);
   void setPositionDelta(Vec2D const& positionDelta);

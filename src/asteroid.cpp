@@ -5,8 +5,9 @@
 #include "beam.h"
 #include "world.h"
 #include "util.h"
+#include "particleengine.h"
 
-int const Asteroid::ID = Entity::newEntityId();
+Entity::Id const Asteroid::ID = Entity::newEntityId();
 float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
 std::vector<std::string> const Asteroid::IMAGES  = {
   "img/asteroid_1.png",
@@ -24,8 +25,14 @@ void Asteroid::init()
   atlas = TextureAtlas(IMAGES);
 }
 
-Asteroid::Asteroid(World* world, Size const size, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), size(size), v(velocity), life((size + 1)/2.0f), shape(position, RADII[size])
+void Asteroid::term()
+{
+  atlas = TextureAtlas();
+}
+
+Asteroid::Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec2D const& velocity) :
+  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  gameWorld(world), o(0), size(size), v(velocity), life((size + 1)/2.0f), shape(position, RADII[size])
 {
   o = glhckSpriteNew(atlas.getTexture(), IMAGE_SIZES[size], IMAGE_SIZES[size]);
   glhckObjectTransformCoordinates(o, &atlas.getTransform(size).transform, atlas.getTransform(size).degree);
@@ -43,7 +50,7 @@ void Asteroid::render()
   glhckObjectRender(o);
 }
 
-void Asteroid::update(float delta)
+void Asteroid::update(float const delta)
 {
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
   glhckObjectRotatef(o, 0, 0, delta * 40);
@@ -70,7 +77,7 @@ CircleShape const* Asteroid::getShape() const
   return &shape;
 }
 
-void Asteroid::collide(Sprite const* other) {
+void Asteroid::collide(Collidable const* other) {
   if(!life > 0)
     return;
 
@@ -147,7 +154,7 @@ void Asteroid::collide(Sprite const* other) {
           float speed = randFloat(120, 160);
           Vec2D dev = hitNormal.scale(randFloat(-100, 100));
           Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
-          world->getParticleEngine().addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
+          gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
         }
       }
       else
@@ -174,10 +181,10 @@ float Asteroid::getLife() const
 
 void Asteroid::die()
 {
-  world->removeSprite(this);
+  gameWorld->removeEntity(this);
 
   Vec2D position = getPosition();
-  world->player.score += (size + 1) * 10;
+  gameWorld->player.score += (size + 1) * 10;
 
   int r = static_cast<int>(RADII[size]);
   for(int i = 0; i < 2 * r; ++i)
@@ -187,19 +194,18 @@ void Asteroid::die()
     Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
     Vec2D velocity = direction.scale(speed);
     Vec2D startPos = position + direction.scale(rand() % r);
-    world->getParticleEngine().addParticle(ParticleEngine::SPARK, startPos, velocity, pLife);
+    gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, velocity, pLife);
   }
 
   if(size > TINY)
   {
     for(int i = 0; i < 2; ++i)
     {
-      float speed = randFloat(world->level.minAsteroidSpeed, world->level.maxAsteroidSpeed);
+      float speed = randFloat(gameWorld->level.minAsteroidSpeed, gameWorld->level.maxAsteroidSpeed);
       Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
       Vec2D velocity = direction.scale(speed);
       Vec2D startPos = position + direction.scale(rand() % r);
-      Asteroid* asteroid = new Asteroid(world, static_cast<Size>(size - 1), startPos, velocity);
-      world->addSprite(asteroid);
+      Asteroid* asteroid = new Asteroid(gameWorld, static_cast<Size>(size - 1), startPos, velocity);
     }
   }
 }

@@ -1,7 +1,11 @@
 #ifndef SHIP_HH
 #define SHIP_HH
 
-#include "sprite.h"
+#include "gameworld.h"
+#include "renderable.h"
+#include "updatable.h"
+#include "collidable.h"
+
 #include "GL/glhck.h"
 #include "vec2d.h"
 #include "circleshape.h"
@@ -12,23 +16,24 @@
 #include <string>
 #include <vector>
 
-class Ship : public Sprite
+class Ship : public Renderable, public Updatable, public Collidable
 {
 public:
   static void init();
+  static void term();
 
-  Ship(World* world, Vec2D const& position, Vec2D const& velocity);
+  Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity);
   ~Ship();
 
-  static int const ID;
-  int getEntityId() const { return ID; }
+  static Entity::Id const ID;
+  Entity::Id getEntityId() const { return ID; }
 
   void render();
-  void update(float delta);
+  void update(float const delta);
+  virtual void collide(Collidable const* other);
+
   bool alive() const;
   virtual CircleShape const* getShape() const;
-
-  virtual void collide(Sprite const* other);
 
   void turnLeft(bool const value);
   void turnRight(bool const value);
@@ -64,6 +69,7 @@ private:
 
   static int const RADIUS = 10;
 
+  GameWorld* gameWorld;
   glhckObject* o;
   glhckObject* shield;
   Vec2D v;

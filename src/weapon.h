@@ -4,12 +4,12 @@
 #include "vec2d.h"
 #include "beam.h"
 
-class World;
+class GameWorld;
 
 class Weapon
 {
 public:
-  Weapon(World* world) : world(world), level(0) {}
+  Weapon(GameWorld* world) : world(world), level(0) {}
 
   virtual int getWeaponId() const = 0;
 
@@ -28,7 +28,7 @@ protected:
 
   static int const MIN_LEVEL = 1;
   static int const MAX_LEVEL = 8;
-  World* world;
+  GameWorld* world;
   int level;
 
 private:
@@ -39,7 +39,7 @@ private:
 class LaserWeapon : public Weapon
 {
 public:
-  LaserWeapon(World* world);
+  LaserWeapon(GameWorld* world);
   static int const ID;
   int getWeaponId() const { return ID; }
   void shoot(Vec2D const& position, Vec2D const& direction);
@@ -53,7 +53,7 @@ private:
 class SpreadWeapon : public Weapon
 {
 public:
-  SpreadWeapon(World* world);
+  SpreadWeapon(GameWorld* world);
   static int const ID;
   int getWeaponId() const { return ID; }
   void shoot(Vec2D const& position, Vec2D const& direction);
@@ -67,7 +67,7 @@ private:
 class BeamWeapon : public Weapon
 {
 public:
-  BeamWeapon(World* world);
+  BeamWeapon(GameWorld* world);
   static int const ID;
   int getWeaponId() const { return ID; }
   void shoot(Vec2D const& position, Vec2D const& direction);
@@ -83,7 +83,7 @@ private:
 class PlasmaWeapon : public Weapon
 {
 public:
-  PlasmaWeapon(World* world);
+  PlasmaWeapon(GameWorld* world);
   static int const ID;
   int getWeaponId() const { return ID; }
   void shoot(Vec2D const& position, Vec2D const& direction);

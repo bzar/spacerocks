@@ -3,7 +3,7 @@
 #include "util.h"
 #include "ufo.h"
 
-int const Beam::ID = Entity::newEntityId();
+Entity::Id const Beam::ID = Entity::newEntityId();
 
 float const Beam::RADIUS = 4;
 std::string const Beam::IMAGE = "img/continuous_beam.png";
@@ -17,8 +17,15 @@ void Beam::init()
   TIP_TEXTURE = glhckTextureNew(TIP_IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
 }
 
-Beam::Beam(World* world, Vec2D const& basePosition, Vec2D const& positionDelta) :
-  Sprite(world, -1), o(nullptr), tip(nullptr), hitDelay(0), recovering(false), shape({0, 0}, {0, 0}, 4)
+void Beam::term()
+{
+  glhckTextureFree(TEXTURE);
+  glhckTextureFree(TIP_TEXTURE);
+}
+
+Beam::Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDelta) :
+  Entity(world), Renderable(world, -1), Updatable(world), Collidable(world),
+  o(nullptr), tip(nullptr), hitDelay(0), recovering(false), shape({0, 0}, {0, 0}, 4)
 {
   o = glhckSpriteNew(TEXTURE, 4, 128);
   tip = glhckSpriteNew(TIP_TEXTURE, 4, 4);
@@ -49,7 +56,7 @@ void Beam::render()
   glhckObjectRender(tip);
 }
 
-void Beam::update(float delta)
+void Beam::update(float const delta)
 {
   Vec2D positionDelta = shape.p2 - shape.p1;
   Vec2D midPoint = shape.p1 + positionDelta.scale(0.5);
@@ -72,7 +79,7 @@ LineShape const* Beam::getShape() const
 }
 
 
-void Beam::collide(Sprite const* other) {
+void Beam::collide(Collidable const* other) {
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))

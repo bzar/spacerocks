@@ -70,7 +70,6 @@ int gameloop(GLFWwindow& window)
   kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
   glhckRenderSetProjection(&proj);
 
-
   Engine engine(&window);
 
   glfwSetWindowUserPointer(window, &engine);
@@ -84,6 +83,8 @@ int gameloop(GLFWwindow& window)
   glhckMemoryGraph();
 
   engine.run();
+
+  GameState::term();
 
   return EXIT_SUCCESS;
 }

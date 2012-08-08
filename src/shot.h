@@ -1,29 +1,34 @@
 #ifndef SHOT_HH
 #define SHOT_HH
 
-#include "sprite.h"
+#include "gameworld.h"
+#include "renderable.h"
+#include "updatable.h"
+#include "collidable.h"
+
 #include "GL/glhck.h"
 #include "vec2d.h"
 #include "circleshape.h"
 
 #include <string>
 
-class Shot : public Sprite
+class Shot : public Renderable, public Updatable, public Collidable
 {
 public:
   static void init();
+  static void term();
 
-  Shot(World* world, float const life, Vec2D const& position, Vec2D const& velocity);
+  Shot(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity);
   ~Shot();
 
-  static int const ID;
-  int getEntityId() const { return ID; }
+  static Entity::Id const ID;
+  Entity::Id getEntityId() const { return ID; }
 
   void render();
-  void update(float delta);
+  void update(float const delta);
+  virtual void collide(Collidable const* other);
   virtual CircleShape const* getShape() const;
 
-  virtual void collide(Sprite const* other);
 
   Vec2D getPosition() const;
 

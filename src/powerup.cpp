@@ -4,7 +4,7 @@
 #include "util.h"
 #include <cstdlib>
 
-int const Powerup::ID = Entity::newEntityId();
+Entity::Id const Powerup::ID = Entity::newEntityId();
 float const Powerup::RADIUS = 16;
 std::vector<std::string> const Powerup::IMAGES = {
   "img/powerup_laser.png",
@@ -23,8 +23,14 @@ void Powerup::init()
   atlas = TextureAtlas(IMAGES);
 }
 
-Powerup::Powerup(World* world, Type const type, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), type(type), v(velocity), life(10), shape(position, RADIUS)
+void Powerup::term()
+{
+  atlas = TextureAtlas();
+}
+
+Powerup::Powerup(GameWorld* world, Type const type, Vec2D const& position, Vec2D const& velocity) :
+  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  o(0), type(type), v(velocity), life(10), shape(position, RADIUS)
 {
   o = glhckSpriteNew(atlas.getTexture(), 16, 16);
   glhckObjectTransformCoordinates(o, &atlas.getTransform(type).transform, atlas.getTransform(type).degree);
@@ -42,11 +48,11 @@ void Powerup::render()
   glhckObjectRender(o);
 }
 
-void Powerup::update(float delta)
+void Powerup::update(float const delta)
 {
   life -= delta;
   if(life <= 0)
-    world->removeSprite(this);
+    world->removeEntity(this);
 
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
@@ -72,12 +78,12 @@ CircleShape const* Powerup::getShape() const
   return &shape;
 }
 
-void Powerup::collide(Sprite const* other) {
+void Powerup::collide(Collidable const* other) {
   if(other->getEntityId() == Ship::ID) {
     Ship const* ship = static_cast<Ship const*>(other);
     if(shape.collidesWith(ship->getShape()))
     {
-      world->removeSprite(this);
+      world->removeEntity(this);
     }
     return;
   }

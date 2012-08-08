@@ -1,7 +1,6 @@
 #include "explosion.h"
-#include "world.h"
 
-int const Explosion::ID = Entity::newEntityId();
+Entity::Id const Explosion::ID = Entity::newEntityId();
 
 std::vector<std::string> const Explosion::IMAGES = {
   "img/explosion/explosion1_0001.png",
@@ -103,8 +102,14 @@ void Explosion::init()
   atlas = TextureAtlas(IMAGES);
 }
 
-Explosion::Explosion(World* world, Vec2D const& position) :
-  Sprite(world, 3), o(0), time(0)
+void Explosion::term()
+{
+  atlas = TextureAtlas();
+}
+
+Explosion::Explosion(GameWorld* world, Vec2D const& position) :
+  Entity(world), Renderable(world, 1), Updatable(world),
+  o(nullptr), time(0)
 {
   o = glhckSpriteNew(atlas.getTexture(), 160, 120);
   glhckObjectTransformCoordinates(o, &atlas.getTransform(0).transform, atlas.getTransform(0).degree);
@@ -118,13 +123,7 @@ Explosion::~Explosion()
   glhckObjectFree(o);
 }
 
-
-void Explosion::render()
-{
-  glhckObjectRender(o);
-}
-
-void Explosion::update(float delta)
+void Explosion::update(float const delta)
 {
   time += delta;
   int frame = static_cast<int>(time * FPS);
@@ -135,6 +134,11 @@ void Explosion::update(float delta)
   }
   else
   {
-    world->removeSprite(this);
+    world->removeEntity(this);
   }
+}
+
+void Explosion::render()
+{
+  glhckObjectRender(o);
 }

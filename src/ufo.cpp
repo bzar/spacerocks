@@ -5,13 +5,14 @@
 #include "beam.h"
 #include "util.h"
 #include "explosion.h"
-#include "world.h"
 #include "ufolaser.h"
 #include "powerup.h"
+#include "ship.h"
+#include "particleengine.h"
 
 float const TAU = 2 * 3.14159265;
 
-int const Ufo::ID = Entity::newEntityId();
+Entity::Id const Ufo::ID = Entity::newEntityId();
 
 int const Ufo::ANIMATION_FRAMES[NUM_FRAMES] = {1, 1, 1, 1, 1, 1, 1, 1, 2, 3};
 
@@ -29,13 +30,19 @@ void Ufo::init()
   atlas = TextureAtlas(IMAGES);
 }
 
-Ufo::Ufo(World* world, Vec2D const& startPosition, Vec2D const& endPosition,
+void Ufo::term()
+{
+  atlas = TextureAtlas();
+}
+
+Ufo::Ufo(GameWorld* world, Vec2D const& startPosition, Vec2D const& endPosition,
          float freq, float amplitude) :
-  Sprite(world, 1), o(0), startPosition(startPosition), endPosition(endPosition),
+  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  gameWorld(world), o(0), startPosition(startPosition), endPosition(endPosition),
   freq(freq), amplitude(amplitude),
-  duration(world->level.ufoDuration),
-  accuracy(world->level.ufoAccuracy),
-  shootInterval(world->level.ufoShootInterval),
+  duration(gameWorld->level.ufoDuration),
+  accuracy(gameWorld->level.ufoAccuracy),
+  shootInterval(gameWorld->level.ufoShootInterval),
   time(0), life(3), shape(startPosition, RADIUS)
 {
   o = glhckSpriteNew(atlas.getTexture(), 16, 16);
@@ -55,7 +62,7 @@ void Ufo::render()
   glhckObjectRender(o);
 }
 
-void Ufo::update(float delta)
+void Ufo::update(float const delta)
 {
   time += delta;
   int const frame = ANIMATION_FRAMES[static_cast<int>(time * FPS) % NUM_FRAMES];
@@ -72,20 +79,19 @@ void Ufo::update(float delta)
   bool timeToShoot = static_cast<int>((time - delta) / shootInterval) !=
     static_cast<int>(time / shootInterval);
 
-  if(timeToShoot && world->player.ship != nullptr)
+  if(timeToShoot && gameWorld->player.ship != nullptr)
   {
-    Vec2D direction = (world->player.ship->getPosition() - getPosition()).uniti();
+    Vec2D direction = (gameWorld->player.ship->getPosition() - getPosition()).uniti();
     float const spread = (1 - accuracy)/2;
     direction.rotatei(randFloat(-spread, spread));
     Vec2D velocity = direction.scale(600);
-    UfoLaser* laser = new UfoLaser(world, 5.0f, getPosition(), velocity);
-    world->addSprite(laser);
+    UfoLaser* laser = new UfoLaser(gameWorld, 5.0f, getPosition(), velocity);
   }
 
   shape.center = getPosition();
 
   if(life <= 0 || time > duration)
-    world->removeSprite(this);
+    gameWorld->removeEntity(this);
 }
 
 CircleShape const* Ufo::getShape() const
@@ -93,7 +99,7 @@ CircleShape const* Ufo::getShape() const
   return &shape;
 }
 
-void Ufo::collide(Sprite const* other) {
+void Ufo::collide(Collidable const* other) {
   Vec2D position = getPosition();
 
   if(other->getEntityId() == Laser::ID
@@ -158,21 +164,18 @@ void Ufo::collide(Sprite const* other) {
           float speed = 120 + (rand() % 40);
           Vec2D dev = hitNormal.scale(randFloat(-100, 100));
           Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
-          world->getParticleEngine().addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
+          gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
         }
       }
       else
       {
-        world->removeSprite(this);
-        world->player.score += 100;
+        gameWorld->removeEntity(this);
+        gameWorld->player.score += 100;
 
         Powerup::Type powerupType = static_cast<Powerup::Type>(randInt(0, Powerup::NUM_TYPES - 1));
         Vec2D velocity = Vec2D(0, 1).rotatei(randFloat(0, 1)).scalei(randFloat(30, 80));
-        Powerup* powerup = new Powerup(world, powerupType, position, velocity);
-        world->addSprite(powerup);
-
-        Explosion* explosion = new Explosion(world, position);
-        world->addSprite(explosion);
+        Powerup* powerup = new Powerup(gameWorld, powerupType, position, velocity);
+        Explosion* explosion = new Explosion(gameWorld, position);
       }
     }
     return;

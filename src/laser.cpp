@@ -1,10 +1,10 @@
 #include "laser.h"
 #include "asteroid.h"
 #include "util.h"
-#include "world.h"
+#include "gameworld.h"
 #include "ufo.h"
 
-int const Laser::ID = Entity::newEntityId();
+Entity::Id const Laser::ID = Entity::newEntityId();
 std::string const Laser::IMAGE = "img/laser2.png";
 glhckTexture* Laser::TEXTURE = nullptr;
 
@@ -13,8 +13,14 @@ void Laser::init()
   TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
 }
 
-Laser::Laser(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
+void Laser::term()
+{
+  glhckTextureFree(TEXTURE);
+}
+
+Laser::Laser(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity) :
+  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 2, 8);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
@@ -36,11 +42,11 @@ void Laser::render()
   glhckObjectRender(o);
 }
 
-void Laser::update(float delta)
+void Laser::update(float const delta)
 {
   life -= delta;
   if(life <= 0)
-    world->removeSprite(this);
+    world->removeEntity(this);
 
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
@@ -70,7 +76,7 @@ LineShape const* Laser::getShape() const
 }
 
 
-void Laser::collide(Sprite const* other) {
+void Laser::collide(Collidable const* other) {
   if(life <= 0)
     return;
 
@@ -79,7 +85,7 @@ void Laser::collide(Sprite const* other) {
     if(shape.collidesWith(asteroid->getShape()))
     {
       life = 0;
-      world->removeSprite(this);
+      world->removeEntity(this);
     }
     return;
   }
@@ -89,7 +95,7 @@ void Laser::collide(Sprite const* other) {
     if(shape.collidesWith(ufo->getShape()))
     {
       life = 0;
-      world->removeSprite(this);
+      world->removeEntity(this);
     }
     return;
   }

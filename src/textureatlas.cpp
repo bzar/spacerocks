@@ -39,7 +39,13 @@ TextureAtlas& TextureAtlas::operator=(TextureAtlas const& other)
 {
   if(&other != this)
   {
-    texture = glhckTextureRef(other.texture);
+    if(texture)
+      glhckTextureFree(texture);
+
+    texture = other.texture;
+    if(texture)
+      texture = glhckTextureRef(texture);
+
     transforms = other.transforms;
   }
 

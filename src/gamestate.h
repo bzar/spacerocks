@@ -2,25 +2,26 @@
 #define GAMESTATE_HH
 
 #include "state.h"
-#include "world.h"
+#include "gameworld.h"
 #include "GL/glhck.h"
 
 class GameState : public State
 {
 public:
   static void init();
+  static void term();
 
   GameState(Engine* engine);
+  ~GameState();
 
   virtual void input();
   virtual void update(float const delta);
   virtual void render();
 
 private:
-  World world;
+  GameWorld world;
   glhckObject* background;
   glhckText *gameText;
-  glhckText *gameTextShadow;
 
   glhckText *fpsText;
   unsigned int gameFont;

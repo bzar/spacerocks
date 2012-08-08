@@ -1,5 +1,7 @@
 #include "particleengine.h"
 
+Entity::Id const ParticleEngine::ID = Entity::newEntityId();
+
 std::vector<std::string> const ParticleEngine::IMAGES = {
   "img/spark.png",
 };
@@ -15,7 +17,13 @@ void ParticleEngine::init()
   atlas = TextureAtlas(IMAGES);
 }
 
-ParticleEngine::ParticleEngine() :
+void ParticleEngine::term()
+{
+  atlas = TextureAtlas();
+}
+
+ParticleEngine::ParticleEngine(GameWorld* world) :
+  Entity(world), Renderable(world, 0, 1), Updatable(world),
   particles(), live(0)
 {
   for(Particle& p : particles)
@@ -41,7 +49,7 @@ void ParticleEngine::render()
   }
 }
 
-void ParticleEngine::update(float delta)
+void ParticleEngine::update(float const delta)
 {
 
   for(int i = 0; i < live; ++i)

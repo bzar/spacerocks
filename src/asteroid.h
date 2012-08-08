@@ -1,7 +1,11 @@
 #ifndef ASTEROID_HH
 #define ASTEROID_HH
 
-#include "sprite.h"
+#include "gameworld.h"
+#include "renderable.h"
+#include "updatable.h"
+#include "collidable.h"
+
 #include "GL/glhck.h"
 #include "vec2d.h"
 #include "circleshape.h"
@@ -10,23 +14,24 @@
 #include <string>
 #include <vector>
 
-class Asteroid : public Sprite
+class Asteroid : public Renderable, public Updatable, public Collidable
 {
 public:
   static void init();
+  static void term();
 
   enum Size { TINY, SMALL, MEDIUM, LARGE, NUM_SIZES };
-  Asteroid(World* world, Size const size, Vec2D const& position, Vec2D const& velocity);
+  Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec2D const& velocity);
   ~Asteroid();
 
-  static int const ID;
-  int getEntityId() const { return ID; }
+  static Entity::Id const ID;
+  Entity::Id getEntityId() const { return ID; }
 
   void render();
-  void update(float delta);
+  void update(float const delta);
 
-  virtual CircleShape const* getShape() const;
-  virtual void collide(Sprite const* other);
+  CircleShape const* getShape() const;
+  void collide(Collidable const* other);
 
   Vec2D getPosition() const;
   float getLife() const;
@@ -38,6 +43,7 @@ private:
   static float const IMAGE_SIZES[NUM_SIZES];
   static TextureAtlas atlas;
 
+  GameWorld* gameWorld;
   glhckObject* o;
   Size size;
   Vec2D v;

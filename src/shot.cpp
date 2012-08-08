@@ -4,7 +4,7 @@
 #include "util.h"
 #include "ufo.h"
 
-int const Shot::ID = Entity::newEntityId();
+Entity::Id const Shot::ID = Entity::newEntityId();
 std::string const Shot::IMAGE = "img/shot.png";
 glhckTexture* Shot::TEXTURE = nullptr;
 
@@ -13,8 +13,14 @@ void Shot::init()
   TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
 }
 
-Shot::Shot(World* world, float const life, Vec2D const& position, Vec2D const& velocity) :
-  Sprite(world), o(0), life(life), v(velocity), shape(position, RADIUS)
+void Shot::term()
+{
+  glhckTextureFree(TEXTURE);
+}
+
+Shot::Shot(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity) :
+  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  o(0), life(life), v(velocity), shape(position, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 4, 4);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
@@ -31,11 +37,11 @@ void Shot::render()
   glhckObjectRender(o);
 }
 
-void Shot::update(float delta)
+void Shot::update(float const delta)
 {
   life -= delta;
   if(life <= 0)
-    world->removeSprite(this);
+    world->removeEntity(this);
 
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
@@ -62,7 +68,7 @@ CircleShape const* Shot::getShape() const
 }
 
 
-void Shot::collide(Sprite const* other) {
+void Shot::collide(Collidable const* other) {
   if(life <= 0)
     return;
 
@@ -71,7 +77,7 @@ void Shot::collide(Sprite const* other) {
     if(shape.collidesWith(asteroid->getShape()))
     {
       life = 0;
-      world->removeSprite(this);
+      world->removeEntity(this);
     }
     return;
   }
@@ -81,7 +87,7 @@ void Shot::collide(Sprite const* other) {
     if(shape.collidesWith(ufo->getShape()))
     {
       life = 0;
-      world->removeSprite(this);
+      world->removeEntity(this);
     }
     return;
   }
