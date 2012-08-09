@@ -6,7 +6,7 @@
 #include "util/util.h"
 #include "particleengine.h"
 
-Entity::Id const Asteroid::ID = Entity::newEntityId();
+UID const Asteroid::ID = getUID();
 float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
 std::vector<std::string> const Asteroid::IMAGES  = {
   "img/asteroid_1.png",

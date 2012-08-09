@@ -3,7 +3,7 @@
 #include "util/util.h"
 #include <cstdlib>
 
-Entity::Id const Powerup::ID = Entity::newEntityId();
+UID const Powerup::ID = getUID();
 float const Powerup::RADIUS = 16;
 std::vector<std::string> const Powerup::IMAGES = {
   "img/powerup_laser.png",

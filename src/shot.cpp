@@ -3,7 +3,7 @@
 #include "ufo.h"
 #include "util/util.h"
 
-Entity::Id const Shot::ID = Entity::newEntityId();
+UID const Shot::ID = getUID();
 std::string const Shot::IMAGE = "img/shot.png";
 glhckTexture* Shot::TEXTURE = nullptr;
 

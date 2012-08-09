@@ -4,27 +4,11 @@
 #include "updatable.h"
 #include "collidable.h"
 
-bool World::ZComparator::operator()(Renderable const* a, Renderable const* b)
-{
-  if(a->getLayer() != b->getLayer())
-  {
-    return a->getLayer() < b->getLayer();
-  }
-  if(a->getZIndex() != b->getZIndex())
-  {
-    return a->getZIndex() < b->getZIndex();
-  }
-  else
-  {
-    return a < b;
-  }
-}
+
 
 World::World() :
   entities(), entitiesToInsert(), entitiesToRemove(),
-  renderables(), renderablesToInsert(),
-  updatables(), updatablesToInsert(),
-  collidables(), collidablesToInsert()
+  roles(), rolesToInsert()
 {
 }
 
@@ -33,52 +17,6 @@ World::~World()
   for(Entity* e : entities)
   {
     delete e;
-  }
-}
-
-void World::update(float const delta)
-{
-  for(Updatable* u : updatables)
-  {
-    u->update(delta);
-  }
-
-  for(Collidable* c1 : collidables)
-  {
-    for(Collidable* c2 : collidables)
-    {
-      if(c1 != c2)
-      {
-        c1->collide(c2);
-      }
-    }
-  }
-
-  for(Entity* entity : entitiesToRemove)
-  {
-    entities.erase(entity);
-    delete entity;
-  }
-
-  entities.insert(entitiesToInsert.begin(), entitiesToInsert.end());
-  entitiesToInsert.clear();
-  entitiesToRemove.clear();
-
-  renderables.insert(renderablesToInsert.begin(), renderablesToInsert.end());
-  renderablesToInsert.clear();
-
-  updatables.insert(updatablesToInsert.begin(), updatablesToInsert.end());
-  updatablesToInsert.clear();
-
-  collidables.insert(collidablesToInsert.begin(), collidablesToInsert.end());
-  collidablesToInsert.clear();
-}
-
-void World::render()
-{
-  for(Renderable* r : renderables)
-  {
-    r->render();
   }
 }
 
@@ -92,32 +30,37 @@ void World::removeEntity(Entity* entity)
   entitiesToRemove.insert(entity);
 }
 
-void World::addRenderable(Renderable* const renderable)
+void World::registerRole(Entity* entity, UID const roleId)
 {
-  renderablesToInsert.insert(renderable);
+  rolesToInsert[roleId].insert(entity);
 }
 
-void World::removeRenderable(Renderable* const renderable)
+void World::unregisterRole(Entity* entity, UID const roleId)
 {
-  renderables.erase(renderable);
+  roles[roleId].erase(entity);
 }
 
-void World::addUpdatable(Updatable* const updatable)
+std::set<Entity*>& World::entitiesWithRole(UID const roleId)
 {
-  updatablesToInsert.insert(updatable);
+  return roles[roleId];
 }
 
-void World::removeUpdatable(Updatable* const updatable)
+void World::maintenance()
 {
-  updatables.erase(updatable);
+  for(Entity* entity : entitiesToRemove)
+  {
+    entities.erase(entity);
+    delete entity;
+  }
+
+  entities.insert(entitiesToInsert.begin(), entitiesToInsert.end());
+  entitiesToInsert.clear();
+  entitiesToRemove.clear();
+
+  for(auto i = rolesToInsert.begin(); i != rolesToInsert.end(); ++i)
+  {
+    roles[i->first].insert(i->second.begin(), i->second.end());
+  }
+  rolesToInsert.clear();
 }
 
-void World::addCollidable(Collidable* const collidable)
-{
-  collidablesToInsert.insert(collidable);
-}
-
-void World::removeCollidable(Collidable* const collidable)
-{
-  collidables.erase(collidable);
-}

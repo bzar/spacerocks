@@ -24,8 +24,8 @@ public:
   ParticleEngine(GameWorld* world);
   ~ParticleEngine();
 
-  static Entity::Id const ID;
-  Entity::Id getEntityId() const { return ID; }
+  static UID const ID;
+  UID getEntityId() const { return ID; }
 
   void render();
   void update(float const delta);

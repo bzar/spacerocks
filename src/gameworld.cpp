@@ -72,8 +72,6 @@ void GameWorld::update(float const delta)
     ufoDelay = UFO_DELAY;
   }
 
-  World::update(delta);
-
   bool victory = ufoDelay <= 0 && player.ship != nullptr;
 
   for(Entity* e : entities)
@@ -88,11 +86,6 @@ void GameWorld::update(float const delta)
   {
     nextLevel();
   }
-}
-
-void GameWorld::render()
-{
-  World::render();
 }
 
 void GameWorld::nextLevel()

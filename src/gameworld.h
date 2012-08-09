@@ -34,7 +34,6 @@ public:
   GameWorld(Engine* engine);
 
   void update(float const delta);
-  void render();
 
   void nextLevel();
   void initLevel(int const n);

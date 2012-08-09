@@ -6,9 +6,10 @@
 class Updatable : public virtual Entity
 {
 public:
-  Updatable(World* world) : Entity(world) { world->addUpdatable(this); }
-  virtual ~Updatable() { world->removeUpdatable(this); }
+  Updatable(World* world) : Entity(world) { world->registerRole(this, ID); }
+  virtual ~Updatable() { world->unregisterRole(this, ID); }
   virtual void update(float const delta) = 0;
+  static UID const ID;
 };
 
 #endif

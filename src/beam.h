@@ -21,8 +21,8 @@ public:
   Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDelta);
   ~Beam();
 
-  static Entity::Id const ID;
-  Entity::Id getEntityId() const { return ID; }
+  static UID const ID;
+  UID getEntityId() const { return ID; }
 
   void render();
   void update(float const delta);

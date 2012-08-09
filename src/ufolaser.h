@@ -24,8 +24,8 @@ public:
   UfoLaser(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity);
   ~UfoLaser();
 
-  static Entity::Id const ID;
-  Entity::Id getEntityId() const { return ID; }
+  static UID const ID;
+  UID getEntityId() const { return ID; }
 
   void render();
   void update(float const delta);

@@ -12,10 +12,7 @@ public:
   static void term();
 
   GameState(Engine* engine);
-
-  virtual void input();
-  virtual void update(float const delta);
-  virtual void render();
+  World* getWorld();
 
 private:
   GameWorld world;

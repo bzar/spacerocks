@@ -6,7 +6,7 @@
 #include "powerup.h"
 #include "util/util.h"
 
-Entity::Id const Ship::ID = Entity::newEntityId();
+UID const Ship::ID = getUID();
 
 std::vector<std::string> const Ship::IMAGES = {
   "img/ship.png", "img/ship_accelerating.png",

@@ -1,6 +1,6 @@
 #include "explosion.h"
 
-Entity::Id const Explosion::ID = Entity::newEntityId();
+UID const Explosion::ID = getUID();
 
 std::vector<std::string> const Explosion::IMAGES = {
   "img/explosion/explosion1_0001.png",

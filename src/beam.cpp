@@ -3,7 +3,7 @@
 #include "ufo.h"
 #include "util/util.h"
 
-Entity::Id const Beam::ID = Entity::newEntityId();
+UID const Beam::ID = getUID();
 
 float const Beam::RADIUS = 4;
 std::string const Beam::IMAGE = "img/continuous_beam.png";

@@ -18,8 +18,8 @@ public:
   Prop(GameWorld* world, std::string const& image, float const width, float const height, int const zIndex = 0, int const layer = 0);
   ~Prop();
 
-  static Entity::Id const ID;
-  Entity::Id getEntityId() const { return ID; }
+  static UID const ID;
+  UID getEntityId() const { return ID; }
 
   void render();
 

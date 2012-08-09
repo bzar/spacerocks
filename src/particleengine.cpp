@@ -1,6 +1,6 @@
 #include "particleengine.h"
 
-Entity::Id const ParticleEngine::ID = Entity::newEntityId();
+UID const ParticleEngine::ID = getUID();
 
 std::vector<std::string> const ParticleEngine::IMAGES = {
   "img/spark.png",

@@ -3,7 +3,7 @@
 #include "ufo.h"
 #include "util/util.h"
 
-Entity::Id const Plasma::ID = Entity::newEntityId();
+UID const Plasma::ID = getUID();
 std::string const Plasma::IMAGE = "img/plasma.png";
 glhckTexture* Plasma::TEXTURE = nullptr;
 

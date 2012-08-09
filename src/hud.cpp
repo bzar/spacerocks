@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <sstream>
 
-Entity::Id const Hud::ID = Entity::newEntityId();
+UID const Hud::ID = getUID();
 
 Hud::Hud(GameWorld* world) :
   Entity(world), Renderable(world, 0, 1),

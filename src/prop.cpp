@@ -1,6 +1,6 @@
 #include "prop.h"
 
-Entity::Id const Prop::ID = Entity::newEntityId();
+UID const Prop::ID = getUID();
 
 Prop::Prop(GameWorld* world, std::string const& image, float const width, float const height, int const zIndex, int const layer) :
   Entity(world), Renderable(world, zIndex, layer), o(0)

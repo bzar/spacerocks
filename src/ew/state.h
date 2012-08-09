@@ -1,20 +1,24 @@
 #ifndef STATE_HH
 #define STATE_HH
 
+#include <vector>
+
 class Engine;
+class Phase;
+class World;
 
 class State
 {
 public:
-  State(Engine* engine) : engine(engine) {}
+  State(Engine* engine, std::vector<Phase*> phases);
+  virtual ~State();
 
   Engine* getEngine() const { return engine; }
-
-  virtual void input() = 0;
-  virtual void update(float const delta) = 0;
-  virtual void render() = 0;
+  void process(float const delta);
+  virtual World* getWorld() = 0;
 
 protected:
   Engine* engine;
+  std::vector<Phase*> phases;
 };
 #endif

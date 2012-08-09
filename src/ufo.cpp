@@ -12,7 +12,7 @@
 
 float const TAU = 2 * 3.14159265;
 
-Entity::Id const Ufo::ID = Entity::newEntityId();
+UID const Ufo::ID = getUID();
 
 int const Ufo::ANIMATION_FRAMES[NUM_FRAMES] = {1, 1, 1, 1, 1, 1, 1, 1, 2, 3};
 

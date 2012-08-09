@@ -2,7 +2,7 @@
 #include "asteroid.h"
 #include "util/util.h"
 
-Entity::Id const UfoLaser::ID = Entity::newEntityId();
+UID const UfoLaser::ID = getUID();
 std::string const UfoLaser::IMAGE = "img/ufolaser.png";
 glhckTexture* UfoLaser::TEXTURE = nullptr;
 

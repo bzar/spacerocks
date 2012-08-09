@@ -3,7 +3,7 @@
 #include "ufo.h"
 #include "util/util.h"
 
-Entity::Id const Laser::ID = Entity::newEntityId();
+UID const Laser::ID = getUID();
 std::string const Laser::IMAGE = "img/laser2.png";
 glhckTexture* Laser::TEXTURE = nullptr;
 

@@ -4,6 +4,7 @@
 #include <set>
 #include <map>
 #include <forward_list>
+#include "uniqueid.h"
 
 class Entity;
 class Renderable;
@@ -17,43 +18,24 @@ public:
   World();
   virtual ~World();
 
-  virtual void update(float const delta);
-  virtual void render();
-
   void addEntity(Entity* entity);
   void removeEntity(Entity* entity);
 
-  void addRenderable(Renderable* const renderable);
-  void removeRenderable(Renderable* const renderable);
+  void registerRole(Entity* entity, UID const roleId);
+  void unregisterRole(Entity* entity, UID const roleId);
+  std::set<Entity*>& entitiesWithRole(UID const roleId);
 
-  void addUpdatable(Updatable* const updatable);
-  void removeUpdatable(Updatable* const updatable);
-
-  void addCollidable(Collidable* const collidable);
-  void removeCollidable(Collidable* const collidable);
+  void maintenance();
 
 protected:
   std::set<Entity*> entities;
 
 private:
-  class ZComparator
-  {
-  public:
-    bool operator()(Renderable const* a, Renderable const* b);
-  };
-
   std::set<Entity*> entitiesToInsert;
   std::set<Entity*> entitiesToRemove;
 
-  std::set<Renderable*, ZComparator> renderables;
-  std::set<Renderable*> renderablesToInsert;
-
-  std::set<Updatable*> updatables;
-  std::set<Updatable*> updatablesToInsert;
-
-  std::set<Collidable*> collidables;
-  std::set<Collidable*> collidablesToInsert;
-
+  std::map<UID, std::set<Entity*>> roles;
+  std::map<UID, std::set<Entity*>> rolesToInsert;
 };
 
 #endif

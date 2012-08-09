@@ -14,16 +14,8 @@ void Engine::run()
 
   while(running)
   {
-    double totalDelta = timer.getDeltaTime();
-
-    for(int iteration = 0; iteration < UPDATE_ITERATIONS; ++iteration)
-    {
-      double delta = totalDelta / UPDATE_ITERATIONS;
-      current->input();
-      current->update(delta);
-    }
-
-    current->render();
+    double delta = timer.getDeltaTime();
+    current->process(delta);
 
     glfwSwapBuffers();
     glhckClear();

@@ -6,9 +6,10 @@
 class Collidable : public virtual Entity
 {
 public:
-  Collidable(World* world) : Entity(world) { world->addCollidable(this); }
-  virtual ~Collidable() { world->removeCollidable(this); }
+  Collidable(World* world) : Entity(world) { world->registerRole(this, ID); }
+  virtual ~Collidable() { world->unregisterRole(this, ID); }
   virtual void collide(Collidable const* other) = 0;
+  static UID const ID;
 };
 
 #endif

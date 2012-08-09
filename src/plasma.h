@@ -21,8 +21,8 @@ public:
   Plasma(GameWorld* world, float const life, float const power, Vec2D const& position, Vec2D const& velocity);
   ~Plasma();
 
-  static Entity::Id const ID;
-  Entity::Id getEntityId() const { return ID; }
+  static UID const ID;
+  UID getEntityId() const { return ID; }
 
   void render();
   void update(float const delta);
