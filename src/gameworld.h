@@ -5,6 +5,8 @@
 
 class Ship;
 class ParticleEngine;
+class Engine;
+class Hud;
 
 class GameWorld : public World
 {
@@ -29,7 +31,7 @@ public:
     int score;
   };
 
-  GameWorld(Player const& player = Player(), Level const& level = Level());
+  GameWorld(Engine* engine);
 
   void update(float const delta);
   void render();
@@ -39,7 +41,9 @@ public:
 
   Level level;
   Player player;
-  ParticleEngine* particleEngine;
+  ParticleEngine* const particleEngine;
+  Engine* const engine;
+  Hud const* hud;
 
 private:
   static int const UFO_SCORE_INTERVAL_MIN;

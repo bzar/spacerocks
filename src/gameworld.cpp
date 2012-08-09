@@ -5,20 +5,25 @@
 #include "ufo.h"
 #include "ufolaser.h"
 #include "particleengine.h"
+#include "prop.h"
+#include "hud.h"
+#include "ew/engine.h"
 
 int const GameWorld::UFO_SCORE_INTERVAL_MIN = 400;
 int const GameWorld::UFO_SCORE_INTERVAL_MAX = 800;
 float const GameWorld::DEATH_DELAY = 3.0f;
 float const GameWorld::UFO_DELAY = 2.0f;
 
-GameWorld::GameWorld(Player const& player, Level const& level) :
-  World(), player(player), level(level),
+GameWorld::GameWorld(Engine* engine) :
+  World(), player(), level(),
   deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
-  particleEngine(new ParticleEngine(this))
+  particleEngine(new ParticleEngine(this)), engine(engine),
+  hud(new Hud(this))
 {
   this->player.lives = 3;
   initLevel(0);
   this->player.ship = new Ship(this, {0, 0}, {0, 0});
+  new Prop(this, "img/background.png", 400, 240, 0, -1);
 }
 
 void GameWorld::update(float const delta)

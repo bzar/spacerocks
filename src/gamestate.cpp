@@ -2,8 +2,6 @@
 
 #include "GL/glfw3.h"
 
-#include <iomanip>
-#include <sstream>
 #include "util/vec2d.h"
 #include "util/util.h"
 
@@ -52,23 +50,8 @@ void GameState::term()
 }
 
 GameState::GameState(Engine* engine) :
-  State(engine), world(), background(nullptr),
-  gameText(nullptr), fpsText(nullptr), gameFont(0), fpsFont(0)
+  State(engine), world(engine)
 {
-  background = glhckSpriteNewFromFile("img/background.png", 400, 240, GLHCK_TEXTURE_DEFAULTS);
-
-  gameText = glhckTextNew(200, 200);
-  fpsText = glhckTextNew(800, 40);
-
-  gameFont = glhckTextNewFont(gameText, "fonts/DejaVuSans.ttf");
-  fpsFont = glhckTextNewFont(fpsText, "fonts/DejaVuSans.ttf");
-}
-
-GameState::~GameState()
-{
-  glhckObjectFree(background);
-  glhckTextFree(gameText);
-  glhckTextFree(fpsText);
 }
 
 void GameState::input()
@@ -120,36 +103,5 @@ void GameState::update(float const delta)
 
 void GameState::render()
 {
-  glhckObjectRender(background);
-
   world.render();
-
-  std::ostringstream ss;
-  ss << "Level: " << (world.level.n + 1)
-      << " | Score: " << world.player.score
-      << " | Lives: " << world.player.lives
-      << " | Weapons:"
-      << " L" << world.player.ship->getLaserLevel()
-      << " S" << world.player.ship->getSpreadLevel()
-      << " B" << world.player.ship->getBeamLevel()
-      << " P" << world.player.ship->getPlasmaLevel();
-
-  glhckTextColor(gameText, 0, 0, 0, 255);
-  glhckTextDraw(gameText, gameFont, 20, 6, 21, ss.str().data(), NULL);
-  glhckTextRender(gameText);
-
-  glhckTextColor(gameText, 255, 255, 255, 255);
-  glhckTextDraw(gameText, gameFont, 20, 5, 20, ss.str().data(), NULL);
-  glhckTextRender(gameText);
-
-
-  ss.str("");
-  ss << std::setprecision(2) << std::fixed
-      << "FPS: " << engine->getTimer().getFPS()
-      << " | total: " << engine->getTimer().getTotalTime()
-      << "s | frame: " << engine->getTimer().getTicks();
-
-  glhckTextDraw(fpsText, fpsFont, 14, 5, 35, ss.str().data(), NULL);
-  glhckTextRender(fpsText);
-
 }

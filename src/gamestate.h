@@ -12,7 +12,6 @@ public:
   static void term();
 
   GameState(Engine* engine);
-  ~GameState();
 
   virtual void input();
   virtual void update(float const delta);
@@ -20,11 +19,5 @@ public:
 
 private:
   GameWorld world;
-  glhckObject* background;
-  glhckText *gameText;
-
-  glhckText *fpsText;
-  unsigned int gameFont;
-  unsigned int fpsFont;
 };
 #endif
