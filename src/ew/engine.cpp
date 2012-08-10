@@ -4,8 +4,9 @@
 
 int const UPDATE_ITERATIONS = 10;
 
-Engine::Engine(GLFWwindow* window) :
-  window(window), states(), current(nullptr), timer(), running(false)
+Engine::Engine(GLFWwindow* window, ControlContext* controlContext) :
+  controlContext(controlContext), window(window), states(),
+  current(nullptr), timer(), running(false)
 {
 }
 
@@ -57,6 +58,11 @@ void Engine::setState(int id)
 GLFWwindow* Engine::getWindow() const
 {
   return window;
+}
+
+ControlContext* Engine::getControlContext() const
+{
+  return controlContext;
 }
 
 Timer const& Engine::getTimer() const

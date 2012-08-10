@@ -31,7 +31,7 @@ public:
   void render();
   void update(float const delta);
   virtual void collide(Collidable const* other);
-  void control();
+  void control(ControlContext* context);
 
   bool alive() const;
   virtual CircleShape const* getShape() const;

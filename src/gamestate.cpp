@@ -50,7 +50,8 @@ void GameState::term()
 }
 
 GameState::GameState(Engine* engine) :
-  State(engine), world(engine)
+  State(engine), world(engine),
+  update(), collide(), render(), control(engine->getControlContext())
 {
 }
 

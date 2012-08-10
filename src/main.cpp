@@ -2,6 +2,7 @@
 #include "GL/glhck.h"
 
 #include "ew/engine.h"
+#include "ew/glfwcontrolcontext.h"
 #include "gamestate.h"
 
 #include <cstdlib>
@@ -70,7 +71,8 @@ int gameloop(GLFWwindow& window)
   kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
   glhckRenderSetProjection(&proj);
 
-  Engine engine(&window);
+  GLFWControlContext controlContext(&window);
+  Engine engine(&window, &controlContext);
 
   glfwSetWindowUserPointer(window, &engine);
   glfwSetWindowSizeCallback(windowResizeCallback);

@@ -137,12 +137,12 @@ void Ship::update(float const delta)
   }
 }
 
-void Ship::control()
+void Ship::control(ControlContext* context)
 {
-/*  turnLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
-  turnRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
-  accelerate(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
-  shoot(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);*/
+  turnLeft(context->key(GLFW_KEY_LEFT));
+  turnRight(context->key(GLFW_KEY_RIGHT));
+  accelerate(context->key(GLFW_KEY_UP));
+  shoot(context->key(GLFW_KEY_SPACE));
 /*
   if(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS && !lastPrevWeaponButtonState)
     prevWeapon();

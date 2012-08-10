@@ -3,6 +3,7 @@
 
 #include "entity.h"
 #include "controllableworld.h"
+#include "controlcontext.h"
 
 class Controllable : public virtual Entity
 {
@@ -12,7 +13,7 @@ public:
     controllableWorld->registerControllable(this);
   }
   virtual ~Controllable() { controllableWorld->unregisterControllable(this); }
-  virtual void control() = 0;
+  virtual void control(ControlContext* context) = 0;
   static UID const ID;
 
 private:
