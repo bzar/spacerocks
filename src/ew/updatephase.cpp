@@ -1,11 +1,10 @@
 #include "updatephase.h"
 #include "updatable.h"
 
-void UpdatePhase::execute(World* world, float const delta)
+void UpdatePhase::execute(UpdatableWorld* world, float const delta)
 {
-  for(Entity* e : world->entitiesWithRole(Updatable::ID))
+  for(Updatable* u : world->getUpdatables())
   {
-    Updatable* u = static_cast<Updatable*>(e);
     u->update(delta);
   }
 }

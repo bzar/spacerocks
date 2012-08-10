@@ -2,14 +2,21 @@
 #define UPDATABLE_HH
 
 #include "entity.h"
+#include "updatableworld.h"
 
 class Updatable : public virtual Entity
 {
 public:
-  Updatable(World* world) : Entity(world) { world->registerRole(this, ID); }
-  virtual ~Updatable() { world->unregisterRole(this, ID); }
+  Updatable(UpdatableWorld* world) : Entity(world), updatableWorld(world)
+  {
+    updatableWorld->registerUpdatable(this);
+  }
+  virtual ~Updatable() { updatableWorld->registerUpdatable(this); }
   virtual void update(float const delta) = 0;
   static UID const ID;
+
+private:
+  UpdatableWorld* updatableWorld;
 };
 
 #endif

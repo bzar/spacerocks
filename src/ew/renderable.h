@@ -2,18 +2,24 @@
 #define RENDERABLE_HH
 
 #include "entity.h"
+#include "renderableworld.h"
 
 class Renderable : public virtual Entity
 {
 public:
-  Renderable(World* world, int zIndex = 0, int layer = 0) : Entity(world), layer(layer), zIndex(zIndex) { world->registerRole(this, ID); }
-  virtual ~Renderable() { world->unregisterRole(this, ID); }
+  Renderable(RenderableWorld* world, int zIndex = 0, int layer = 0) :
+    Entity(world), renderableWorld(world), layer(layer), zIndex(zIndex)
+  {
+    renderableWorld->registerRenderable(this);
+  }
+  virtual ~Renderable() { renderableWorld->unregisterRenderable(this); }
   virtual void render() = 0;
   virtual int getLayer() const { return layer; }
   virtual int getZIndex() const { return zIndex; }
   static UID const ID;
 
 private:
+  RenderableWorld* renderableWorld;
   int const layer;
   int const zIndex;
 };

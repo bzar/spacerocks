@@ -2,18 +2,12 @@
 #define RENDERPHASE_HH
 
 #include "phase.h"
+#include "renderableworld.h"
 
 class RenderPhase : public Phase
 {
 public:
-  void execute(World* world, float const delta);
-
-private:
-  class ZComparator
-  {
-  public:
-    bool operator()(Renderable const* a, Renderable const* b);
-  };
+  void execute(RenderableWorld* world, float const delta);
 };
 
 #endif

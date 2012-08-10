@@ -2,11 +2,12 @@
 #define COLLIDEPHASE_HH
 
 #include "phase.h"
+#include "collidableworld.h"
 
 class CollidePhase : public Phase
 {
 public:
-  void execute(World* world, float const delta);
+  void execute(CollidableWorld* world, float const delta);
 };
 
 #endif

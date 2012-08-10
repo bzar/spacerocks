@@ -15,7 +15,8 @@ float const GameWorld::DEATH_DELAY = 3.0f;
 float const GameWorld::UFO_DELAY = 2.0f;
 
 GameWorld::GameWorld(Engine* engine) :
-  World(), player(), level(),
+  World(), RenderableWorld(), UpdatableWorld(), CollidableWorld(),
+  player(), level(),
   deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
   particleEngine(new ParticleEngine(this)), engine(engine),
   hud(new Hud(this))

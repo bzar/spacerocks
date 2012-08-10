@@ -2,8 +2,8 @@
 #include "world.h"
 #include "phase.h"
 
-State::State(Engine* engine, World* world, std::vector<Phase*> phases) :
-  engine(engine), world(world), phases(phases)
+State::State(Engine* engine, std::vector<Phase*> phases) :
+  engine(engine), phases(phases)
 {
 
 }

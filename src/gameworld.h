@@ -1,14 +1,16 @@
 #ifndef GAMEWORLD_HH
 #define GAMEWORLD_HH
 
-#include "ew/world.h"
+#include "ew/renderableworld.h"
+#include "ew/updatableworld.h"
+#include "ew/collidableworld.h"
 
 class Ship;
 class ParticleEngine;
 class Engine;
 class Hud;
 
-class GameWorld : public World
+class GameWorld : public RenderableWorld, public UpdatableWorld, public CollidableWorld
 {
 public:
   struct Level

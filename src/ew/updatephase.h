@@ -2,11 +2,12 @@
 #define UPDATEPHASE_HH
 
 #include "phase.h"
+#include "updatableworld.h"
 
 class UpdatePhase : public Phase
 {
 public:
-  void execute(World* world, float const delta);
+  void execute(UpdatableWorld* world, float const delta);
 };
 
 #endif

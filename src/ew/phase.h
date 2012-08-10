@@ -6,7 +6,7 @@
 class Phase
 {
 public:
-  virtual void execute(World* world, float const delta) = 0;
+  virtual void execute(World* world, float const delta) {};
 
 };
 
