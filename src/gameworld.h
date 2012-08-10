@@ -4,13 +4,15 @@
 #include "ew/renderableworld.h"
 #include "ew/updatableworld.h"
 #include "ew/collidableworld.h"
+#include "ew/controllableworld.h"
 
 class Ship;
 class ParticleEngine;
 class Engine;
 class Hud;
 
-class GameWorld : public RenderableWorld, public UpdatableWorld, public CollidableWorld
+class GameWorld : public RenderableWorld, public UpdatableWorld,
+                  public CollidableWorld, public ControllableWorld
 {
 public:
   struct Level

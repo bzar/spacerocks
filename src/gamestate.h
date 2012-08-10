@@ -2,6 +2,10 @@
 #define GAMESTATE_HH
 
 #include "ew/state.h"
+#include "ew/updatephase.h"
+#include "ew/collidephase.h"
+#include "ew/renderphase.h"
+#include "ew/controlphase.h"
 #include "gameworld.h"
 #include "GL/glhck.h"
 
@@ -13,8 +17,13 @@ public:
 
   GameState(Engine* engine);
   World* getWorld();
+  void process(float const delta);
 
 private:
   GameWorld world;
+  UpdatePhase update;
+  CollidePhase collide;
+  RenderPhase render;
+  ControlPhase control;
 };
 #endif

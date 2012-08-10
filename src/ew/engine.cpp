@@ -1,5 +1,6 @@
 #include "engine.h"
 #include "GL/glhck.h"
+#include "world.h"
 
 int const UPDATE_ITERATIONS = 10;
 
@@ -16,6 +17,7 @@ void Engine::run()
   {
     double delta = timer.getDeltaTime();
     current->process(delta);
+    current->getWorld()->maintenance();
 
     glfwSwapBuffers();
     glhckClear();

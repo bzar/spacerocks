@@ -5,6 +5,7 @@
 #include "ew/renderable.h"
 #include "ew/updatable.h"
 #include "ew/collidable.h"
+#include "ew/controllable.h"
 
 #include "GL/glhck.h"
 #include "util/vec2d.h"
@@ -15,7 +16,7 @@
 #include <string>
 #include <vector>
 
-class Ship : public Renderable, public Updatable, public Collidable
+class Ship : public Renderable, public Updatable, public Collidable, public Controllable
 {
 public:
   static void init();
@@ -30,6 +31,7 @@ public:
   void render();
   void update(float const delta);
   virtual void collide(Collidable const* other);
+  void control();
 
   bool alive() const;
   virtual CircleShape const* getShape() const;

@@ -6,6 +6,8 @@
 #include "powerup.h"
 #include "util/util.h"
 
+#include "GL/glfw3.h"
+
 UID const Ship::ID = getUID();
 
 std::vector<std::string> const Ship::IMAGES = {
@@ -28,7 +30,7 @@ void Ship::term()
 }
 
 Ship::Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity) :
-  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  Entity(world), Renderable(world), Updatable(world), Collidable(world), Controllable(world),
   gameWorld(world), o(nullptr), shield(nullptr), v(velocity),
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
   shieldLeft(4),
@@ -133,6 +135,29 @@ void Ship::update(float const delta)
   {
     shieldLeft -= delta;
   }
+}
+
+void Ship::control()
+{
+/*  turnLeft(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS);
+  turnRight(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS);
+  accelerate(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS);
+  shoot(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);*/
+/*
+  if(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS && !lastPrevWeaponButtonState)
+    prevWeapon();
+
+  if(glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && !lastNextWeaponButtonState)
+    nextWeapon();
+
+  if(glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS && !lastF1)
+    increaseLaserLevel();
+  if(glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS && !lastF2)
+    increaseSpreadLevel();
+  if(glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS && !lastF3)
+    increaseBeamLevel();
+  if(glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS && !lastF4)
+    increasePlasmaLevel();*/
 }
 
 bool Ship::alive() const

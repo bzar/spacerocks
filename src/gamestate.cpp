@@ -19,8 +19,6 @@
 #include "powerup.h"
 #include "particleengine.h"
 
-#include "ew/renderphase.h"
-
 void GameState::init()
 {
   Ship::init();
@@ -52,7 +50,7 @@ void GameState::term()
 }
 
 GameState::GameState(Engine* engine) :
-  State(engine, {new RenderPhase}), world(engine)
+  State(engine), world(engine)
 {
 }
 
@@ -61,6 +59,13 @@ World* GameState::getWorld()
   return &world;
 }
 
+void GameState::process(float const delta)
+{
+  update.execute(&world, delta);
+  collide.execute(&world, delta);
+  render.execute(&world, delta);
+  control.execute(&world, delta);
+}
 /*void GameState::input()
 {
   GLFWwindow& window = *engine->getWindow();
