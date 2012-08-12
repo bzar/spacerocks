@@ -20,7 +20,7 @@ public:
   static void init();
   static void term();
 
-  enum Size { TINY, SMALL, MEDIUM, LARGE, NUM_SIZES };
+  enum Size { TINY = 0, SMALL, MEDIUM, LARGE, NUM_SIZES };
   Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec2D const& velocity);
   ~Asteroid();
 

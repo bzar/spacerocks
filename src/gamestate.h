@@ -6,6 +6,7 @@
 #include "ew/collidephase.h"
 #include "ew/renderphase.h"
 #include "ew/controlphase.h"
+#include "gamephase.h"
 #include "gameworld.h"
 #include "GL/glhck.h"
 
@@ -21,6 +22,7 @@ public:
 
 private:
   GameWorld world;
+  GamePhase game;
   UpdatePhase update;
   CollidePhase collide;
   RenderPhase render;

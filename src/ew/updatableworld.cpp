@@ -19,6 +19,7 @@ void UpdatableWorld::registerUpdatable(Updatable* updatable)
 
 void UpdatableWorld::unregisterUpdatable(Updatable* updatable)
 {
+  updatablesToInsert.erase(updatable);
   updatables.erase(updatable);
 }
 

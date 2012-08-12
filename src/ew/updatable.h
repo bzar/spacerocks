@@ -11,7 +11,7 @@ public:
   {
     updatableWorld->registerUpdatable(this);
   }
-  virtual ~Updatable() { updatableWorld->registerUpdatable(this); }
+  virtual ~Updatable() { updatableWorld->unregisterUpdatable(this); }
   virtual void update(float const delta) = 0;
   static UID const ID;
 

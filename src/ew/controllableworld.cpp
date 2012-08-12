@@ -19,6 +19,7 @@ void ControllableWorld::registerControllable(Controllable* controllable)
 
 void ControllableWorld::unregisterControllable(Controllable* controllable)
 {
+  controllablesToInsert.erase(controllable);
   controllables.erase(controllable);
 }
 

@@ -3,6 +3,7 @@
 
 #include "controlcontext.h"
 #include "GL/glfw3.h"
+#include <iostream>
 
 class GLFWControlContext : public ControlContext
 {
@@ -12,11 +13,15 @@ public:
   {
   }
 
-  virtual bool key(int const key)
+  virtual bool keyDown(int const key)
   {
-    return glfwGetKey(window, key) == GLFW_PRESS;
-  };
+    return glfwGetKey(*window, key) == GLFW_PRESS;
+  }
 
+  virtual void update()
+  {
+    glfwPollEvents();
+  }
 private:
   GLFWwindow* window;
 };

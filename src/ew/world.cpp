@@ -7,8 +7,7 @@
 
 
 World::World() :
-  entities(), entitiesToInsert(), entitiesToRemove(),
-  roles(), rolesToInsert()
+  entities(), entitiesToInsert(), entitiesToRemove()
 {
 }
 
@@ -27,22 +26,16 @@ void World::addEntity(Entity* entity)
 
 void World::removeEntity(Entity* entity)
 {
-  entitiesToRemove.insert(entity);
-}
-
-void World::registerRole(Entity* entity, UID const roleId)
-{
-  rolesToInsert[roleId].insert(entity);
-}
-
-void World::unregisterRole(Entity* entity, UID const roleId)
-{
-  roles[roleId].erase(entity);
-}
-
-std::set<Entity*>& World::entitiesWithRole(UID const roleId)
-{
-  return roles[roleId];
+  auto toBeInserted = entitiesToInsert.find(entity);
+  if(toBeInserted != entitiesToInsert.end())
+  {
+    delete entity;
+    entitiesToInsert.erase(toBeInserted);
+  }
+  else
+  {
+    entitiesToRemove.insert(entity);
+  }
 }
 
 void World::maintenance()
@@ -56,11 +49,5 @@ void World::maintenance()
   entities.insert(entitiesToInsert.begin(), entitiesToInsert.end());
   entitiesToInsert.clear();
   entitiesToRemove.clear();
-
-  for(auto i = rolesToInsert.begin(); i != rolesToInsert.end(); ++i)
-  {
-    roles[i->first].insert(i->second.begin(), i->second.end());
-  }
-  rolesToInsert.clear();
 }
 

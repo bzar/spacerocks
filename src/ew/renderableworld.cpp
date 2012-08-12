@@ -37,6 +37,7 @@ void RenderableWorld::registerRenderable(Renderable* renderable)
 
 void RenderableWorld::unregisterRenderable(Renderable* renderable)
 {
+  renderablesToInsert.erase(renderable);
   renderables.erase(renderable);
 }
 

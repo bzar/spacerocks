@@ -21,10 +21,6 @@ public:
   void addEntity(Entity* entity);
   void removeEntity(Entity* entity);
 
-  void registerRole(Entity* entity, UID const roleId);
-  void unregisterRole(Entity* entity, UID const roleId);
-  std::set<Entity*>& entitiesWithRole(UID const roleId);
-
   void maintenance();
 
 protected:
@@ -33,9 +29,6 @@ protected:
 private:
   std::set<Entity*> entitiesToInsert;
   std::set<Entity*> entitiesToRemove;
-
-  std::map<UID, std::set<Entity*>> roles;
-  std::map<UID, std::set<Entity*>> rolesToInsert;
 };
 
 #endif

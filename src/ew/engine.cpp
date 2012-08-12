@@ -1,6 +1,7 @@
 #include "engine.h"
 #include "GL/glhck.h"
 #include "world.h"
+#include <iostream>
 
 int const UPDATE_ITERATIONS = 10;
 
@@ -13,10 +14,12 @@ Engine::Engine(GLFWwindow* window, ControlContext* controlContext) :
 void Engine::run()
 {
   running = true;
+  current->getWorld()->maintenance();
 
   while(running)
   {
     double delta = timer.getDeltaTime();
+    controlContext->update();
     current->process(delta);
     current->getWorld()->maintenance();
 

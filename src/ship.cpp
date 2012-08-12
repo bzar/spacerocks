@@ -5,6 +5,7 @@
 #include "ufolaser.h"
 #include "powerup.h"
 #include "util/util.h"
+#include <iostream>
 
 #include "GL/glfw3.h"
 
@@ -139,25 +140,25 @@ void Ship::update(float const delta)
 
 void Ship::control(ControlContext* context)
 {
-  turnLeft(context->key(GLFW_KEY_LEFT));
-  turnRight(context->key(GLFW_KEY_RIGHT));
-  accelerate(context->key(GLFW_KEY_UP));
-  shoot(context->key(GLFW_KEY_SPACE));
-/*
-  if(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS && !lastPrevWeaponButtonState)
+  turnLeft(context->keyDown(GLFW_KEY_LEFT));
+  turnRight(context->keyDown(GLFW_KEY_RIGHT));
+  accelerate(context->keyDown(GLFW_KEY_UP));
+  shoot(context->keyDown(GLFW_KEY_SPACE));
+
+  if(context->keyPush(GLFW_KEY_Z))
     prevWeapon();
 
-  if(glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && !lastNextWeaponButtonState)
+  if(context->keyPush(GLFW_KEY_X))
     nextWeapon();
 
-  if(glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS && !lastF1)
+  if(context->keyPush(GLFW_KEY_F1))
     increaseLaserLevel();
-  if(glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS && !lastF2)
+  if(context->keyPush(GLFW_KEY_F2))
     increaseSpreadLevel();
-  if(glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS && !lastF3)
+  if(context->keyPush(GLFW_KEY_F3))
     increaseBeamLevel();
-  if(glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS && !lastF4)
-    increasePlasmaLevel();*/
+  if(context->keyPush(GLFW_KEY_F4))
+    increasePlasmaLevel();
 }
 
 bool Ship::alive() const

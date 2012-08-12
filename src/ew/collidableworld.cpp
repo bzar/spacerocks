@@ -19,6 +19,7 @@ void CollidableWorld::registerCollidable(Collidable* collidable)
 
 void CollidableWorld::unregisterCollidable(Collidable* collidable)
 {
+  collidablesToInsert.erase(collidable);
   collidables.erase(collidable);
 }
 
