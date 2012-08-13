@@ -4,10 +4,8 @@
 #include "updatable.h"
 #include "collidable.h"
 
-
-
 World::World() :
-  entities(), entitiesToInsert(), entitiesToRemove()
+  entities(), entitiesToInsert(), entitiesToRemove(), maintenanceCallbacks()
 {
 }
 
@@ -49,5 +47,15 @@ void World::maintenance()
   entities.insert(entitiesToInsert.begin(), entitiesToInsert.end());
   entitiesToInsert.clear();
   entitiesToRemove.clear();
+
+  for(auto cb : maintenanceCallbacks)
+  {
+    cb();
+  }
+
 }
 
+void World::onMaintenance(std::function<void ()> callback)
+{
+  maintenanceCallbacks.push_front(callback);
+}

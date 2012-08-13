@@ -3,6 +3,13 @@
 ControllableWorld::ControllableWorld() :
   World(), controllables(), controllablesToInsert()
 {
+  onMaintenance([&]() {
+    if(!controllablesToInsert.empty())
+    {
+      controllables.insert(controllablesToInsert.begin(), controllablesToInsert.end());
+      controllablesToInsert.clear();
+    }
+  });
 
 }
 
@@ -25,11 +32,6 @@ void ControllableWorld::unregisterControllable(Controllable* controllable)
 
 std::set<Controllable*> const& ControllableWorld::getControllables()
 {
-  if(!controllablesToInsert.empty())
-  {
-    controllables.insert(controllablesToInsert.begin(), controllablesToInsert.end());
-    controllablesToInsert.clear();
-  }
   return controllables;
 }
 

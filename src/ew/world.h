@@ -4,7 +4,7 @@
 #include <set>
 #include <map>
 #include <forward_list>
-#include "uniqueid.h"
+#include <functional>
 
 class Entity;
 class Renderable;
@@ -24,11 +24,13 @@ public:
   void maintenance();
 
 protected:
+  void onMaintenance(std::function<void ()> callback);
   std::set<Entity*> entities;
 
 private:
   std::set<Entity*> entitiesToInsert;
   std::set<Entity*> entitiesToRemove;
+  std::forward_list<std::function<void ()>> maintenanceCallbacks;
 };
 
 #endif

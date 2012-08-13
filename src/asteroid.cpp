@@ -6,8 +6,6 @@
 #include "util/util.h"
 #include "particleengine.h"
 
-#include <iostream>
-
 UID const Asteroid::ID = getUID();
 float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
 std::vector<std::string> const Asteroid::IMAGES  = {
@@ -35,7 +33,6 @@ Asteroid::Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec
   Entity(world), Renderable(world), Updatable(world), Collidable(world),
   gameWorld(world), o(0), size(size), v(velocity), life((size + 1)/2.0f), shape(position, RADII[size])
 {
-  std::cout << "Spawning asteroid, size = " << size << std::endl;
   o = glhckSpriteNew(atlas.getTexture(), IMAGE_SIZES[size], IMAGE_SIZES[size]);
   glhckObjectTransformCoordinates(o, &atlas.getTransform(size).transform, atlas.getTransform(size).degree);
   glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
@@ -201,7 +198,6 @@ void Asteroid::die()
 
   if(size > TINY)
   {
-    std::cout << "Fracturing asteroid, size = " << size << std::endl;
     for(int i = 0; i < 2; ++i)
     {
       float speed = randFloat(gameWorld->level.minAsteroidSpeed, gameWorld->level.maxAsteroidSpeed);

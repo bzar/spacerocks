@@ -3,7 +3,13 @@
 CollidableWorld::CollidableWorld() :
   World(), collidables(), collidablesToInsert()
 {
-
+  onMaintenance([&]() {
+    if(!collidablesToInsert.empty())
+    {
+      collidables.insert(collidablesToInsert.begin(), collidablesToInsert.end());
+      collidablesToInsert.clear();
+    }
+  });
 }
 
 CollidableWorld::~CollidableWorld()
@@ -25,11 +31,6 @@ void CollidableWorld::unregisterCollidable(Collidable* collidable)
 
 std::set<Collidable*> const& CollidableWorld::getCollidables()
 {
-  if(!collidablesToInsert.empty())
-  {
-    collidables.insert(collidablesToInsert.begin(), collidablesToInsert.end());
-    collidablesToInsert.clear();
-  }
   return collidables;
 }
 

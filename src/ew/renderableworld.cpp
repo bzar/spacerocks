@@ -21,7 +21,13 @@ bool RenderableWorld::ZComparator::operator()(Renderable const* a, Renderable co
 RenderableWorld::RenderableWorld() :
   World(), renderables(), renderablesToInsert()
 {
-
+  onMaintenance([&]() {
+    if(!renderablesToInsert.empty())
+    {
+      renderables.insert(renderablesToInsert.begin(), renderablesToInsert.end());
+      renderablesToInsert.clear();
+    }
+  });
 }
 
 RenderableWorld::~RenderableWorld()
@@ -43,11 +49,6 @@ void RenderableWorld::unregisterRenderable(Renderable* renderable)
 
 std::set<Renderable*, RenderableWorld::ZComparator> const& RenderableWorld::getRenderables()
 {
-  if(!renderablesToInsert.empty())
-  {
-    renderables.insert(renderablesToInsert.begin(), renderablesToInsert.end());
-    renderablesToInsert.clear();
-  }
   return renderables;
 }
 

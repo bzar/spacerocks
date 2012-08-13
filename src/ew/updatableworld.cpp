@@ -3,7 +3,13 @@
 UpdatableWorld::UpdatableWorld() :
   World(), updatables(), updatablesToInsert()
 {
-
+  onMaintenance([&]() {
+    if(!updatablesToInsert.empty())
+    {
+      updatables.insert(updatablesToInsert.begin(), updatablesToInsert.end());
+      updatablesToInsert.clear();
+    }
+  });
 }
 
 UpdatableWorld::~UpdatableWorld()
@@ -25,11 +31,6 @@ void UpdatableWorld::unregisterUpdatable(Updatable* updatable)
 
 std::set<Updatable*> const& UpdatableWorld::getUpdatables()
 {
-  if(!updatablesToInsert.empty())
-  {
-    updatables.insert(updatablesToInsert.begin(), updatablesToInsert.end());
-    updatablesToInsert.clear();
-  }
   return updatables;
 }
 
