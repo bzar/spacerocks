@@ -1,4 +1,5 @@
 #include "collidableworld.h"
+#include "collidable.h"
 
 CollidableWorld::CollidableWorld() :
   World(), collidables(), collidablesToInsert()
@@ -14,7 +15,10 @@ CollidableWorld::CollidableWorld() :
 
 CollidableWorld::~CollidableWorld()
 {
-
+  for(Collidable* c : collidables)
+  {
+    c->collidableUnregistered();
+  }
 }
 
 
@@ -27,6 +31,7 @@ void CollidableWorld::unregisterCollidable(Collidable* collidable)
 {
   collidablesToInsert.erase(collidable);
   collidables.erase(collidable);
+  collidable->collidableUnregistered();
 }
 
 std::set<Collidable*> const& CollidableWorld::getCollidables()

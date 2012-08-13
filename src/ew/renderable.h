@@ -12,10 +12,11 @@ public:
   {
     renderableWorld->registerRenderable(this);
   }
-  virtual ~Renderable() { renderableWorld->unregisterRenderable(this); }
+  virtual ~Renderable() { if(renderableWorld != nullptr) renderableWorld->unregisterRenderable(this); }
   virtual void render() = 0;
   virtual int getLayer() const { return layer; }
   virtual int getZIndex() const { return zIndex; }
+  void renderableUnregistered() { renderableWorld = nullptr; }
   static UID const ID;
 
 private:

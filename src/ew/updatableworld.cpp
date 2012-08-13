@@ -1,4 +1,5 @@
 #include "updatableworld.h"
+#include "updatable.h"
 
 UpdatableWorld::UpdatableWorld() :
   World(), updatables(), updatablesToInsert()
@@ -14,7 +15,10 @@ UpdatableWorld::UpdatableWorld() :
 
 UpdatableWorld::~UpdatableWorld()
 {
-
+  for(Updatable* u : updatables)
+  {
+    u->updatableUnregistered();
+  }
 }
 
 
@@ -27,6 +31,7 @@ void UpdatableWorld::unregisterUpdatable(Updatable* updatable)
 {
   updatablesToInsert.erase(updatable);
   updatables.erase(updatable);
+  updatable->updatableUnregistered();
 }
 
 std::set<Updatable*> const& UpdatableWorld::getUpdatables()

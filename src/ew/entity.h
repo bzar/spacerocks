@@ -3,7 +3,6 @@
 
 #include "world.h"
 #include "uniqueid.h"
-#include <iostream>
 
 class Entity
 {

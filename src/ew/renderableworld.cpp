@@ -32,7 +32,10 @@ RenderableWorld::RenderableWorld() :
 
 RenderableWorld::~RenderableWorld()
 {
-
+  for(Renderable* r : renderables)
+  {
+    r->renderableUnregistered();
+  }
 }
 
 
@@ -45,6 +48,7 @@ void RenderableWorld::unregisterRenderable(Renderable* renderable)
 {
   renderablesToInsert.erase(renderable);
   renderables.erase(renderable);
+  renderable->renderableUnregistered();
 }
 
 std::set<Renderable*, RenderableWorld::ZComparator> const& RenderableWorld::getRenderables()

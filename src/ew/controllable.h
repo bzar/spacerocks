@@ -12,8 +12,9 @@ public:
   {
     controllableWorld->registerControllable(this);
   }
-  virtual ~Controllable() { controllableWorld->unregisterControllable(this); }
+  virtual ~Controllable() { if(controllableWorld != nullptr) controllableWorld->unregisterControllable(this); }
   virtual void control(ControlContext* context) = 0;
+  void controllableUnregistered() { controllableWorld = nullptr; }
   static UID const ID;
 
 private:

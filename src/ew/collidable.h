@@ -11,8 +11,9 @@ public:
   {
     collidableWorld->registerCollidable(this);
   }
-  virtual ~Collidable() { collidableWorld->unregisterCollidable(this); }
+  virtual ~Collidable() { if(collidableWorld != nullptr) collidableWorld->unregisterCollidable(this); }
   virtual void collide(Collidable const* other) = 0;
+  void collidableUnregistered() { collidableWorld = nullptr; }
   static UID const ID;
 
 private:
