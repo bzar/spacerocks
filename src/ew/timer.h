@@ -5,7 +5,7 @@ class Timer
 {
 public:
   Timer();
-  
+
   void tick();
   double getTime() const;
   double getDeltaTime() const;
@@ -13,7 +13,7 @@ public:
   double getTotalTime() const;
   double getFPS() const;
   unsigned int getTicks() const;
-  
+
 private:
   double now;
   double start;

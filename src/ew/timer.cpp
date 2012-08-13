@@ -10,7 +10,7 @@ Timer::Timer() :
   prev = time;
   prevFPS = time;
 }
-  
+
 void Timer::tick()
 {
   prev = now;
@@ -21,7 +21,7 @@ void Timer::tick()
     fps = 30.0 / dt;
     prevFPS = now;
   }
-  
+
   ++ticks;
 }
 
