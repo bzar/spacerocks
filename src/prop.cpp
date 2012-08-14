@@ -13,7 +13,7 @@ Prop::~Prop()
   glhckObjectFree(o);
 }
 
-void Prop::render()
+void Prop::render(RenderContext* context)
 {
   glhckObjectRender(o);
 }

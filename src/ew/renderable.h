@@ -3,6 +3,7 @@
 
 #include "entity.h"
 #include "renderableworld.h"
+#include "rendercontext.h"
 
 class Renderable : public virtual Entity
 {
@@ -13,7 +14,7 @@ public:
     renderableWorld->registerRenderable(this);
   }
   virtual ~Renderable() { if(renderableWorld != nullptr) renderableWorld->unregisterRenderable(this); }
-  virtual void render() = 0;
+  virtual void render(RenderContext* context) = 0;
   virtual int getLayer() const { return layer; }
   virtual int getZIndex() const { return zIndex; }
   void renderableUnregistered() { renderableWorld = nullptr; }

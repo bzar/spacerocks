@@ -138,7 +138,7 @@ void Explosion::update(float const delta)
   }
 }
 
-void Explosion::render()
+void Explosion::render(RenderContext* context)
 {
   glhckObjectRender(o);
 }

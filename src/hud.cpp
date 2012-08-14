@@ -24,7 +24,7 @@ Hud::~Hud()
   glhckTextFree(fpsText);
 }
 
-void Hud::render()
+void Hud::render(RenderContext* context)
 {
   std::ostringstream ss;
   ss << "Level: " << (gameWorld->level.n + 1)

@@ -21,7 +21,7 @@ public:
   static UID const ID;
   UID getEntityId() const { return ID; }
 
-  void render();
+  void render(RenderContext* context);
 
 private:
   glhckTexture* texture;

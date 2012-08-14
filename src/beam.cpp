@@ -50,7 +50,7 @@ Beam::~Beam()
   glhckObjectFree(tip);
 }
 
-void Beam::render()
+void Beam::render(RenderContext* context)
 {
   glhckObjectRender(o);
   glhckObjectRender(tip);

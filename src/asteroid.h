@@ -27,7 +27,7 @@ public:
   static UID const ID;
   UID getEntityId() const { return ID; }
 
-  void render();
+  void render(RenderContext* context);
   void update(float const delta);
 
   CircleShape const* getShape() const;

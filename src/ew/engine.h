@@ -19,6 +19,7 @@ public:
   void addState(int id, State* state);
   void setState(int id);
   ControlContext* getControlContext() const;
+  RenderContext* getRenderContext() const;
   Timer const& getTimer() const;
 
 private:

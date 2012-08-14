@@ -58,6 +58,11 @@ ControlContext* Engine::getControlContext() const
   return controlContext;
 }
 
+RenderContext* Engine::getRenderContext() const
+{
+  return renderContext;
+}
+
 Timer const& Engine::getTimer() const
 {
   return timer;

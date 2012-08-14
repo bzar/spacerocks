@@ -31,7 +31,7 @@ Shot::~Shot()
   glhckObjectFree(o);
 }
 
-void Shot::render()
+void Shot::render(RenderContext* context)
 {
   glhckObjectRender(o);
 }

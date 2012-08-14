@@ -60,7 +60,7 @@ Ship::~Ship()
 }
 
 
-void Ship::render()
+void Ship::render(RenderContext* context)
 {
   if(dead)
     return;

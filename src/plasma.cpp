@@ -34,7 +34,7 @@ Plasma::~Plasma()
   glhckObjectFree(o);
 }
 
-void Plasma::render()
+void Plasma::render(RenderContext* context)
 {
   glhckObjectRender(o);
 }

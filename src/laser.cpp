@@ -36,7 +36,7 @@ Laser::~Laser()
   glhckObjectFree(o);
 }
 
-void Laser::render()
+void Laser::render(RenderContext* context)
 {
   glhckObjectRender(o);
 }

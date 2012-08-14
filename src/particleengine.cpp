@@ -41,7 +41,7 @@ ParticleEngine::~ParticleEngine()
   }
 }
 
-void ParticleEngine::render()
+void ParticleEngine::render(RenderContext* context)
 {
   for(int i = 0; i < live; ++i)
   {

@@ -5,6 +5,6 @@ void RenderPhase::execute(float const delta)
 {
   for(Renderable* r : world->getRenderables())
   {
-    r->render();
+    r->render(context);
   }
 }

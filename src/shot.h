@@ -24,7 +24,7 @@ public:
   static UID const ID;
   UID getEntityId() const { return ID; }
 
-  void render();
+  void render(RenderContext* context);
   void update(float const delta);
   virtual void collide(Collidable const* other);
   virtual CircleShape const* getShape() const;

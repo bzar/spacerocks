@@ -42,7 +42,7 @@ Powerup::~Powerup()
   glhckObjectFree(o);
 }
 
-void Powerup::render()
+void Powerup::render(RenderContext* context)
 {
   glhckObjectRender(o);
 }

@@ -44,7 +44,7 @@ Asteroid::~Asteroid()
   glhckObjectFree(o);
 }
 
-void Asteroid::render()
+void Asteroid::render(RenderContext* context)
 {
   glhckObjectRender(o);
 }

@@ -35,7 +35,7 @@ UfoLaser::~UfoLaser()
   glhckObjectFree(o);
 }
 
-void UfoLaser::render()
+void UfoLaser::render(RenderContext* context)
 {
   glhckObjectRender(o);
 }

@@ -57,7 +57,7 @@ Ufo::~Ufo()
 }
 
 
-void Ufo::render()
+void Ufo::render(RenderContext* context)
 {
   glhckObjectRender(o);
 }
