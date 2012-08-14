@@ -12,10 +12,11 @@ class World;
 class State
 {
 public:
-  State(Engine* engine, World* world, std::vector<Phase*> const& phases);
+  State(Engine* engine, World* world);
   virtual ~State() {};
 
   Engine* getEngine() const { return engine; }
+  void setPhases(std::vector<Phase*> const& value);
   virtual void process(float const delta);
   virtual World* getWorld() { return world; }
 

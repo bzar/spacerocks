@@ -43,8 +43,9 @@ void GameState::term()
 }
 
 GameState::GameState(Engine* engine) :
-  State(engine, &world, {&control, &update, &collide, &render, &game}),
+  State(engine, &world),
   world(engine), game(&world, engine), update(&world), collide(&world),
   render(&world), control(&world, engine->getControlContext())
 {
+  setPhases({&control, &update, &collide, &render, &game});
 }

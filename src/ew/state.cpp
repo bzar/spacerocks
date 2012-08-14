@@ -1,9 +1,14 @@
 #include "state.h"
 
-State::State(Engine* engine, World* world, std::vector<Phase*> const& phases) :
-  engine(engine), world(world), phases(phases)
+State::State(Engine* engine, World* world) :
+  engine(engine), world(world), phases()
 {
 
+}
+
+void State::setPhases(std::vector<Phase*> const& value)
+{
+  phases = value;
 }
 
 void State::process(float const delta)
