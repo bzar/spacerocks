@@ -7,7 +7,11 @@
 class RenderPhase : public Phase
 {
 public:
-  void execute(RenderableWorld* world, float const delta);
+  RenderPhase(RenderableWorld* world) : world(world) {}
+  void execute(float const delta);
+
+private:
+  RenderableWorld* world;
 };
 
 #endif

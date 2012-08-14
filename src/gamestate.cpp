@@ -50,22 +50,8 @@ void GameState::term()
 }
 
 GameState::GameState(Engine* engine) :
-  State(engine), world(engine),
-  game(engine), update(), collide(), render(),
-  control(engine->getControlContext())
+  State(engine, &world, {&control, &update, &collide, &render, &game}),
+  world(engine), game(&world, engine), update(&world), collide(&world),
+  render(&world), control(&world, engine->getControlContext())
 {
-}
-
-World* GameState::getWorld()
-{
-  return &world;
-}
-
-void GameState::process(float const delta)
-{
-  control.execute(&world, delta);
-  update.execute(&world, delta);
-  collide.execute(&world, delta);
-  render.execute(&world, delta);
-  game.execute(&world, delta);
 }

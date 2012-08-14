@@ -6,25 +6,24 @@
 #include "state.h"
 #include "timer.h"
 #include "controlcontext.h"
+#include "rendercontext.h"
 
-#include "GL/glfw3.h"
 
 class Engine
 {
 public:
-  Engine(GLFWwindow* window, ControlContext* controlContext);
+  Engine(ControlContext* controlContext, RenderContext* renderContext);
 
   void run();
   void quit();
   void addState(int id, State* state);
   void setState(int id);
-  GLFWwindow* getWindow() const;
   ControlContext* getControlContext() const;
   Timer const& getTimer() const;
 
 private:
   ControlContext* controlContext;
-  GLFWwindow* window;
+  RenderContext* renderContext;
   std::map<int, State*> states;
   State* current;
 

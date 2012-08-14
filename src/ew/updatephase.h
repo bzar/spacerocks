@@ -7,7 +7,11 @@
 class UpdatePhase : public Phase
 {
 public:
-  void execute(UpdatableWorld* world, float const delta);
+  UpdatePhase(UpdatableWorld* world) : world(world) {}
+  void execute(float const delta);
+
+private:
+  UpdatableWorld* world;
 };
 
 #endif

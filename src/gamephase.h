@@ -8,10 +8,11 @@
 class GamePhase : public Phase
 {
 public:
-  GamePhase(Engine* engine);
-  void execute(GameWorld* world, float const delta);
+  GamePhase(GameWorld* world, Engine* engine);
+  void execute(float const delta);
 
 private:
+  GameWorld* world;
   Engine* engine;
 };
 

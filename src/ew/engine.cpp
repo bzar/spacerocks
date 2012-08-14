@@ -1,13 +1,9 @@
 #include "engine.h"
-#include "GL/glhck.h"
 #include "world.h"
-#include <iostream>
 
-int const UPDATE_ITERATIONS = 10;
-
-Engine::Engine(GLFWwindow* window, ControlContext* controlContext) :
-  controlContext(controlContext), window(window), states(),
-  current(nullptr), timer(), running(false)
+Engine::Engine(ControlContext* controlContext, RenderContext* renderContext) :
+  controlContext(controlContext), renderContext(renderContext),
+  states(), current(nullptr), timer(), running(false)
 {
 }
 
@@ -20,12 +16,11 @@ void Engine::run()
   {
     double delta = timer.getDeltaTime();
     controlContext->update();
+    renderContext->preRender();
     current->process(delta);
     current->getWorld()->maintenance();
-
-    glfwSwapBuffers();
-    glhckClear();
-
+    renderContext->postRender();
+    renderContext->waitUntilNextFrame();
     timer.tick();
   }
 }
@@ -56,11 +51,6 @@ void Engine::setState(int id)
     return;
 
   current = existing->second;
-}
-
-GLFWwindow* Engine::getWindow() const
-{
-  return window;
 }
 
 ControlContext* Engine::getControlContext() const

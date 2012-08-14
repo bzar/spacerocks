@@ -1,7 +1,7 @@
 #include "collidephase.h"
 #include "collidable.h"
 
-void CollidePhase::execute(CollidableWorld* world, float const delta)
+void CollidePhase::execute(float const delta)
 {
   for(Collidable* c1 : world->getCollidables())
   {

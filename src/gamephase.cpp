@@ -1,12 +1,13 @@
 #include "gamephase.h"
+#include "GL/glfw3.h"
 
-GamePhase::GamePhase(Engine* engine) :
-  engine(engine)
+GamePhase::GamePhase(GameWorld* world, Engine* engine) :
+  world(world), engine(engine)
 {
 
 }
 
-void GamePhase::execute(GameWorld* world, float const delta)
+void GamePhase::execute(float const delta)
 {
   if(engine->getControlContext()->keyDown(GLFW_KEY_ESCAPE))
   {

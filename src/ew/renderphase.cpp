@@ -1,7 +1,7 @@
 #include "renderphase.h"
 #include "renderable.h"
 
-void RenderPhase::execute(RenderableWorld* world, float const delta)
+void RenderPhase::execute(float const delta)
 {
   for(Renderable* r : world->getRenderables())
   {

@@ -8,10 +8,11 @@
 class ControlPhase : public Phase
 {
 public:
-  ControlPhase(ControlContext* context);
-  void execute(ControllableWorld* world, float const delta);
+  ControlPhase(ControllableWorld* world, ControlContext* context);
+  void execute(float const delta);
 
 private:
+  ControllableWorld* world;
   ControlContext* context;
 };
 

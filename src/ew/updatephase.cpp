@@ -1,7 +1,7 @@
 #include "updatephase.h"
 #include "updatable.h"
 
-void UpdatePhase::execute(UpdatableWorld* world, float const delta)
+void UpdatePhase::execute(float const delta)
 {
   for(Updatable* u : world->getUpdatables())
   {

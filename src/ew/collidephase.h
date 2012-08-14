@@ -7,7 +7,11 @@
 class CollidePhase : public Phase
 {
 public:
-  void execute(CollidableWorld* world, float const delta);
+  CollidePhase(CollidableWorld* world) : world(world) {}
+  void execute(float const delta);
+
+private:
+  CollidableWorld* world;
 };
 
 #endif
