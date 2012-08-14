@@ -1,12 +1,5 @@
 #include "gamestate.h"
 
-#include "GL/glfw3.h"
-
-#include "util/vec2d.h"
-#include "util/util.h"
-
-#include "ew/engine.h"
-
 #include "asteroid.h"
 #include "ship.h"
 #include "laser.h"
