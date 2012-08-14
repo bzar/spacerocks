@@ -7,12 +7,12 @@
 #include "timer.h"
 #include "controlcontext.h"
 #include "rendercontext.h"
-
+#include "timecontext.h"
 
 class Engine
 {
 public:
-  Engine(ControlContext* controlContext, RenderContext* renderContext);
+  Engine(ControlContext* controlContext, RenderContext* renderContext, TimeContext* timeContext);
 
   void run();
   void quit();
@@ -20,11 +20,13 @@ public:
   void setState(int id);
   ControlContext* getControlContext() const;
   RenderContext* getRenderContext() const;
+  TimeContext* getTimeContext() const;
   Timer const& getTimer() const;
 
 private:
   ControlContext* controlContext;
   RenderContext* renderContext;
+  TimeContext* timeContext;
   std::map<int, State*> states;
   State* current;
 

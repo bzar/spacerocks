@@ -3,6 +3,7 @@
 
 #include "ew/engine.h"
 #include "ew/glfwcontrolcontext.h"
+#include "ew/glfwtimecontext.h"
 #include "ew/glhckglfwrendercontext.h"
 #include "gamestate.h"
 
@@ -74,7 +75,8 @@ int gameloop(GLFWwindow& window)
 
   GLFWControlContext controlContext(&window);
   GlhckGLFWRenderContext renderContext;
-  Engine engine(&controlContext, &renderContext);
+  GLFWTimeContext timeContext;
+  Engine engine(&controlContext, &renderContext, &timeContext);
 
   glfwSetWindowUserPointer(window, &engine);
   glfwSetWindowSizeCallback(windowResizeCallback);

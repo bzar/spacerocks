@@ -1,10 +1,9 @@
 #include "timer.h"
-#include "GL/glfw3.h"
 
-Timer::Timer() :
-  now(0), start(0), prev(0), prevFPS(0), fps(0), ticks(0)
+Timer::Timer(TimeContext* context) :
+  context(context), now(0), start(0), prev(0), prevFPS(0), fps(0), ticks(0)
 {
-  double time = glfwGetTime();
+  double time = context->timeInSeconds();
   now = time;
   start = time;
   prev = time;
@@ -14,7 +13,7 @@ Timer::Timer() :
 void Timer::tick()
 {
   prev = now;
-  now = glfwGetTime();
+  now = context->timeInSeconds();
 
   if(ticks % 30 == 0) {
     double dt = now - prevFPS;

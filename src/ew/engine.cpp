@@ -1,9 +1,9 @@
 #include "engine.h"
 #include "world.h"
 
-Engine::Engine(ControlContext* controlContext, RenderContext* renderContext) :
-  controlContext(controlContext), renderContext(renderContext),
-  states(), current(nullptr), timer(), running(false)
+Engine::Engine(ControlContext* controlContext, RenderContext* renderContext, TimeContext* timeContext) :
+  controlContext(controlContext), renderContext(renderContext), timeContext(timeContext),
+  states(), current(nullptr), timer(timeContext), running(false)
 {
 }
 
@@ -61,6 +61,11 @@ ControlContext* Engine::getControlContext() const
 RenderContext* Engine::getRenderContext() const
 {
   return renderContext;
+}
+
+TimeContext* Engine::getTimeContext() const
+{
+  return timeContext;
 }
 
 Timer const& Engine::getTimer() const
