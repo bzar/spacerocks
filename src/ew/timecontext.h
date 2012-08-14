@@ -1,9 +1,12 @@
 #ifndef TIMECONTEXT_HH
 #define TIMECONTEXT_HH
 
-class TimeContext
+namespace ew
 {
-public:
-  virtual double timeInSeconds() = 0;
+  class TimeContext
+  {
+  public:
+    virtual double timeInSeconds() = 0;
+  };
 };
 #endif

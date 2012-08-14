@@ -1,11 +1,13 @@
 #ifndef PHASE_HH
 #define PHASE_HH
 
-class Phase
+namespace ew
 {
-public:
-  virtual void execute(float const delta) = 0;
+  class Phase
+  {
+  public:
+    virtual void execute(float const delta) = 0;
 
+  };
 };
-
 #endif

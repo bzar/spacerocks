@@ -4,7 +4,7 @@
 #include "rendercontext.h"
 #include "GL/glfw3.h"
 
-class GLFWRenderContext : public RenderContext
+class GLFWRenderContext : public ew::RenderContext
 {
 public:
   virtual void postRender()

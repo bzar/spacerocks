@@ -14,9 +14,9 @@ int const GameWorld::UFO_SCORE_INTERVAL_MAX = 800;
 float const GameWorld::DEATH_DELAY = 3.0f;
 float const GameWorld::UFO_DELAY = 2.0f;
 
-GameWorld::GameWorld(Engine* engine) :
-  World(), RenderableWorld(), UpdatableWorld(), CollidableWorld(),
-  ControllableWorld(),
+GameWorld::GameWorld(ew::Engine* engine) :
+  ew::World(), ew::RenderableWorld(), ew::UpdatableWorld(), ew::CollidableWorld(),
+  ew::ControllableWorld(),
   player(), level(),
   deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
   particleEngine(new ParticleEngine(this)), engine(engine),
@@ -76,7 +76,7 @@ void GameWorld::update(float const delta)
 
   bool victory = ufoDelay <= 0 && player.ship != nullptr;
 
-  for(Entity* e : entities)
+  for(ew::Entity* e : entities)
   {
     victory = victory
       && e->getEntityId() != Asteroid::ID

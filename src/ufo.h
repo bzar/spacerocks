@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-class Ufo : public Renderable, public Updatable, public Collidable
+class Ufo : public ew::Renderable, public ew::Updatable, public ew::Collidable
 {
 public:
   static void init();
@@ -24,12 +24,12 @@ public:
       float freq, float amplitude);
   ~Ufo();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
   void update(float const delta);
-  void collide(Collidable const* other);
+  void collide(ew::Collidable const* other);
 
   CircleShape const* getShape() const;
 

@@ -5,20 +5,21 @@
 #include "controllableworld.h"
 #include "controlcontext.h"
 
-class Controllable : public virtual Entity
+namespace ew
 {
-public:
-  Controllable(ControllableWorld* world) : Entity(world), controllableWorld(world)
+  class Controllable : public virtual Entity
   {
-    controllableWorld->registerControllable(this);
-  }
-  virtual ~Controllable() { if(controllableWorld != nullptr) controllableWorld->unregisterControllable(this); }
-  virtual void control(ControlContext* context) = 0;
-  void controllableUnregistered() { controllableWorld = nullptr; }
-  static UID const ID;
+  public:
+    Controllable(ControllableWorld* world) : Entity(world), controllableWorld(world)
+    {
+      controllableWorld->registerControllable(this);
+    }
+    virtual ~Controllable() { if(controllableWorld != nullptr) controllableWorld->unregisterControllable(this); }
+    virtual void control(ControlContext* context) = 0;
+    void controllableUnregistered() { controllableWorld = nullptr; }
 
-private:
-  ControllableWorld* controllableWorld;
+  private:
+    ControllableWorld* controllableWorld;
+  };
 };
-
 #endif

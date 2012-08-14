@@ -3,7 +3,7 @@
 #include "ufo.h"
 #include "util/util.h"
 
-UID const Laser::ID = getUID();
+ew::UID const Laser::ID = ew::getUID();
 std::string const Laser::IMAGE = "img/laser2.png";
 glhckTexture* Laser::TEXTURE = nullptr;
 
@@ -18,7 +18,7 @@ void Laser::term()
 }
 
 Laser::Laser(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity) :
-  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 2, 8);
@@ -36,7 +36,7 @@ Laser::~Laser()
   glhckObjectFree(o);
 }
 
-void Laser::render(RenderContext* context)
+void Laser::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
 }
@@ -75,7 +75,7 @@ LineShape const* Laser::getShape() const
 }
 
 
-void Laser::collide(Collidable const* other) {
+void Laser::collide(ew::Collidable const* other) {
   if(life <= 0)
     return;
 

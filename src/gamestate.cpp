@@ -42,8 +42,8 @@ void GameState::term()
   ParticleEngine::term();
 }
 
-GameState::GameState(Engine* engine) :
-  State(engine, &world), world(engine),
+GameState::GameState(ew::Engine* engine) :
+  ew::State(engine, &world), world(engine),
   game(&world, engine), update(&world), collide(&world),
   render(&world, engine->getRenderContext()),
   control(&world, engine->getControlContext())

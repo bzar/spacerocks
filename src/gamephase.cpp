@@ -1,7 +1,7 @@
 #include "gamephase.h"
 #include "GL/glfw3.h"
 
-GamePhase::GamePhase(GameWorld* world, Engine* engine) :
+GamePhase::GamePhase(GameWorld* world, ew::Engine* engine) :
   world(world), engine(engine)
 {
 

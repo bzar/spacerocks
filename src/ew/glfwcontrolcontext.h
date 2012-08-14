@@ -5,11 +5,11 @@
 #include "GL/glfw3.h"
 #include <iostream>
 
-class GLFWControlContext : public ControlContext
+class GLFWControlContext : public ew::ControlContext
 {
 public:
   GLFWControlContext(GLFWwindow* window) :
-    ControlContext(), window(window)
+    ew::ControlContext(), window(window)
   {
   }
 

@@ -1,6 +1,6 @@
 #include "uniqueid.h"
 
-UID getUID()
+ew::UID ew::getUID()
 {
   static UID next = 0;
   return next++;

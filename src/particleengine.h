@@ -13,7 +13,7 @@
 #include <array>
 #include <string>
 
-class ParticleEngine : public Renderable, public Updatable
+class ParticleEngine : public ew::Renderable, public ew::Updatable
 {
 public:
   enum ParticleType { SPARK, NUM_PARTICLE_TYPES };
@@ -24,10 +24,10 @@ public:
   ParticleEngine(GameWorld* world);
   ~ParticleEngine();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
   void update(float const delta);
 
   void addParticle(ParticleType const type, Vec2D const& position, Vec2D const& velocity, float const life);

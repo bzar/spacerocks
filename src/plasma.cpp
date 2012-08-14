@@ -3,7 +3,7 @@
 #include "ufo.h"
 #include "util/util.h"
 
-UID const Plasma::ID = getUID();
+ew::UID const Plasma::ID = ew::getUID();
 std::string const Plasma::IMAGE = "img/plasma.png";
 glhckTexture* Plasma::TEXTURE = nullptr;
 
@@ -19,7 +19,7 @@ void Plasma::term()
 
 Plasma::Plasma(GameWorld* world, float const life, float const power,
                Vec2D const& position, Vec2D const& velocity) :
-  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   o(0), power(power), nextPower(power), life(life), v(velocity), shape(position, getRadius())
 {
   o = glhckSpriteNew(TEXTURE, 1, 1);
@@ -34,7 +34,7 @@ Plasma::~Plasma()
   glhckObjectFree(o);
 }
 
-void Plasma::render(RenderContext* context)
+void Plasma::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
 }
@@ -77,7 +77,7 @@ CircleShape const* Plasma::getShape() const
 }
 
 
-void Plasma::collide(Collidable const* other) {
+void Plasma::collide(ew::Collidable const* other) {
   if(life <= 0 || power <= 0)
     return;
 

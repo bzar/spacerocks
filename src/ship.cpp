@@ -9,7 +9,7 @@
 
 #include "GL/glfw3.h"
 
-UID const Ship::ID = getUID();
+ew::UID const Ship::ID = ew::getUID();
 
 std::vector<std::string> const Ship::IMAGES = {
   "img/ship.png", "img/ship_accelerating.png",
@@ -31,7 +31,7 @@ void Ship::term()
 }
 
 Ship::Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity) :
-  Entity(world), Renderable(world), Updatable(world), Collidable(world), Controllable(world),
+  ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world), ew::Controllable(world),
   gameWorld(world), o(nullptr), shield(nullptr), v(velocity),
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
   shieldLeft(4),
@@ -60,7 +60,7 @@ Ship::~Ship()
 }
 
 
-void Ship::render(RenderContext* context)
+void Ship::render(ew::RenderContext* context)
 {
   if(dead)
     return;
@@ -138,7 +138,7 @@ void Ship::update(float const delta)
   }
 }
 
-void Ship::control(ControlContext* context)
+void Ship::control(ew::ControlContext* context)
 {
   turnLeft(context->keyDown(GLFW_KEY_LEFT));
   turnRight(context->keyDown(GLFW_KEY_RIGHT));
@@ -172,7 +172,7 @@ CircleShape const* Ship::getShape() const
 }
 
 
-void Ship::collide(Collidable const* other) {
+void Ship::collide(ew::Collidable const* other) {
   if(dead)
     return;
 

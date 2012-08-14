@@ -5,15 +5,15 @@
 #include "ew/engine.h"
 #include "gameworld.h"
 
-class GamePhase : public Phase
+class GamePhase : public ew::Phase
 {
 public:
-  GamePhase(GameWorld* world, Engine* engine);
+  GamePhase(GameWorld* world, ew::Engine* engine);
   void execute(float const delta);
 
 private:
   GameWorld* world;
-  Engine* engine;
+  ew::Engine* engine;
 };
 
 #endif

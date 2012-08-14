@@ -4,20 +4,21 @@
 #include "entity.h"
 #include "collidableworld.h"
 
-class Collidable : public virtual Entity
+namespace ew
 {
-public:
-  Collidable(CollidableWorld* world) : Entity(world), collidableWorld(world)
+  class Collidable : public virtual Entity
   {
-    collidableWorld->registerCollidable(this);
-  }
-  virtual ~Collidable() { if(collidableWorld != nullptr) collidableWorld->unregisterCollidable(this); }
-  virtual void collide(Collidable const* other) = 0;
-  void collidableUnregistered() { collidableWorld = nullptr; }
-  static UID const ID;
+  public:
+    Collidable(CollidableWorld* world) : Entity(world), collidableWorld(world)
+    {
+      collidableWorld->registerCollidable(this);
+    }
+    virtual ~Collidable() { if(collidableWorld != nullptr) collidableWorld->unregisterCollidable(this); }
+    virtual void collide(Collidable const* other) = 0;
+    void collidableUnregistered() { collidableWorld = nullptr; }
 
-private:
-  CollidableWorld* collidableWorld;
+  private:
+    CollidableWorld* collidableWorld;
+  };
 };
-
 #endif

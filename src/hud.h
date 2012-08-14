@@ -6,16 +6,16 @@
 
 #include "GL/glhck.h"
 
-class Hud : public Renderable
+class Hud : public ew::Renderable
 {
 public:
   Hud(GameWorld* world);
   ~Hud();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
 
 private:
   GameWorld* gameWorld;

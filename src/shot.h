@@ -12,7 +12,7 @@
 
 #include <string>
 
-class Shot : public Renderable, public Updatable, public Collidable
+class Shot : public ew::Renderable, public ew::Updatable, public ew::Collidable
 {
 public:
   static void init();
@@ -21,12 +21,12 @@ public:
   Shot(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity);
   ~Shot();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
   void update(float const delta);
-  virtual void collide(Collidable const* other);
+  virtual void collide(ew::Collidable const* other);
   virtual CircleShape const* getShape() const;
 
 

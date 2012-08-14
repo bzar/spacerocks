@@ -12,7 +12,7 @@
 
 #include <string>
 
-class Beam : public Renderable, public Updatable, public Collidable
+class Beam : public ew::Renderable, public ew::Updatable, public ew::Collidable
 {
 public:
   static void init();
@@ -21,14 +21,14 @@ public:
   Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDelta);
   ~Beam();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
   void update(float const delta);
   LineShape const* getShape() const;
 
-  void collide(Collidable const* other);
+  void collide(ew::Collidable const* other);
 
   void setBasePosition(Vec2D const& basePosition);
   void setPositionDelta(Vec2D const& positionDelta);

@@ -14,7 +14,7 @@
 
 class GameWorld;
 
-class Explosion : public Renderable, public Updatable
+class Explosion : public ew::Renderable, public ew::Updatable
 {
 public:
   static void init();
@@ -23,10 +23,10 @@ public:
   Explosion(GameWorld* world, Vec2D const& position);
   ~Explosion();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
   void update(float const delta);
 
 private:

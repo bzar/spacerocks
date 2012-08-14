@@ -1,7 +1,7 @@
 #include "renderableworld.h"
 #include "renderable.h"
 
-bool RenderableWorld::ZComparator::operator()(Renderable const* a, Renderable const* b)
+bool ew::RenderableWorld::ZComparator::operator()(Renderable const* a, Renderable const* b)
 {
   if(a->getLayer() != b->getLayer())
   {
@@ -18,7 +18,7 @@ bool RenderableWorld::ZComparator::operator()(Renderable const* a, Renderable co
 }
 
 
-RenderableWorld::RenderableWorld() :
+ew::RenderableWorld::RenderableWorld() :
   World(), renderables(), renderablesToInsert()
 {
   onMaintenance([&]() {
@@ -30,7 +30,7 @@ RenderableWorld::RenderableWorld() :
   });
 }
 
-RenderableWorld::~RenderableWorld()
+ew::RenderableWorld::~RenderableWorld()
 {
   for(Renderable* r : renderables)
   {
@@ -39,19 +39,19 @@ RenderableWorld::~RenderableWorld()
 }
 
 
-void RenderableWorld::registerRenderable(Renderable* renderable)
+void ew::RenderableWorld::registerRenderable(Renderable* renderable)
 {
   renderablesToInsert.insert(renderable);
 }
 
-void RenderableWorld::unregisterRenderable(Renderable* renderable)
+void ew::RenderableWorld::unregisterRenderable(Renderable* renderable)
 {
   renderablesToInsert.erase(renderable);
   renderables.erase(renderable);
   renderable->renderableUnregistered();
 }
 
-std::set<Renderable*, RenderableWorld::ZComparator> const& RenderableWorld::getRenderables()
+std::set<ew::Renderable*, ew::RenderableWorld::ZComparator> const& ew::RenderableWorld::getRenderables()
 {
   return renderables;
 }

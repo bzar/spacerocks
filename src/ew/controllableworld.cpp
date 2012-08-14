@@ -1,7 +1,7 @@
 #include "controllableworld.h"
 #include "controllable.h"
 
-ControllableWorld::ControllableWorld() :
+ew::ControllableWorld::ControllableWorld() :
   World(), controllables(), controllablesToInsert()
 {
   onMaintenance([&]() {
@@ -14,7 +14,7 @@ ControllableWorld::ControllableWorld() :
 
 }
 
-ControllableWorld::~ControllableWorld()
+ew::ControllableWorld::~ControllableWorld()
 {
   for(Controllable* c : controllables)
   {
@@ -23,19 +23,19 @@ ControllableWorld::~ControllableWorld()
 }
 
 
-void ControllableWorld::registerControllable(Controllable* controllable)
+void ew::ControllableWorld::registerControllable(Controllable* controllable)
 {
   controllablesToInsert.insert(controllable);
 }
 
-void ControllableWorld::unregisterControllable(Controllable* controllable)
+void ew::ControllableWorld::unregisterControllable(Controllable* controllable)
 {
   controllablesToInsert.erase(controllable);
   controllables.erase(controllable);
   controllable->controllableUnregistered();
 }
 
-std::set<Controllable*> const& ControllableWorld::getControllables()
+std::set<ew::Controllable*> const& ew::ControllableWorld::getControllables()
 {
   return controllables;
 }

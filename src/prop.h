@@ -9,7 +9,7 @@
 #include <map>
 #include <string>
 
-class Prop : public Renderable
+class Prop : public ew::Renderable
 {
 public:
   static void init();
@@ -18,10 +18,10 @@ public:
   Prop(GameWorld* world, std::string const& image, float const width, float const height, int const zIndex = 0, int const layer = 0);
   ~Prop();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
 
 private:
   glhckTexture* texture;

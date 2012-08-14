@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-class Powerup : public Renderable, public Updatable, public Collidable
+class Powerup : public ew::Renderable, public ew::Updatable, public ew::Collidable
 {
 public:
   static void init();
@@ -24,12 +24,12 @@ public:
   Powerup(GameWorld* world, Type const type, Vec2D const& position, Vec2D const& velocity);
   ~Powerup();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
   void update(float const delta);
-  virtual void collide(Collidable const* other);
+  virtual void collide(ew::Collidable const* other);
 
   virtual CircleShape const* getShape() const;
 

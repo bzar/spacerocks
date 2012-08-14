@@ -4,21 +4,23 @@
 #include "world.h"
 #include <set>
 
-class Collidable;
-
-class CollidableWorld : public virtual World
+namespace ew
 {
-public:
-  CollidableWorld();
-  virtual ~CollidableWorld();
+  class Collidable;
 
-  void registerCollidable(Collidable* collidable);
-  void unregisterCollidable(Collidable* collidable);
-  std::set<Collidable*> const& getCollidables();
+  class CollidableWorld : public virtual World
+  {
+  public:
+    CollidableWorld();
+    virtual ~CollidableWorld();
 
-private:
-  std::set<Collidable*> collidablesToInsert;
-  std::set<Collidable*> collidables;
+    void registerCollidable(Collidable* collidable);
+    void unregisterCollidable(Collidable* collidable);
+    std::set<Collidable*> const& getCollidables();
+
+  private:
+    std::set<Collidable*> collidablesToInsert;
+    std::set<Collidable*> collidables;
+  };
 };
-
 #endif

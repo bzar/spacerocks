@@ -1,7 +1,7 @@
 #include "updatableworld.h"
 #include "updatable.h"
 
-UpdatableWorld::UpdatableWorld() :
+ew::UpdatableWorld::UpdatableWorld() :
   World(), updatables(), updatablesToInsert()
 {
   onMaintenance([&]() {
@@ -13,7 +13,7 @@ UpdatableWorld::UpdatableWorld() :
   });
 }
 
-UpdatableWorld::~UpdatableWorld()
+ew::UpdatableWorld::~UpdatableWorld()
 {
   for(Updatable* u : updatables)
   {
@@ -22,19 +22,19 @@ UpdatableWorld::~UpdatableWorld()
 }
 
 
-void UpdatableWorld::registerUpdatable(Updatable* updatable)
+void ew::UpdatableWorld::registerUpdatable(Updatable* updatable)
 {
   updatablesToInsert.insert(updatable);
 }
 
-void UpdatableWorld::unregisterUpdatable(Updatable* updatable)
+void ew::UpdatableWorld::unregisterUpdatable(Updatable* updatable)
 {
   updatablesToInsert.erase(updatable);
   updatables.erase(updatable);
   updatable->updatableUnregistered();
 }
 
-std::set<Updatable*> const& UpdatableWorld::getUpdatables()
+std::set<ew::Updatable*> const& ew::UpdatableWorld::getUpdatables()
 {
   return updatables;
 }

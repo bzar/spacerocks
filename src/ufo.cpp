@@ -12,7 +12,7 @@
 
 float const TAU = 2 * 3.14159265;
 
-UID const Ufo::ID = getUID();
+ew::UID const Ufo::ID = ew::getUID();
 
 int const Ufo::ANIMATION_FRAMES[NUM_FRAMES] = {1, 1, 1, 1, 1, 1, 1, 1, 2, 3};
 
@@ -37,7 +37,7 @@ void Ufo::term()
 
 Ufo::Ufo(GameWorld* world, Vec2D const& startPosition, Vec2D const& endPosition,
          float freq, float amplitude) :
-  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   gameWorld(world), o(0), startPosition(startPosition), endPosition(endPosition),
   freq(freq), amplitude(amplitude),
   duration(gameWorld->level.ufoDuration),
@@ -57,7 +57,7 @@ Ufo::~Ufo()
 }
 
 
-void Ufo::render(RenderContext* context)
+void Ufo::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
 }
@@ -99,7 +99,7 @@ CircleShape const* Ufo::getShape() const
   return &shape;
 }
 
-void Ufo::collide(Collidable const* other) {
+void Ufo::collide(ew::Collidable const* other) {
   Vec2D position = getPosition();
 
   if(other->getEntityId() == Laser::ID

@@ -5,15 +5,17 @@
 #include "controllableworld.h"
 #include "controlcontext.h"
 
-class ControlPhase : public Phase
+namespace ew
 {
-public:
-  ControlPhase(ControllableWorld* world, ControlContext* context);
-  void execute(float const delta);
+  class ControlPhase : public Phase
+  {
+  public:
+    ControlPhase(ControllableWorld* world, ControlContext* context);
+    void execute(float const delta);
 
-private:
-  ControllableWorld* world;
-  ControlContext* context;
+  private:
+    ControllableWorld* world;
+    ControlContext* context;
+  };
 };
-
 #endif

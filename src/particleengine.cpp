@@ -1,6 +1,6 @@
 #include "particleengine.h"
 
-UID const ParticleEngine::ID = getUID();
+ew::UID const ParticleEngine::ID = ew::getUID();
 
 std::vector<std::string> const ParticleEngine::IMAGES = {
   "img/spark.png",
@@ -23,7 +23,7 @@ void ParticleEngine::term()
 }
 
 ParticleEngine::ParticleEngine(GameWorld* world) :
-  Entity(world), Renderable(world, 0, 1), Updatable(world),
+  ew::Entity(world), ew::Renderable(world, 0, 1), ew::Updatable(world),
   particles(), live(0)
 {
   for(Particle& p : particles)
@@ -41,7 +41,7 @@ ParticleEngine::~ParticleEngine()
   }
 }
 
-void ParticleEngine::render(RenderContext* context)
+void ParticleEngine::render(ew::RenderContext* context)
 {
   for(int i = 0; i < live; ++i)
   {

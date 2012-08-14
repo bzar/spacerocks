@@ -2,7 +2,7 @@
 #include "asteroid.h"
 #include "util/util.h"
 
-UID const UfoLaser::ID = getUID();
+ew::UID const UfoLaser::ID = ew::getUID();
 std::string const UfoLaser::IMAGE = "img/ufolaser.png";
 glhckTexture* UfoLaser::TEXTURE = nullptr;
 
@@ -17,7 +17,7 @@ void UfoLaser::term()
 }
 
 UfoLaser::UfoLaser(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity) :
-  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 2, 8);
@@ -35,7 +35,7 @@ UfoLaser::~UfoLaser()
   glhckObjectFree(o);
 }
 
-void UfoLaser::render(RenderContext* context)
+void UfoLaser::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
 }
@@ -57,7 +57,7 @@ LineShape const* UfoLaser::getShape() const
 }
 
 
-void UfoLaser::collide(Collidable const* other) {
+void UfoLaser::collide(ew::Collidable const* other) {
   Vec2D position = getPosition();
 
   if(other->getEntityId() == Asteroid::ID) {

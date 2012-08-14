@@ -3,7 +3,7 @@
 #include "util/util.h"
 #include <cstdlib>
 
-UID const Powerup::ID = getUID();
+ew::UID const Powerup::ID = ew::getUID();
 float const Powerup::RADIUS = 16;
 std::vector<std::string> const Powerup::IMAGES = {
   "img/powerup_laser.png",
@@ -28,7 +28,7 @@ void Powerup::term()
 }
 
 Powerup::Powerup(GameWorld* world, Type const type, Vec2D const& position, Vec2D const& velocity) :
-  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   o(0), type(type), v(velocity), life(10), shape(position, RADIUS)
 {
   o = glhckSpriteNew(atlas.getTexture(), 16, 16);
@@ -42,7 +42,7 @@ Powerup::~Powerup()
   glhckObjectFree(o);
 }
 
-void Powerup::render(RenderContext* context)
+void Powerup::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
 }
@@ -77,7 +77,7 @@ CircleShape const* Powerup::getShape() const
   return &shape;
 }
 
-void Powerup::collide(Collidable const* other) {
+void Powerup::collide(ew::Collidable const* other) {
   if(other->getEntityId() == Ship::ID) {
     Ship const* ship = static_cast<Ship const*>(other);
     if(shape.collidesWith(ship->getShape()))

@@ -1,13 +1,13 @@
 #include "engine.h"
 #include "world.h"
 
-Engine::Engine(ControlContext* controlContext, RenderContext* renderContext, TimeContext* timeContext) :
+ew::Engine::Engine(ControlContext* controlContext, RenderContext* renderContext, TimeContext* timeContext) :
   controlContext(controlContext), renderContext(renderContext), timeContext(timeContext),
   states(), current(nullptr), timer(timeContext), running(false)
 {
 }
 
-void Engine::run()
+void ew::Engine::run()
 {
   running = true;
   current->getWorld()->maintenance();
@@ -25,12 +25,12 @@ void Engine::run()
   }
 }
 
-void Engine::quit()
+void ew::Engine::quit()
 {
   running = false;
 }
 
-void Engine::addState(int id, State* state)
+void ew::Engine::addState(int id, State* state)
 {
   auto existing = states.find(id);
   if(existing != states.end())
@@ -44,7 +44,7 @@ void Engine::addState(int id, State* state)
   states[id] = state;
 }
 
-void Engine::setState(int id)
+void ew::Engine::setState(int id)
 {
   auto existing = states.find(id);
   if(existing == states.end() || existing->second == current)
@@ -53,22 +53,22 @@ void Engine::setState(int id)
   current = existing->second;
 }
 
-ControlContext* Engine::getControlContext() const
+ew::ControlContext* ew::Engine::getControlContext() const
 {
   return controlContext;
 }
 
-RenderContext* Engine::getRenderContext() const
+ew::RenderContext* ew::Engine::getRenderContext() const
 {
   return renderContext;
 }
 
-TimeContext* Engine::getTimeContext() const
+ew::TimeContext* ew::Engine::getTimeContext() const
 {
   return timeContext;
 }
 
-Timer const& Engine::getTimer() const
+ew::Timer const& ew::Engine::getTimer() const
 {
   return timer;
 }

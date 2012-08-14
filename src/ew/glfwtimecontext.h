@@ -4,7 +4,7 @@
 #include "timecontext.h"
 #include "GL/glfw3.h"
 
-class GLFWTimeContext : public TimeContext
+class GLFWTimeContext : public ew::TimeContext
 {
 public:
   virtual double timeInSeconds()

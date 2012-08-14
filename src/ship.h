@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-class Ship : public Renderable, public Updatable, public Collidable, public Controllable
+class Ship : public ew::Renderable, public ew::Updatable, public ew::Collidable, public ew::Controllable
 {
 public:
   static void init();
@@ -25,13 +25,13 @@ public:
   Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity);
   ~Ship();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
   void update(float const delta);
-  virtual void collide(Collidable const* other);
-  void control(ControlContext* context);
+  virtual void collide(ew::Collidable const* other);
+  void control(ew::ControlContext* context);
 
   bool alive() const;
   virtual CircleShape const* getShape() const;

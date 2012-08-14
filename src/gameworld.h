@@ -5,14 +5,14 @@
 #include "ew/updatableworld.h"
 #include "ew/collidableworld.h"
 #include "ew/controllableworld.h"
+#include "ew/engine.h"
 
 class Ship;
 class ParticleEngine;
-class Engine;
 class Hud;
 
-class GameWorld : public RenderableWorld, public UpdatableWorld,
-                  public CollidableWorld, public ControllableWorld
+class GameWorld : public ew::RenderableWorld, public ew::UpdatableWorld,
+                  public ew::CollidableWorld, public ew::ControllableWorld
 {
 public:
   struct Level
@@ -35,7 +35,7 @@ public:
     int score;
   };
 
-  GameWorld(Engine* engine);
+  GameWorld(ew::Engine* engine);
 
   void update(float const delta);
 
@@ -45,7 +45,7 @@ public:
   Level level;
   Player player;
   ParticleEngine* const particleEngine;
-  Engine* const engine;
+  ew::Engine* const engine;
   Hud const* hud;
 
 private:

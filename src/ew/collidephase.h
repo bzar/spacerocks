@@ -4,14 +4,16 @@
 #include "phase.h"
 #include "collidableworld.h"
 
-class CollidePhase : public Phase
+namespace ew
 {
-public:
-  CollidePhase(CollidableWorld* world) : world(world) {}
-  void execute(float const delta);
+  class CollidePhase : public Phase
+  {
+  public:
+    CollidePhase(CollidableWorld* world) : world(world) {}
+    void execute(float const delta);
 
-private:
-  CollidableWorld* world;
+  private:
+    CollidableWorld* world;
+  };
 };
-
 #endif

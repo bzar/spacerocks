@@ -5,25 +5,26 @@
 #include "renderableworld.h"
 #include "rendercontext.h"
 
-class Renderable : public virtual Entity
+namespace ew
 {
-public:
-  Renderable(RenderableWorld* world, int zIndex = 0, int layer = 0) :
-    Entity(world), renderableWorld(world), layer(layer), zIndex(zIndex)
+  class Renderable : public virtual Entity
   {
-    renderableWorld->registerRenderable(this);
-  }
-  virtual ~Renderable() { if(renderableWorld != nullptr) renderableWorld->unregisterRenderable(this); }
-  virtual void render(RenderContext* context) = 0;
-  virtual int getLayer() const { return layer; }
-  virtual int getZIndex() const { return zIndex; }
-  void renderableUnregistered() { renderableWorld = nullptr; }
-  static UID const ID;
+  public:
+    Renderable(RenderableWorld* world, int zIndex = 0, int layer = 0) :
+      Entity(world), renderableWorld(world), layer(layer), zIndex(zIndex)
+    {
+      renderableWorld->registerRenderable(this);
+    }
+    virtual ~Renderable() { if(renderableWorld != nullptr) renderableWorld->unregisterRenderable(this); }
+    virtual void render(RenderContext* context) = 0;
+    virtual int getLayer() const { return layer; }
+    virtual int getZIndex() const { return zIndex; }
+    void renderableUnregistered() { renderableWorld = nullptr; }
 
-private:
-  RenderableWorld* renderableWorld;
-  int const layer;
-  int const zIndex;
+  private:
+    RenderableWorld* renderableWorld;
+    int const layer;
+    int const zIndex;
+  };
 };
-
 #endif

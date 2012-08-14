@@ -3,7 +3,7 @@
 #include "ufo.h"
 #include "util/util.h"
 
-UID const Shot::ID = getUID();
+ew::UID const Shot::ID = ew::getUID();
 std::string const Shot::IMAGE = "img/shot.png";
 glhckTexture* Shot::TEXTURE = nullptr;
 
@@ -18,7 +18,7 @@ void Shot::term()
 }
 
 Shot::Shot(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity) :
-  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   o(0), life(life), v(velocity), shape(position, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 4, 4);
@@ -31,7 +31,7 @@ Shot::~Shot()
   glhckObjectFree(o);
 }
 
-void Shot::render(RenderContext* context)
+void Shot::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
 }
@@ -67,7 +67,7 @@ CircleShape const* Shot::getShape() const
 }
 
 
-void Shot::collide(Collidable const* other) {
+void Shot::collide(ew::Collidable const* other) {
   if(life <= 0)
     return;
 

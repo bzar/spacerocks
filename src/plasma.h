@@ -12,7 +12,7 @@
 
 #include <string>
 
-class Plasma : public Renderable, public Updatable, public Collidable
+class Plasma : public ew::Renderable, public ew::Updatable, public ew::Collidable
 {
 public:
   static void init();
@@ -21,12 +21,12 @@ public:
   Plasma(GameWorld* world, float const life, float const power, Vec2D const& position, Vec2D const& velocity);
   ~Plasma();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
   void update(float const delta);
-  void collide(Collidable const* other);
+  void collide(ew::Collidable const* other);
 
   virtual CircleShape const* getShape() const;
 

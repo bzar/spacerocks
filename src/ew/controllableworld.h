@@ -4,21 +4,23 @@
 #include "world.h"
 #include <set>
 
-class Controllable;
-
-class ControllableWorld : public virtual World
+namespace ew
 {
-public:
-  ControllableWorld();
-  virtual ~ControllableWorld();
+  class Controllable;
 
-  void registerControllable(Controllable* controllable);
-  void unregisterControllable(Controllable* controllable);
-  std::set<Controllable*> const& getControllables();
+  class ControllableWorld : public virtual World
+  {
+  public:
+    ControllableWorld();
+    virtual ~ControllableWorld();
 
-private:
-  std::set<Controllable*> controllablesToInsert;
-  std::set<Controllable*> controllables;
+    void registerControllable(Controllable* controllable);
+    void unregisterControllable(Controllable* controllable);
+    std::set<Controllable*> const& getControllables();
+
+  private:
+    std::set<Controllable*> controllablesToInsert;
+    std::set<Controllable*> controllables;
+  };
 };
-
 #endif

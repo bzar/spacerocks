@@ -4,14 +4,16 @@
 #include "phase.h"
 #include "updatableworld.h"
 
-class UpdatePhase : public Phase
+namespace ew
 {
-public:
-  UpdatePhase(UpdatableWorld* world) : world(world) {}
-  void execute(float const delta);
+  class UpdatePhase : public Phase
+  {
+  public:
+    UpdatePhase(UpdatableWorld* world) : world(world) {}
+    void execute(float const delta);
 
-private:
-  UpdatableWorld* world;
+  private:
+    UpdatableWorld* world;
+  };
 };
-
 #endif

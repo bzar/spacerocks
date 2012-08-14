@@ -6,7 +6,7 @@
 #include "util/util.h"
 #include "particleengine.h"
 
-UID const Asteroid::ID = getUID();
+ew::UID const Asteroid::ID = ew::getUID();
 float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
 std::vector<std::string> const Asteroid::IMAGES  = {
   "img/asteroid_1.png",
@@ -30,7 +30,7 @@ void Asteroid::term()
 }
 
 Asteroid::Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec2D const& velocity) :
-  Entity(world), Renderable(world), Updatable(world), Collidable(world),
+  ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   gameWorld(world), o(0), size(size), v(velocity), life((size + 1)/2.0f), shape(position, RADII[size])
 {
   o = glhckSpriteNew(atlas.getTexture(), IMAGE_SIZES[size], IMAGE_SIZES[size]);
@@ -44,7 +44,7 @@ Asteroid::~Asteroid()
   glhckObjectFree(o);
 }
 
-void Asteroid::render(RenderContext* context)
+void Asteroid::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
 }
@@ -76,7 +76,7 @@ CircleShape const* Asteroid::getShape() const
   return &shape;
 }
 
-void Asteroid::collide(Collidable const* other) {
+void Asteroid::collide(ew::Collidable const* other) {
   if(!life > 0)
     return;
 

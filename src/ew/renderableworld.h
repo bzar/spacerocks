@@ -4,27 +4,29 @@
 #include <set>
 #include "world.h"
 
-class Renderable;
-
-class RenderableWorld : public virtual World
+namespace ew
 {
-public:
-  class ZComparator
+  class Renderable;
+
+  class RenderableWorld : public virtual World
   {
   public:
-    bool operator()(Renderable const* a, Renderable const* b);
+    class ZComparator
+    {
+    public:
+      bool operator()(Renderable const* a, Renderable const* b);
+    };
+
+    RenderableWorld();
+    virtual ~RenderableWorld();
+
+    void registerRenderable(Renderable* renderable);
+    void unregisterRenderable(Renderable* renderable);
+    std::set<Renderable*, ZComparator> const& getRenderables();
+
+  private:
+    std::set<Renderable*> renderablesToInsert;
+    std::set<Renderable*, ZComparator> renderables;
   };
-
-  RenderableWorld();
-  virtual ~RenderableWorld();
-
-  void registerRenderable(Renderable* renderable);
-  void unregisterRenderable(Renderable* renderable);
-  std::set<Renderable*, ZComparator> const& getRenderables();
-
-private:
-  std::set<Renderable*> renderablesToInsert;
-  std::set<Renderable*, ZComparator> renderables;
 };
-
 #endif

@@ -10,20 +10,20 @@
 #include "gamephase.h"
 #include "gameworld.h"
 
-class GameState : public State
+class GameState : public ew::State
 {
 public:
   static void init();
   static void term();
 
-  GameState(Engine* engine);
+  GameState(ew::Engine* engine);
 
 private:
   GameWorld world;
   GamePhase game;
-  UpdatePhase update;
-  CollidePhase collide;
-  RenderPhase render;
-  ControlPhase control;
+  ew::UpdatePhase update;
+  ew::CollidePhase collide;
+  ew::RenderPhase render;
+  ew::ControlPhase control;
 };
 #endif

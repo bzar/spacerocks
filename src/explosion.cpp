@@ -1,6 +1,6 @@
 #include "explosion.h"
 
-UID const Explosion::ID = getUID();
+ew::UID const Explosion::ID = ew::getUID();
 
 std::vector<std::string> const Explosion::IMAGES = {
   "img/explosion/explosion1_0001.png",
@@ -108,7 +108,7 @@ void Explosion::term()
 }
 
 Explosion::Explosion(GameWorld* world, Vec2D const& position) :
-  Entity(world), Renderable(world, 1), Updatable(world),
+  ew::Entity(world), ew::Renderable(world, 1), ew::Updatable(world),
   o(nullptr), time(0)
 {
   o = glhckSpriteNew(atlas.getTexture(), 160, 120);
@@ -138,7 +138,7 @@ void Explosion::update(float const delta)
   }
 }
 
-void Explosion::render(RenderContext* context)
+void Explosion::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
 }

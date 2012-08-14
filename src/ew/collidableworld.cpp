@@ -1,7 +1,7 @@
 #include "collidableworld.h"
 #include "collidable.h"
 
-CollidableWorld::CollidableWorld() :
+ew::CollidableWorld::CollidableWorld() :
   World(), collidables(), collidablesToInsert()
 {
   onMaintenance([&]() {
@@ -13,7 +13,7 @@ CollidableWorld::CollidableWorld() :
   });
 }
 
-CollidableWorld::~CollidableWorld()
+ew::CollidableWorld::~CollidableWorld()
 {
   for(Collidable* c : collidables)
   {
@@ -22,19 +22,19 @@ CollidableWorld::~CollidableWorld()
 }
 
 
-void CollidableWorld::registerCollidable(Collidable* collidable)
+void ew::CollidableWorld::registerCollidable(Collidable* collidable)
 {
   collidablesToInsert.insert(collidable);
 }
 
-void CollidableWorld::unregisterCollidable(Collidable* collidable)
+void ew::CollidableWorld::unregisterCollidable(Collidable* collidable)
 {
   collidablesToInsert.erase(collidable);
   collidables.erase(collidable);
   collidable->collidableUnregistered();
 }
 
-std::set<Collidable*> const& CollidableWorld::getCollidables()
+std::set<ew::Collidable*> const& ew::CollidableWorld::getCollidables()
 {
   return collidables;
 }

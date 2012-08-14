@@ -5,10 +5,10 @@
 #include <iomanip>
 #include <sstream>
 
-UID const Hud::ID = getUID();
+ew::UID const Hud::ID = ew::getUID();
 
 Hud::Hud(GameWorld* world) :
-  Entity(world), Renderable(world, 0, 1),
+  ew::Entity(world), ew::Renderable(world, 0, 1),
   gameWorld(world), gameText(nullptr), fpsText(nullptr), gameFont(0), fpsFont(0)
 {
   gameText = glhckTextNew(200, 200);
@@ -24,7 +24,7 @@ Hud::~Hud()
   glhckTextFree(fpsText);
 }
 
-void Hud::render(RenderContext* context)
+void Hud::render(ew::RenderContext* context)
 {
   std::ostringstream ss;
   ss << "Level: " << (gameWorld->level.n + 1)

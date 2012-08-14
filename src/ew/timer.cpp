@@ -1,6 +1,6 @@
 #include "timer.h"
 
-Timer::Timer(TimeContext* context) :
+ew::Timer::Timer(TimeContext* context) :
   context(context), now(0), start(0), prev(0), prevFPS(0), fps(0), ticks(0)
 {
   double time = context->timeInSeconds();
@@ -10,7 +10,7 @@ Timer::Timer(TimeContext* context) :
   prevFPS = time;
 }
 
-void Timer::tick()
+void ew::Timer::tick()
 {
   prev = now;
   now = context->timeInSeconds();
@@ -24,32 +24,32 @@ void Timer::tick()
   ++ticks;
 }
 
-double Timer::getTime() const
+double ew::Timer::getTime() const
 {
   return now;
 }
 
-double Timer::getDeltaTime() const
+double ew::Timer::getDeltaTime() const
 {
   return now - prev;
 }
 
-double Timer::getStartTime() const
+double ew::Timer::getStartTime() const
 {
   return start;
 }
 
-double Timer::getTotalTime() const
+double ew::Timer::getTotalTime() const
 {
   return now - start;
 }
 
-double Timer::getFPS() const
+double ew::Timer::getFPS() const
 {
   return fps;
 }
 
-unsigned int Timer::getTicks() const
+unsigned int ew::Timer::getTicks() const
 {
   return ticks;
 }

@@ -4,21 +4,23 @@
 #include "world.h"
 #include <set>
 
-class Updatable;
-
-class UpdatableWorld : public virtual World
+namespace ew
 {
-public:
-  UpdatableWorld();
-  virtual ~UpdatableWorld();
+  class Updatable;
 
-  void registerUpdatable(Updatable* updatable);
-  void unregisterUpdatable(Updatable* updatable);
-  std::set<Updatable*> const& getUpdatables();
+  class UpdatableWorld : public virtual World
+  {
+  public:
+    UpdatableWorld();
+    virtual ~UpdatableWorld();
 
-private:
-  std::set<Updatable*> updatablesToInsert;
-  std::set<Updatable*> updatables;
+    void registerUpdatable(Updatable* updatable);
+    void unregisterUpdatable(Updatable* updatable);
+    std::set<Updatable*> const& getUpdatables();
+
+  private:
+    std::set<Updatable*> updatablesToInsert;
+    std::set<Updatable*> updatables;
+  };
 };
-
 #endif

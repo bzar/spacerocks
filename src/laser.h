@@ -12,7 +12,7 @@
 
 #include <string>
 
-class Laser : public Renderable, public Updatable, public Collidable
+class Laser : public ew::Renderable, public ew::Updatable, public ew::Collidable
 {
 public:
   static void init();
@@ -21,12 +21,12 @@ public:
   Laser(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity);
   ~Laser();
 
-  static UID const ID;
-  UID getEntityId() const { return ID; }
+  static ew::UID const ID;
+  ew::UID getEntityId() const { return ID; }
 
-  void render(RenderContext* context);
+  void render(ew::RenderContext* context);
   void update(float const delta);
-  void collide(Collidable const* other);
+  void collide(ew::Collidable const* other);
 
   LineShape const* getShape() const;
 

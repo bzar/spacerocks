@@ -3,7 +3,7 @@
 #include "ufo.h"
 #include "util/util.h"
 
-UID const Beam::ID = getUID();
+ew::UID const Beam::ID = ew::getUID();
 
 float const Beam::RADIUS = 4;
 std::string const Beam::IMAGE = "img/continuous_beam.png";
@@ -24,7 +24,7 @@ void Beam::term()
 }
 
 Beam::Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDelta) :
-  Entity(world), Renderable(world, -1), Updatable(world), Collidable(world),
+  ew::Entity(world), ew::Renderable(world, -1), ew::Updatable(world), ew::Collidable(world),
   o(nullptr), tip(nullptr), hitDelay(0), recovering(false), shape({0, 0}, {0, 0}, 4)
 {
   o = glhckSpriteNew(TEXTURE, 4, 128);
@@ -50,7 +50,7 @@ Beam::~Beam()
   glhckObjectFree(tip);
 }
 
-void Beam::render(RenderContext* context)
+void Beam::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
   glhckObjectRender(tip);
@@ -79,7 +79,7 @@ LineShape const* Beam::getShape() const
 }
 
 
-void Beam::collide(Collidable const* other) {
+void Beam::collide(ew::Collidable const* other) {
   if(other->getEntityId() == Asteroid::ID) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))

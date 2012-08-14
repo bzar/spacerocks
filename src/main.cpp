@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 
 int windowCloseCallback(GLFWwindow window)
 {
-  Engine* engine = static_cast<Engine*>(glfwGetWindowUserPointer(window));
+  ew::Engine* engine = static_cast<ew::Engine*>(glfwGetWindowUserPointer(window));
   engine->quit();
   return GL_FALSE;
 }
@@ -76,7 +76,7 @@ int gameloop(GLFWwindow& window)
   GLFWControlContext controlContext(&window);
   GlhckGLFWRenderContext renderContext;
   GLFWTimeContext timeContext;
-  Engine engine(&controlContext, &renderContext, &timeContext);
+  ew::Engine engine(&controlContext, &renderContext, &timeContext);
 
   glfwSetWindowUserPointer(window, &engine);
   glfwSetWindowSizeCallback(windowResizeCallback);

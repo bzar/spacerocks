@@ -5,15 +5,17 @@
 #include "renderableworld.h"
 #include "rendercontext.h"
 
-class RenderPhase : public Phase
+namespace ew
 {
-public:
-  RenderPhase(RenderableWorld* world, RenderContext* context) : world(world), context(context) {}
-  void execute(float const delta);
+  class RenderPhase : public Phase
+  {
+  public:
+    RenderPhase(RenderableWorld* world, RenderContext* context) : world(world), context(context) {}
+    void execute(float const delta);
 
-private:
-  RenderableWorld* world;
-  RenderContext* context;
+  private:
+    RenderableWorld* world;
+    RenderContext* context;
+  };
 };
-
 #endif

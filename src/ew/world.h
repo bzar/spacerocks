@@ -6,31 +6,33 @@
 #include <forward_list>
 #include <functional>
 
-class Entity;
-class Renderable;
-class Updatable;
-class Collidable;
-
-class World
+namespace ew
 {
-public:
+  class Entity;
+  class Renderable;
+  class Updatable;
+  class Collidable;
 
-  World();
-  virtual ~World();
+  class World
+  {
+  public:
 
-  void addEntity(Entity* entity);
-  void removeEntity(Entity* entity);
+    World();
+    virtual ~World();
 
-  void maintenance();
+    void addEntity(Entity* entity);
+    void removeEntity(Entity* entity);
 
-protected:
-  void onMaintenance(std::function<void ()> callback);
-  std::set<Entity*> entities;
+    void maintenance();
 
-private:
-  std::set<Entity*> entitiesToInsert;
-  std::set<Entity*> entitiesToRemove;
-  std::forward_list<std::function<void ()>> maintenanceCallbacks;
+  protected:
+    void onMaintenance(std::function<void ()> callback);
+    std::set<Entity*> entities;
+
+  private:
+    std::set<Entity*> entitiesToInsert;
+    std::set<Entity*> entitiesToRemove;
+    std::forward_list<std::function<void ()>> maintenanceCallbacks;
+  };
 };
-
 #endif
