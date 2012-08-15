@@ -2,9 +2,9 @@
 #include "GL/glhck.h"
 
 #include "ew/engine.h"
-#include "ew/glfwcontrolcontext.h"
-#include "ew/glfwtimecontext.h"
-#include "ew/glhckglfwrendercontext.h"
+#include "ew/integration/glfwcontrolcontext.h"
+#include "ew/integration/glfwtimecontext.h"
+#include "ew/integration/glhckglfwrendercontext.h"
 #include "gamestate.h"
 
 #include <cstdlib>

@@ -1,3 +1,6 @@
 [submodule "lib/glhck"]
 	path = lib/glhck
 	url = git://github.com/bzar/glhck.git
+[submodule "lib/engineworks"]
+	path = lib/engineworks
+	url = git://github.com/bzar/engineworks.git
