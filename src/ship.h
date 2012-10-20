@@ -7,7 +7,7 @@
 #include "ew/collidable.h"
 #include "ew/controllable.h"
 
-#include "GL/glhck.h"
+#include "glhck/glhck.h"
 #include "util/vec2d.h"
 #include "util/circleshape.h"
 #include "weapon.h"

@@ -24,7 +24,7 @@ Plasma::Plasma(GameWorld* world, float const life, float const power,
 {
   o = glhckSpriteNew(TEXTURE, 1, 1);
   glhckObjectScalef(o, getRadius(), getRadius(), 1);
-  glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle()) * 360);
 }

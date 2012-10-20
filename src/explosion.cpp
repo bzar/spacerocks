@@ -112,9 +112,9 @@ Explosion::Explosion(GameWorld* world, Vec2D const& position) :
   o(nullptr), time(0)
 {
   o = glhckSpriteNew(atlas.getTexture(), 160, 120);
-  glhckObjectTransformCoordinates(o, &atlas.getTransform(0).transform, atlas.getTransform(0).degree);
+  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(0).transform, atlas.getTransform(0).degree);
 
-  glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 
@@ -130,7 +130,7 @@ void Explosion::update(float const delta)
 
   if(frame < NUM_IMAGES)
   {
-    glhckObjectTransformCoordinates(o, &atlas.getTransform(frame).transform, atlas.getTransform(frame).degree);
+    glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(frame).transform, atlas.getTransform(frame).degree);
   }
   else
   {

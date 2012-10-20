@@ -34,8 +34,8 @@ Asteroid::Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec
   gameWorld(world), o(0), size(size), v(velocity), life((size + 1)/2.0f), shape(position, RADII[size])
 {
   o = glhckSpriteNew(atlas.getTexture(), IMAGE_SIZES[size], IMAGE_SIZES[size]);
-  glhckObjectTransformCoordinates(o, &atlas.getTransform(size).transform, atlas.getTransform(size).degree);
-  glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(size).transform, atlas.getTransform(size).degree);
+  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 

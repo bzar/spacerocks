@@ -29,7 +29,7 @@ ParticleEngine::ParticleEngine(GameWorld* world) :
   for(Particle& p : particles)
   {
     p.o = glhckSpriteNew(atlas.getTexture(), 1, 1);
-    glhckObjectSetMaterialFlags(p.o, GLHCK_MATERIAL_ALPHA);
+    glhckObjectMaterialFlags(p.o, GLHCK_MATERIAL_ALPHA);
   }
 }
 
@@ -85,7 +85,7 @@ void ParticleEngine::addParticle(ParticleType const type, Vec2D const& position,
   if(p.type != type)
   {
     p.type = type;
-    glhckObjectTransformCoordinates(p.o, &atlas.getTransform(p.type).transform, atlas.getTransform(p.type).degree);
+    glhckGeometryTransformCoordinates(glhckObjectGetGeometry(p.o), &atlas.getTransform(p.type).transform, atlas.getTransform(p.type).degree);
     glhckObjectScalef(p.o, PARTICLE_SIZES[p.type], PARTICLE_SIZES[p.type], 1);
   }
 

@@ -4,7 +4,7 @@
 #include "gameworld.h"
 #include "ew/renderable.h"
 
-#include "GL/glhck.h"
+#include "glhck/glhck.h"
 
 class Hud : public ew::Renderable
 {

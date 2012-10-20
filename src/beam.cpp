@@ -29,8 +29,8 @@ Beam::Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDel
 {
   o = glhckSpriteNew(TEXTURE, 4, 128);
   tip = glhckSpriteNew(TIP_TEXTURE, 4, 4);
-  glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
-  glhckObjectSetMaterialFlags(tip, GLHCK_MATERIAL_ALPHA);
+  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  glhckObjectMaterialFlags(tip, GLHCK_MATERIAL_ALPHA);
 
   shape.p1 = basePosition;
   shape.p2 = basePosition + positionDelta;

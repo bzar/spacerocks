@@ -22,7 +22,7 @@ Laser::Laser(GameWorld* world, float const life, Vec2D const& position, Vec2D co
   o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 2, 8);
-  glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);
 

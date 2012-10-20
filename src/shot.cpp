@@ -22,7 +22,7 @@ Shot::Shot(GameWorld* world, float const life, Vec2D const& position, Vec2D cons
   o(0), life(life), v(velocity), shape(position, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 4, 4);
-  glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 

@@ -46,8 +46,8 @@ Ufo::Ufo(GameWorld* world, Vec2D const& startPosition, Vec2D const& endPosition,
   time(0), life(3), shape(startPosition, RADIUS)
 {
   o = glhckSpriteNew(atlas.getTexture(), 16, 16);
-  glhckObjectTransformCoordinates(o, &atlas.getTransform(0).transform, atlas.getTransform(0).degree);
-  glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(0).transform, atlas.getTransform(0).degree);
+  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, startPosition.x, startPosition.y, 0);
 }
 
@@ -66,7 +66,7 @@ void Ufo::update(float const delta)
 {
   time += delta;
   int const frame = ANIMATION_FRAMES[static_cast<int>(time * FPS) % NUM_FRAMES];
-  glhckObjectTransformCoordinates(o, &atlas.getTransform(frame).transform, atlas.getTransform(frame).degree);
+  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(frame).transform, atlas.getTransform(frame).degree);
   glhckObjectRotatef(o, 0, 0, delta * 180);
 
   Vec2D journey = endPosition - startPosition;

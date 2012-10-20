@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "GL/glhck.h"
+#include "glhck/glhck.h"
 
 class TextureAtlas
 {
@@ -11,7 +11,7 @@ public:
   struct TransformData
   {
     TransformData() : transform{0, 0, 0, 0}, degree{0} {}
-    kmVec4 transform;
+    glhckRect transform;
     short degree;
   };
 

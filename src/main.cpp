@@ -1,5 +1,5 @@
 #include "GL/glfw3.h"
-#include "GL/glhck.h"
+#include "glhck/glhck.h"
 
 #include "ew/engine.h"
 #include "ew/integration/glfwcontrolcontext.h"

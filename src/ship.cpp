@@ -42,11 +42,11 @@ Ship::Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity) :
   o = glhckSpriteNew(atlas.getTexture(), 16, 16);
   shield = glhckSpriteNew(atlas.getTexture(), 24, 24);
 
-  glhckObjectTransformCoordinates(o, &atlas.getTransform(DEFAULT).transform, atlas.getTransform(DEFAULT).degree);
-  glhckObjectTransformCoordinates(shield, &atlas.getTransform(SHIELD).transform, atlas.getTransform(SHIELD).degree);
+  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(DEFAULT).transform, atlas.getTransform(DEFAULT).degree);
+  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(shield), &atlas.getTransform(SHIELD).transform, atlas.getTransform(SHIELD).degree);
 
-  glhckObjectSetMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
-  glhckObjectSetMaterialFlags(shield, GLHCK_MATERIAL_ALPHA);
+  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  glhckObjectMaterialFlags(shield, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 
   weapon = &laser;
@@ -100,7 +100,7 @@ void Ship::update(float const delta)
         DEFAULT;
   }
 
-  glhckObjectTransformCoordinates(o, &atlas.getTransform(t).transform, atlas.getTransform(t).degree);
+  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(t).transform, atlas.getTransform(t).degree);
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
 

@@ -6,7 +6,7 @@
 #include "ew/updatable.h"
 #include "ew/collidable.h"
 
-#include "GL/glhck.h"
+#include "glhck/glhck.h"
 #include "util/vec2d.h"
 #include "util/circleshape.h"
 #include "textureatlas.h"
