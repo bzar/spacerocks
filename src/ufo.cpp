@@ -24,10 +24,16 @@ std::vector<std::string> const Ufo::IMAGES = {
 };
 
 TextureAtlas Ufo::atlas = TextureAtlas();
+Sound Ufo::shootSound = Sound();
+Sound Ufo::hitSound = Sound();
+Sound Ufo::destroySound = Sound();
 
 void Ufo::init()
 {
   atlas = TextureAtlas(IMAGES);
+  shootSound.load("snd/sfx/weaponfire9.wav");
+  hitSound.load("snd/sfx/weaponfire3.wav");
+  destroySound.load("snd/sfx/explosion1.wav");
 }
 
 void Ufo::term()
@@ -86,6 +92,7 @@ void Ufo::update(float const delta)
     direction.rotatei(randFloat(-spread, spread));
     Vec2D velocity = direction.scale(600);
     UfoLaser* laser = new UfoLaser(gameWorld, 5.0f, getPosition(), velocity);
+    shootSound.play();
   }
 
   shape.center = getPosition();
@@ -166,6 +173,8 @@ void Ufo::collide(ew::Collidable const* other) {
           Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
           gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
         }
+        
+        hitSound.play();
       }
       else
       {
@@ -176,6 +185,8 @@ void Ufo::collide(ew::Collidable const* other) {
         Vec2D velocity = Vec2D(0, 1).rotatei(randFloat(0, 1)).scalei(randFloat(30, 80));
         Powerup* powerup = new Powerup(gameWorld, powerupType, position, velocity);
         Explosion* explosion = new Explosion(gameWorld, position);
+        
+        destroySound.play();
       }
     }
     return;

@@ -19,10 +19,12 @@ std::vector<std::string> const Ship::IMAGES = {
 };
 
 TextureAtlas Ship::atlas = TextureAtlas();
+Sound Ship::destroySound = Sound();
 
 void Ship::init()
 {
   atlas = TextureAtlas(IMAGES);
+  destroySound.load("snd/sfx/explosion2.wav");
 }
 
 void Ship::term()
@@ -302,6 +304,7 @@ Vec2D Ship::getPosition() const
 
 void Ship::nextWeapon()
 {
+  weapon->stopShooting();
   int current = 0;
   for(int i = 0; i < weapons.size(); ++i)
   {
@@ -325,6 +328,7 @@ void Ship::nextWeapon()
 
 void Ship::prevWeapon()
 {
+  weapon->stopShooting();
   int current = 0;
   for(int i = 0; i < weapons.size(); ++i)
   {
@@ -348,6 +352,7 @@ void Ship::prevWeapon()
 
 void Ship::die()
 {
+  weapon->stopShooting();
   Explosion* explosion = new Explosion(gameWorld, getPosition());
   dead = true;
 
@@ -355,4 +360,6 @@ void Ship::die()
   {
     w->decreaseLevel();
   }
+  
+  destroySound.play();
 }

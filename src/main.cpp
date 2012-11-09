@@ -6,6 +6,7 @@
 #include "ew/integration/glfwtimecontext.h"
 #include "ew/integration/glhckglfwrendercontext.h"
 #include "gamestate.h"
+#include "sound.h"
 
 #include <cstdlib>
 #include <random>
@@ -34,11 +35,17 @@ int main(int argc, char** argv)
   if(!glhckInit(argc, argv))
     return EXIT_FAILURE;
 
+  glhckSetGlobalPrecision(GLHCK_INDEX_BYTE, GLHCK_VERTEX_V2F);
+  
   if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_AUTO))
     return EXIT_FAILURE;
 
+  Sound::init();
+  
   int retval = gameloop(window);
 
+  Sound::exit();
+  
   glhckTerminate();
   glfwTerminate();
 

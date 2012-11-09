@@ -12,6 +12,7 @@
 #include "util/circleshape.h"
 #include "weapon.h"
 #include "textureatlas.h"
+#include "sound.h"
 
 #include <string>
 #include <vector>
@@ -91,6 +92,8 @@ private:
 
   bool dead;
   CircleShape shape;
+  
+  static Sound destroySound;
 
 };
 #endif

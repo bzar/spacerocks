@@ -16,10 +16,19 @@ std::vector<std::string> const Powerup::IMAGES = {
 };
 
 TextureAtlas Powerup::atlas = TextureAtlas();
+Sound Powerup::weaponSound = Sound();
+Sound Powerup::extralifeSound = Sound();
+Sound Powerup::loselifeSound = Sound();
+Sound Powerup::shieldSound = Sound();
 
 void Powerup::init()
 {
   atlas = TextureAtlas(IMAGES);
+  
+  weaponSound.load("snd/sfx/weapon1probl.wav");
+  extralifeSound.load("snd/sfx/game_showmenu.wav");
+  loselifeSound.load("snd/sfx/game_hidemenu.wav");
+  shieldSound.load("snd/sfx/antimaterhit.wav");
 }
 
 void Powerup::term()
@@ -80,9 +89,19 @@ CircleShape const* Powerup::getShape() const
 void Powerup::collide(ew::Collidable const* other) {
   if(other->getEntityId() == Ship::ID) {
     Ship const* ship = static_cast<Ship const*>(other);
-    if(shape.collidesWith(ship->getShape()))
+    if(ship->alive() && shape.collidesWith(ship->getShape()))
     {
       world->removeEntity(this);
+      
+      if(type == LASER || type == SPREAD || type == BEAM || type == PLASMA) {
+        weaponSound.play();
+      } else if(type == EXTRALIFE) {
+        extralifeSound.play();
+      } else if(type == LOSELIFE) {
+        loselifeSound.play();
+      } else if(type == SHIELD) {
+        shieldSound.play();
+      }
     }
     return;
   }

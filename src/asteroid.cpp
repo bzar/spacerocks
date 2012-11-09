@@ -18,10 +18,16 @@ std::vector<std::string> const Asteroid::IMAGES  = {
 float const Asteroid::IMAGE_SIZES[NUM_SIZES] = {8, 8, 16, 24 };
 
 TextureAtlas Asteroid::atlas = TextureAtlas();
+Sound Asteroid::hitSound = Sound();
+Sound Asteroid::destroySoundBig = Sound();
+Sound Asteroid::destroySoundSmall = Sound();
 
 void Asteroid::init()
 {
   atlas = TextureAtlas(IMAGES);
+  hitSound.load("snd/sfx/menu_onbutton.wav");
+  destroySoundBig.load("snd/sfx/explosion2.wav");
+  destroySoundSmall.load("snd/sfx/explosion4.wav");
 }
 
 void Asteroid::term()
@@ -155,6 +161,7 @@ void Asteroid::collide(ew::Collidable const* other) {
           Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
           gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
         }
+        hitSound.play();
       }
       else
       {
@@ -206,5 +213,14 @@ void Asteroid::die()
       Vec2D startPos = position + direction.scale(rand() % r);
       Asteroid* asteroid = new Asteroid(gameWorld, static_cast<Size>(size - 1), startPos, velocity);
     }
+  }
+  
+  if(size >= MEDIUM)
+  {
+    destroySoundBig.play();
+  }
+  else
+  {
+    destroySoundSmall.play();
   }
 }

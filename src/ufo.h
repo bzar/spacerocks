@@ -10,6 +10,7 @@
 #include "util/vec2d.h"
 #include "util/circleshape.h"
 #include "textureatlas.h"
+#include "sound.h"
 
 #include <string>
 #include <vector>
@@ -58,6 +59,10 @@ private:
   float time;
   float life;
   CircleShape shape;
+  
+  static Sound shootSound;
+  static Sound hitSound;
+  static Sound destroySound;
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include "util/vec2d.h"
 #include "beam.h"
+#include "sound.h"
 
 class GameWorld;
 
@@ -46,6 +47,7 @@ public:
   void update(float const delta);
 
 private:
+  Sound sound;
   float cooldown;
 };
 
@@ -61,6 +63,7 @@ public:
 
 private:
   float cooldown;
+  Sound sound;
 };
 
 
@@ -75,8 +78,12 @@ public:
   void update(float const delta);
 
 private:
+  float levelLength() const;
+  
   Beam* beam;
   float time;
+  float maxLength;
+  Sound sound;
 };
 
 
@@ -91,6 +98,7 @@ public:
 
 private:
   float cooldown;
+  Sound sound;
 };
 
 
