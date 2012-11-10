@@ -12,6 +12,8 @@
 #include "powerup.h"
 #include "particleengine.h"
 
+Music GameState::music = Music();
+
 void GameState::init()
 {
   Ship::init();
@@ -25,6 +27,18 @@ void GameState::init()
   UfoLaser::init();
   Powerup::init();
   ParticleEngine::init();
+  
+  music.load({
+    "snd/music/01.ogg",
+    "snd/music/02.ogg",
+    "snd/music/03.ogg",
+    "snd/music/04.ogg",
+    "snd/music/05.ogg",
+    "snd/music/06.ogg",
+    "snd/music/07.ogg",
+    "snd/music/08.ogg",
+    "snd/music/09.ogg"
+  });
 }
 
 void GameState::term()
@@ -49,4 +63,15 @@ GameState::GameState(ew::Engine* engine) :
   control(&world, engine->getControlContext())
 {
   setPhases({&control, &update, &collide, &render, &game});
+}
+
+void GameState::process(const float delta)
+{
+    ew::State::process(delta);
+
+    if(!music.playing())
+    {
+      music.next();
+      music.play();
+    }
 }

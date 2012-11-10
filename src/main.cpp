@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include <random>
+#include <iostream>
 
 int const WIDTH = 800;
 int const HEIGHT = 480;
@@ -23,22 +24,32 @@ int main(int argc, char** argv)
   if (!glfwInit())
     return EXIT_FAILURE;
 
-  glfwOpenWindowHint(GLFW_DEPTH_BITS, 24);
-  GLFWwindow window = glfwOpenWindow(WIDTH, HEIGHT, GLFW_WINDOWED, "Space Rocks!", NULL);
+  glfwWindowHint(GLFW_DEPTH_BITS, 24);
+  GLFWwindow window = glfwCreateWindow(WIDTH, HEIGHT, GLFW_WINDOWED, "Space Rocks!", NULL);
+  glfwMakeContextCurrent(window);
 
   if(!window)
+  {
+    std::cerr << "GLFW error: " << glfwErrorString(glfwGetError()) << std::endl;
     return EXIT_FAILURE;
+  }
 
   glfwSwapInterval(1);
   glfwSetWindowCloseCallback(windowCloseCallback);
 
   if(!glhckInit(argc, argv))
+  {
+    std::cerr << "GLHCK initialization error" << std::endl;
     return EXIT_FAILURE;
+  }
 
   glhckSetGlobalPrecision(GLHCK_INDEX_BYTE, GLHCK_VERTEX_V2F);
   
-  if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_AUTO))
+  if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_OPENGL))
+  {
+    std::cerr << "GLHCK display create error" << std::endl;
     return EXIT_FAILURE;
+  }
 
   Sound::init();
   
@@ -81,7 +92,7 @@ int gameloop(GLFWwindow& window)
   glhckRenderSetProjection(&proj);
 
   GLFWControlContext controlContext(&window);
-  GlhckGLFWRenderContext renderContext;
+  GlhckGLFWRenderContext renderContext(window);
   GLFWTimeContext timeContext;
   ew::Engine engine(&controlContext, &renderContext, &timeContext);
 

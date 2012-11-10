@@ -9,6 +9,7 @@
 
 #include "gamephase.h"
 #include "gameworld.h"
+#include "music.h"
 
 class GameState : public ew::State
 {
@@ -17,6 +18,8 @@ public:
   static void term();
 
   GameState(ew::Engine* engine);
+  
+  virtual void process(float const delta);
 
 private:
   GameWorld world;
@@ -25,5 +28,7 @@ private:
   ew::CollidePhase collide;
   ew::RenderPhase render;
   ew::ControlPhase control;
+  
+  static Music music;
 };
 #endif
