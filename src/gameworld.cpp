@@ -7,6 +7,7 @@
 #include "particleengine.h"
 #include "prop.h"
 #include "hud.h"
+#include "gamenotification.h"
 #include "ew/engine.h"
 
 int const GameWorld::UFO_SCORE_INTERVAL_MIN = 400;
@@ -26,6 +27,8 @@ GameWorld::GameWorld(ew::Engine* engine) :
   initLevel(0);
   this->player.ship = new Ship(this, {0, 0}, {0, 0});
   new Prop(this, "img/background.png", 400, 240, 0, -1);
+  
+  new GameNotification(this, "Foo Bar Baz Bag", GameNotification::MEDIUM);
 }
 
 void GameWorld::update(float const delta)
