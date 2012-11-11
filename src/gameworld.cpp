@@ -113,8 +113,7 @@ void GameWorld::initLevel(int const n)
   level.minAsteroidSpeed = lerp(10, 20, n/40.0);
   level.maxAsteroidSpeed = lerp(20, 60, n/40.0);
   level.ufoDuration = lerp(20, 10, n/40.0);
-  //level.ufoAccuracy = lerp(0.6, 0.9, n/60.0);
-  level.ufoAccuracy = 1.0;
+  level.ufoAccuracy = lerp(0.6, 0.9, n/60.0);
   level.ufoShootInterval = lerp(3.0, 1.5, n/60.0);
 
   int levelsPerNextSize = 4;
