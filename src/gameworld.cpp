@@ -1,4 +1,7 @@
 #include "gameworld.h"
+
+#include <sstream>
+
 #include "util/util.h"
 #include "ship.h"
 #include "asteroid.h"
@@ -27,8 +30,6 @@ GameWorld::GameWorld(ew::Engine* engine) :
   initLevel(0);
   this->player.ship = new Ship(this, {0, 0}, {0, 0});
   new Prop(this, "img/background.png", 400, 240, 0, -1);
-  
-  new GameNotification(this, "Foo Bar Baz Bag", GameNotification::MEDIUM);
 }
 
 void GameWorld::update(float const delta)
@@ -112,7 +113,8 @@ void GameWorld::initLevel(int const n)
   level.minAsteroidSpeed = lerp(10, 20, n/40.0);
   level.maxAsteroidSpeed = lerp(20, 60, n/40.0);
   level.ufoDuration = lerp(20, 10, n/40.0);
-  level.ufoAccuracy = lerp(0.6, 0.9, n/60.0);
+  //level.ufoAccuracy = lerp(0.6, 0.9, n/60.0);
+  level.ufoAccuracy = 1.0;
   level.ufoShootInterval = lerp(3.0, 1.5, n/60.0);
 
   int levelsPerNextSize = 4;
@@ -150,6 +152,15 @@ void GameWorld::initLevel(int const n)
       .scalei(randFloat(level.minAsteroidSpeed, level.maxAsteroidSpeed));
     Asteroid* asteroid = new Asteroid(this, size, position, velocity);
   }
+}
+
+void GameWorld::addScore(int amount, const Vec2D& position)
+{
+  player.score += amount;
+  
+  std::ostringstream oss;
+  oss << amount;
+  new GameNotification(this, oss.str(), lerp(8, 20, amount/200.0), 0.5, position); 
 }
 
 int GameWorld::getUfoInterval()

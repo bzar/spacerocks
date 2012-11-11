@@ -109,87 +109,90 @@ CircleShape const* Ufo::getShape() const
 void Ufo::collide(ew::Collidable const* other) {
   Vec2D position = getPosition();
 
-  if(other->getEntityId() == Laser::ID
-    || other->getEntityId() == Shot::ID
-    || other->getEntityId() == Plasma::ID
-    || other->getEntityId() == Beam::ID)
-  {
-    bool collide = false;
-    Vec2D p;
+  bool collide = false;
+  Vec2D p;
 
-    if(other->getEntityId() == Laser::ID) {
-      Laser const* laser = static_cast<Laser const*>(other);
-      if(shape.collidesWith(laser->getShape()))
-      {
-        life -= 0.5;
-        p = laser->getPosition();
-        collide = true;
-      }
-    }
-
-    if(other->getEntityId() == Shot::ID) {
-      Shot const* shot = static_cast<Shot const*>(other);
-      if(shape.collidesWith(shot->getShape()))
-      {
-        life -= 0.5;
-        p = shot->getPosition();
-        collide = true;
-      }
-    }
-
-    if(other->getEntityId() == Plasma::ID) {
-      Plasma const* plasma = static_cast<Plasma const*>(other);
-      if(shape.collidesWith(plasma->getShape()))
-      {
-        life -= 1.0;
-        p = plasma->getPosition();
-        collide = true;
-      }
-    }
-
-    if(other->getEntityId() == Beam::ID) {
-      Beam const* beam = static_cast<Beam const*>(other);
-      if(beam->canHit() && shape.collidesWith(beam->getShape()))
-      {
-        life -= 0.5;
-        p = beam->getBasePosition();
-        collide = true;
-      }
-    }
-
-    if(collide)
+  if(other->getEntityId() == Laser::ID) {
+    Laser const* laser = static_cast<Laser const*>(other);
+    if(shape.collidesWith(laser->getShape()))
     {
-      if(life > 0)
-      {
-        Vec2D hitDirection = (p - position).uniti();
-        Vec2D hitPosition = position + hitDirection.scale(RADIUS);
-        Vec2D hitNormal = hitDirection.normal();
-
-        for(int i = 0; i < 10; ++i)
-        {
-          float pLife = 0.1 + randFloat(0, 0.1);
-          float speed = 120 + (rand() % 40);
-          Vec2D dev = hitNormal.scale(randFloat(-100, 100));
-          Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
-          gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
-        }
-        
-        hitSound.play();
-      }
-      else
-      {
-        gameWorld->removeEntity(this);
-        gameWorld->player.score += 100;
-
-        Powerup::Type powerupType = static_cast<Powerup::Type>(randInt(0, Powerup::NUM_TYPES - 1));
-        Vec2D velocity = Vec2D(0, 1).rotatei(randFloat(0, 1)).scalei(randFloat(30, 80));
-        Powerup* powerup = new Powerup(gameWorld, powerupType, position, velocity);
-        Explosion* explosion = new Explosion(gameWorld, position);
-        
-        destroySound.play();
-      }
+      life -= 0.5;
+      p = laser->getPosition();
+      collide = true;
     }
-    return;
+  }
+
+  else if(other->getEntityId() == Shot::ID) {
+    Shot const* shot = static_cast<Shot const*>(other);
+    if(shape.collidesWith(shot->getShape()))
+    {
+      life -= 0.5;
+      p = shot->getPosition();
+      collide = true;
+    }
+  }
+
+  else if(other->getEntityId() == Plasma::ID) {
+    Plasma const* plasma = static_cast<Plasma const*>(other);
+    if(shape.collidesWith(plasma->getShape()))
+    {
+      life -= 1.0;
+      p = plasma->getPosition();
+      collide = true;
+    }
+  }
+
+  else if(other->getEntityId() == Beam::ID) {
+    Beam const* beam = static_cast<Beam const*>(other);
+    if(beam->canHit() && shape.collidesWith(beam->getShape()))
+    {
+      life -= 0.5;
+      p = beam->getBasePosition();
+      collide = true;
+    }
+  }
+
+  else if(other->getEntityId() == Ship::ID) {
+    Ship const* ship = static_cast<Ship const*>(other);
+    if(ship->alive() && shape.collidesWith(ship->getShape()))
+    {
+      life = 0;
+      p = ship->getPosition();
+      collide = true;
+    }
+  }
+  
+  if(collide)
+  {
+    if(life > 0)
+    {
+      Vec2D hitDirection = (p - position).uniti();
+      Vec2D hitPosition = position + hitDirection.scale(RADIUS);
+      Vec2D hitNormal = hitDirection.normal();
+
+      for(int i = 0; i < 10; ++i)
+      {
+        float pLife = 0.1 + randFloat(0, 0.1);
+        float speed = 120 + (rand() % 40);
+        Vec2D dev = hitNormal.scale(randFloat(-100, 100));
+        Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
+        gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
+      }
+      
+      hitSound.play();
+    }
+    else
+    {
+      gameWorld->removeEntity(this);
+      gameWorld->addScore(100, position);
+
+      Powerup::Type powerupType = static_cast<Powerup::Type>(randInt(0, Powerup::NUM_TYPES - 1));
+      Vec2D velocity = Vec2D(0, 1).rotatei(randFloat(0, 1)).scalei(randFloat(30, 80));
+      Powerup* powerup = new Powerup(gameWorld, powerupType, position, velocity);
+      Explosion* explosion = new Explosion(gameWorld, position);
+      
+      destroySound.play();
+    }
   }
 }
 

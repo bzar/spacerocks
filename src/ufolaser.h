@@ -34,6 +34,7 @@ public:
   LineShape const* getShape() const;
 
   Vec2D getPosition() const;
+  Vec2D getVelocity() const;
 
 private:
   static std::string const IMAGE;

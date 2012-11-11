@@ -180,6 +180,11 @@ Vec2D Asteroid::getPosition() const
   return {pos->x, pos->y};
 }
 
+Vec2D Asteroid::getVelocity() const
+{
+  return v;
+}
+
 float Asteroid::getLife() const
 {
   return life;
@@ -190,7 +195,7 @@ void Asteroid::die()
   gameWorld->removeEntity(this);
 
   Vec2D position = getPosition();
-  gameWorld->player.score += (size + 1) * 10;
+  gameWorld->addScore((size + 1) * 10, position);
 
   int r = static_cast<int>(RADII[size]);
   for(int i = 0; i < 2 * r; ++i)

@@ -7,6 +7,8 @@
 #include "ew/controllableworld.h"
 #include "ew/engine.h"
 
+#include "util/vec2d.h"
+
 class Ship;
 class ParticleEngine;
 class Hud;
@@ -41,6 +43,8 @@ public:
 
   void nextLevel();
   void initLevel(int const n);
+  
+  void addScore(int amount, Vec2D const& position);
 
   Level level;
   Player player;

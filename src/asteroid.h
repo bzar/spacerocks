@@ -35,6 +35,7 @@ public:
   void collide(ew::Collidable const* other);
 
   Vec2D getPosition() const;
+  Vec2D getVelocity() const;
   float getLife() const;
   void die();
 

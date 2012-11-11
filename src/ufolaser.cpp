@@ -1,5 +1,6 @@
 #include "ufolaser.h"
 #include "asteroid.h"
+#include "ship.h"
 #include "util/util.h"
 
 ew::UID const UfoLaser::ID = ew::getUID();
@@ -69,10 +70,26 @@ void UfoLaser::collide(ew::Collidable const* other) {
     }
     return;
   }
+
+  if(other->getEntityId() == Ship::ID) {
+    Ship const* ship = static_cast<Ship const*>(other);
+    if(shape.collidesWith(ship->getShape()))
+    {
+      life = 0;
+      world->removeEntity(this);
+    }
+    return;
+  }
+
 }
 
 Vec2D UfoLaser::getPosition() const
 {
   kmVec3 const* pos = glhckObjectGetPosition(o);
   return {pos->x, pos->y};
+}
+
+Vec2D UfoLaser::getVelocity() const
+{
+  return v;
 }

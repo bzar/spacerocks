@@ -16,11 +16,10 @@
 class GameNotification : public ew::Renderable, public ew::Updatable
 {
 public:
-  enum Size { TINY = 10, SMALL = 14, MEDIUM = 20, LARGE = 32 };
   static void init();
   static void term();
 
-  GameNotification(GameWorld* world, std::string const& text, Size size);
+  GameNotification(GameWorld* world, std::string const& text, float size, float life, Vec2D const& position);
   ~GameNotification();
 
   static ew::UID const ID;
@@ -30,10 +29,12 @@ public:
   void update(float const delta);
 
 private:
-  Size size;
-  glhckObject* o;
-  
+  float size;
   float life;
+  
+  glhckObject* o;  
+  float time;
 };
 
 #endif
+

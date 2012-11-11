@@ -36,7 +36,7 @@ Ship::Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity) :
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world), ew::Controllable(world),
   gameWorld(world), o(nullptr), shield(nullptr), v(velocity),
   turningLeft(false), turningRight(false), accelerating(false), shooting(false),
-  shieldLeft(4),
+  immortalityLeft(4), shields(0),
   weapon(nullptr), laser(world), spread(world), beam(world), plasma(world),
   weapons({&laser, &spread, &beam, &plasma}),
   dead(false), shape(position, RADIUS)
@@ -67,9 +67,10 @@ void Ship::render(ew::RenderContext* context)
   if(dead)
     return;
 
+  glhckObjectColorb(o, 255, 255, 255, immortalityLeft > 0 ? 128 : 255);
   glhckObjectRender(o);
 
-  if(shieldLeft > 0)
+  if(shields > 0)
   {
     glhckObjectRender(shield);
   }
@@ -91,6 +92,11 @@ void Ship::update(float const delta)
     v += acceleration;
   }
 
+  if(v.lengthSquared() > MAX_SPEED * MAX_SPEED)
+  {
+    v.uniti().scalei(MAX_SPEED);
+  }
+  
   ImageType t = DEFAULT;
   if(accelerating) {
     t = turningLeft && !turningRight ? LEFT_ACCELERATING :
@@ -134,9 +140,9 @@ void Ship::update(float const delta)
   }
 
   glhckObjectPosition(shield, glhckObjectGetPosition(o));
-  if(shieldLeft > 0)
+  if(immortalityLeft > 0)
   {
-    shieldLeft -= delta;
+    immortalityLeft -= delta;
   }
 }
 
@@ -161,6 +167,8 @@ void Ship::control(ew::ControlContext* context)
     increaseBeamLevel();
   if(context->keyPush(GLFW_KEY_F4))
     increasePlasmaLevel();
+  if(context->keyPush(GLFW_KEY_F5))
+    shields += 1;
 }
 
 bool Ship::alive() const
@@ -181,45 +189,66 @@ void Ship::collide(ew::Collidable const* other) {
   Vec2D position = getPosition();
 
   if(other->getEntityId() == Asteroid::ID) {
-    if(shieldLeft > 0)
+    if(immortalityLeft > 0)
       return;
 
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))
     {
-      die();
+      if(shields <= 0)
+      {
+        die();
+      }
+      else
+      {
+        shields -= 1;
+        float speed = 2 * asteroid->getVelocity().subtract(v).length();
+        v = position.subtract(asteroid->getPosition()).uniti().scale(speed);
+      }
     }
     return;
   }
 
   if(other->getEntityId() == UfoLaser::ID) {
-    if(shieldLeft > 0)
+    if(immortalityLeft > 0)
       return;
 
     UfoLaser const* ufoLaser = static_cast<UfoLaser const*>(other);
     if(shape.collidesWith(ufoLaser->getShape()))
     {
-      die();
+      if(shields <= 0)
+      {
+        die();
+      }
+      else
+      {
+        shields -= 1;
+        v += ufoLaser->getVelocity().scale(0.1);
+      }
     }
     return;
   }
 
   if(other->getEntityId() == Ufo::ID) {
-    if(shieldLeft > 0)
+    if(immortalityLeft > 0)
       return;
 
     Ufo const* ufo = static_cast<Ufo const*>(other);
     if(shape.collidesWith(ufo->getShape()))
     {
-      die();
+      if(shields <= 0)
+      {      
+        die();
+      }
+      else
+      {
+        shields -= 1;
+      }
     }
     return;
   }
 
   if(other->getEntityId() == Powerup::ID) {
-    if(shieldLeft > 0)
-      return;
-
     Powerup const* powerup = static_cast<Powerup const*>(other);
     if(shape.collidesWith(powerup->getShape()))
     {
@@ -249,7 +278,7 @@ void Ship::collide(ew::Collidable const* other) {
       }
       else if(powerup->getType() == Powerup::SHIELD)
       {
-        shieldLeft = 5.0;
+        shields += 1;
       }
     }
     return;

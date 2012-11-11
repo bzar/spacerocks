@@ -70,6 +70,7 @@ private:
   static TextureAtlas atlas;
 
   static int const RADIUS = 10;
+  static int const MAX_SPEED = 800;
 
   GameWorld* gameWorld;
   glhckObject* o;
@@ -81,7 +82,8 @@ private:
   bool accelerating;
   bool shooting;
 
-  float shieldLeft;
+  float immortalityLeft;
+  int shields;
 
   Weapon* weapon;
   LaserWeapon laser;
