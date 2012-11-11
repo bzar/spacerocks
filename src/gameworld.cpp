@@ -159,7 +159,7 @@ void GameWorld::addScore(int amount, const Vec2D& position)
   
   std::ostringstream oss;
   oss << amount;
-  new GameNotification(this, oss.str(), lerp(8, 20, amount/200.0), 0.5, position); 
+  new GameNotification(this, oss.str(), lerp(5, 15, amount/200.0), 0.5, position); 
 }
 
 int GameWorld::getUfoInterval()

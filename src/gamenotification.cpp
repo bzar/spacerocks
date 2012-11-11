@@ -19,7 +19,7 @@ GameNotification::GameNotification(GameWorld* world, const std::string& text,
 {
   float width = 0;
   float height = size * 1.5f;
-  float const renderMultiplier = 4;
+  float const renderMultiplier = 8;
   
   glhckText* textObject = glhckTextNew(512, 512);
   unsigned int font = glhckTextNewFont(textObject, "fonts/DejaVuSans.ttf");

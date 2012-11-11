@@ -28,13 +28,33 @@ void Hud::render(ew::RenderContext* context)
 {
   std::ostringstream ss;
   ss << "Level: " << (gameWorld->level.n + 1)
-      << " | Score: " << gameWorld->player.score
-      << " | Lives: " << gameWorld->player.lives
-      << " | Weapons:"
-      << " L" << gameWorld->player.ship->getLaserLevel()
-      << " S" << gameWorld->player.ship->getSpreadLevel()
-      << " B" << gameWorld->player.ship->getBeamLevel()
-      << " P" << gameWorld->player.ship->getPlasmaLevel();
+     << " | Score: " << gameWorld->player.score
+     << " | Lives: " << gameWorld->player.lives
+     << " | Weapons:";
+  
+  if(gameWorld->player.ship->getLaserLevel() > 0)
+  {
+    bool selected = gameWorld->player.ship->getSelectedWeaponId() == LaserWeapon::ID;
+    ss << (selected ? " [" : " ") << "L" << gameWorld->player.ship->getLaserLevel() << (selected ? "]" : "");
+  }
+  
+  if(gameWorld->player.ship->getSpreadLevel() > 0)
+  {
+    bool selected = gameWorld->player.ship->getSelectedWeaponId() == SpreadWeapon::ID;
+    ss << (selected ? " [" : " ") << "S" << gameWorld->player.ship->getSpreadLevel() << (selected ? "]" : "");
+  }
+  
+  if(gameWorld->player.ship->getBeamLevel() > 0)
+  {
+    bool selected = gameWorld->player.ship->getSelectedWeaponId() == BeamWeapon::ID;
+    ss << (selected ? " [" : " ") << "B" << gameWorld->player.ship->getBeamLevel() << (selected ? "]" : "");
+  }
+  
+  if(gameWorld->player.ship->getPlasmaLevel() > 0)
+  {
+    bool selected = gameWorld->player.ship->getSelectedWeaponId() == PlasmaWeapon::ID;
+    ss << (selected ? " [" : " ") << "P" << gameWorld->player.ship->getPlasmaLevel() << (selected ? "]" : "");
+  }
 
   glhckTextColor(gameText, 0, 0, 0, 255);
   glhckTextDraw(gameText, gameFont, 20, 6, 21, ss.str().data(), NULL);

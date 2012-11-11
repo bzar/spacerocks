@@ -49,16 +49,18 @@ public:
   void nextWeapon();
   void prevWeapon();
 
-  void increaseLaserLevel() { laser.increaseLevel(); }
-  void increaseSpreadLevel() { spread.increaseLevel(); }
-  void increaseBeamLevel() { beam.increaseLevel(); }
-  void increasePlasmaLevel() { plasma.increaseLevel(); }
+  void increaseLaserLevel();
+  void increaseSpreadLevel();
+  void increaseBeamLevel();
+  void increasePlasmaLevel();
 
   int getLaserLevel() { return laser.getLevel(); }
   int getSpreadLevel() { return spread.getLevel(); }
   int getBeamLevel() { return beam.getLevel(); }
   int getPlasmaLevel() { return plasma.getLevel(); }
 
+  int getSelectedWeaponId() const;
+  
   void die();
 
 private:

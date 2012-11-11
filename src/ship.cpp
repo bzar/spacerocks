@@ -4,6 +4,7 @@
 #include "ufo.h"
 #include "ufolaser.h"
 #include "powerup.h"
+#include "gamenotification.h"
 #include "util/util.h"
 #include <iostream>
 
@@ -20,6 +21,11 @@ std::vector<std::string> const Ship::IMAGES = {
 
 TextureAtlas Ship::atlas = TextureAtlas();
 Sound Ship::destroySound = Sound();
+
+namespace
+{
+  float const POWERUP_TEXT_SIZE = 14;
+}
 
 void Ship::init()
 {
@@ -254,31 +260,36 @@ void Ship::collide(ew::Collidable const* other) {
     {
       if(powerup->getType() == Powerup::LASER)
       {
-        laser.increaseLevel();
+        increaseLaserLevel();
       }
       else if(powerup->getType() == Powerup::SPREAD)
       {
-        spread.increaseLevel();
+        increaseSpreadLevel();
       }
       else if(powerup->getType() == Powerup::BEAM)
       {
-        beam.increaseLevel();
+        increaseBeamLevel();
       }
       else if(powerup->getType() == Powerup::PLASMA)
       {
-        plasma.increaseLevel();
+        increasePlasmaLevel();
       }
       else if(powerup->getType() == Powerup::EXTRALIFE)
       {
         gameWorld->player.lives += 1;
+        new GameNotification(gameWorld, "1up", POWERUP_TEXT_SIZE, 1.0, getPosition());
+
       }
       else if(powerup->getType() == Powerup::LOSELIFE)
       {
         gameWorld->player.lives -= 1;
+        new GameNotification(gameWorld, "-1up", POWERUP_TEXT_SIZE, 1.0, getPosition());
+
       }
       else if(powerup->getType() == Powerup::SHIELD)
       {
         shields += 1;
+        new GameNotification(gameWorld, "Shield +1", POWERUP_TEXT_SIZE, 1.0, getPosition());
       }
     }
     return;
@@ -379,6 +390,28 @@ void Ship::prevWeapon()
   }
 }
 
+void Ship::increaseLaserLevel() { 
+  laser.increaseLevel(); 
+  new GameNotification(gameWorld, "Laser +1", POWERUP_TEXT_SIZE, 1.0, getPosition());
+}
+void Ship::increaseSpreadLevel() { 
+  spread.increaseLevel(); 
+  new GameNotification(gameWorld, "Spread +1", POWERUP_TEXT_SIZE, 1.0, getPosition());  
+}
+void Ship::increaseBeamLevel() { 
+  beam.increaseLevel(); 
+  new GameNotification(gameWorld, "Beam +1", POWERUP_TEXT_SIZE, 1.0, getPosition());  
+}
+void Ship::increasePlasmaLevel() { 
+  plasma.increaseLevel(); 
+  new GameNotification(gameWorld, "Plasma +1", POWERUP_TEXT_SIZE, 1.0, getPosition());  
+}
+
+int Ship::getSelectedWeaponId() const
+{
+  return weapon->getWeaponId();
+}
+
 void Ship::die()
 {
   weapon->stopShooting();
@@ -392,3 +425,4 @@ void Ship::die()
   
   destroySound.play();
 }
+
