@@ -75,7 +75,6 @@ void Music::play()
     return;
   }
   
-  std::cout << "Playing music index " << index << std::endl;
   if(Mix_PlayMusic(buffers.at(index), 1) != 0)
   {
     std::cerr << "Error playing music: " << Mix_GetError() << std::endl;

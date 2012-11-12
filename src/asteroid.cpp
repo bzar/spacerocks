@@ -25,7 +25,7 @@ Sound Asteroid::destroySoundSmall = Sound();
 void Asteroid::init()
 {
   atlas = TextureAtlas(IMAGES);
-  hitSound.load("snd/sfx/menu_onbutton.wav");
+  hitSound.load("snd/sfx/explosion4.wav");
   destroySoundBig.load("snd/sfx/explosion2.wav");
   destroySoundSmall.load("snd/sfx/explosion4.wav");
 }

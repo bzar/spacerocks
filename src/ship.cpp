@@ -21,6 +21,7 @@ std::vector<std::string> const Ship::IMAGES = {
 
 TextureAtlas Ship::atlas = TextureAtlas();
 Sound Ship::destroySound = Sound();
+Sound Ship::engineSound = Sound();
 
 namespace
 {
@@ -31,6 +32,7 @@ void Ship::init()
 {
   atlas = TextureAtlas(IMAGES);
   destroySound.load("snd/sfx/explosion2.wav");
+  engineSound.load("snd/sfx/enginehum3.ogg");
 }
 
 void Ship::term()
@@ -308,7 +310,18 @@ void Ship::turnRight(bool const value)
 
 void Ship::accelerate(bool const value)
 {
-  accelerating = value;
+  if(value != accelerating)
+  {
+    accelerating = value;  
+    if(value)
+    {
+      engineSound.play(0, 0, -1);
+    }
+    else
+    {
+      engineSound.fadeOut(500);
+    }
+  }
 }
 
 void Ship::shoot(bool const value)

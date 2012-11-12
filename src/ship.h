@@ -98,6 +98,7 @@ private:
   CircleShape shape;
   
   static Sound destroySound;
-
+  static Sound engineSound;
+  
 };
 #endif
