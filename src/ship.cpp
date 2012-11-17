@@ -342,6 +342,7 @@ void Ship::reset()
   glhckObjectPositionf(o, 0, 0, 0);
   glhckObjectRotationf(o, 0, 0, 0);
   v = {0, 0};
+  immortalityLeft = 4.0f;
 }
 
 Vec2D Ship::getVelocity() const

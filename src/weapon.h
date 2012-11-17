@@ -78,6 +78,12 @@ public:
   void update(float const delta);
 
 private:
+  static float const EXTEND_TIME;
+  static float const BASE_LENGTH;
+  static float const LENGTH_PER_LEVEL;
+  static float const RECHARGE_RATE;
+  static float const RETRACT_RATE;
+  
   float levelLength() const;
   
   Beam* beam;

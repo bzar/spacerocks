@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
 
-  glfwSwapInterval(1);
+  glfwSwapInterval(0);
   glfwSetWindowCloseCallback(windowCloseCallback);
 
   if(!glhckInit(argc, argv))

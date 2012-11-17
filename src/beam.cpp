@@ -6,6 +6,7 @@
 ew::UID const Beam::ID = ew::getUID();
 
 float const Beam::RADIUS = 4;
+float const Beam::HIT_RATE = 4;
 std::string const Beam::IMAGE = "img/continuous_beam.png";
 std::string const Beam::TIP_IMAGE = "img/continuous_tip.png";
 glhckTexture* Beam::TEXTURE = nullptr;
@@ -85,7 +86,7 @@ void Beam::collide(ew::Collidable const* other) {
     if(shape.collidesWith(asteroid->getShape()))
     {
       if(!recovering)
-        hitDelay = 0.10;
+        hitDelay = 1.0f / HIT_RATE;
       shape.p2 = circleLineIntersectionPoint(asteroid->getShape()->center, asteroid->getShape()->radius, shape.p1, shape.p2, shape.radius);
     }
     return;
@@ -96,7 +97,7 @@ void Beam::collide(ew::Collidable const* other) {
     if(shape.collidesWith(ufo->getShape()))
     {
       if(!recovering)
-        hitDelay = 0.10;
+        hitDelay = 1.0f / HIT_RATE;
       shape.p2 = circleLineIntersectionPoint(ufo->getShape()->center, ufo->getShape()->radius, shape.p1, shape.p2, shape.radius);
     }
     return;

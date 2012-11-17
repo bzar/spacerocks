@@ -37,6 +37,7 @@ public:
 
 private:
   static float const RADIUS;
+  static float const HIT_RATE;
   static std::string const IMAGE;
   static std::string const TIP_IMAGE;
   static glhckTexture* TEXTURE;

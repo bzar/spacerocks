@@ -83,7 +83,7 @@ CircleShape const* Asteroid::getShape() const
 }
 
 void Asteroid::collide(ew::Collidable const* other) {
-  if(!life > 0)
+  if(life <= 0)
     return;
 
   Vec2D position = getPosition();

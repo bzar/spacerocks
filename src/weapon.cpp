@@ -69,7 +69,7 @@ BeamWeapon::BeamWeapon(GameWorld* world) : Weapon(world), beam(nullptr), time(0)
 
 void BeamWeapon::shoot(Vec2D const& position, Vec2D const& direction)
 {
-  float length = levelLength() * lerp(0, 1, time * 8);
+  float length = levelLength() * lerp(0, 1, time / EXTEND_TIME);
   length = length <= maxLength ? length : maxLength;
   
   Vec2D beamVector = direction.scale(length);
@@ -100,17 +100,26 @@ void BeamWeapon::update(float const delta)
   
   if(beam != nullptr) {
     time += delta;
-    maxLength -= delta * 8;
-    maxLength = maxLength >= 0 ? maxLength : 0;
+    if(time > EXTEND_TIME)
+    {
+      maxLength -= delta * RETRACT_RATE;
+      maxLength = maxLength >= 0 ? maxLength : 0;
+    }
   } else {
-    maxLength += delta * 16;
+    maxLength += delta * RECHARGE_RATE;
     maxLength = maxLength <= levelLength() ? maxLength : levelLength();
   }
 }
 
+float const BeamWeapon::EXTEND_TIME = 0.125;
+float const BeamWeapon::BASE_LENGTH = 16.0;
+float const BeamWeapon::LENGTH_PER_LEVEL = 16.0;
+float const BeamWeapon::RECHARGE_RATE = 16.0;
+float const BeamWeapon::RETRACT_RATE = 8.0;
+
 float BeamWeapon::levelLength() const
 {
-  return level * 32;
+  return BASE_LENGTH + LENGTH_PER_LEVEL * level;
 }
 
 PlasmaWeapon::PlasmaWeapon(GameWorld* world) : Weapon(world), cooldown(0), sound("snd/sfx/weaponfire4.wav")
