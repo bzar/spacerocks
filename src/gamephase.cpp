@@ -13,6 +13,14 @@ void GamePhase::execute(float const delta)
   {
     engine->quit();
   }
-
-  world->update(delta);
+  
+  if(engine->getControlContext()->keyPush(GLFW_KEY_P))
+  {
+    world->setPaused(!world->getPaused());
+  }
+  
+  if(!world->getPaused())
+  {
+    world->update(delta);
+  }
 }

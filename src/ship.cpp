@@ -86,6 +86,9 @@ void Ship::render(ew::RenderContext* context)
 
 void Ship::update(float const delta)
 {
+  if(gameWorld->getPaused())
+    return;
+  
   if(dead)
     return;
 
@@ -156,6 +159,9 @@ void Ship::update(float const delta)
 
 void Ship::control(ew::ControlContext* context)
 {
+  if(gameWorld->getPaused())
+    return;
+  
   turnLeft(context->keyDown(GLFW_KEY_LEFT));
   turnRight(context->keyDown(GLFW_KEY_RIGHT));
   accelerate(context->keyDown(GLFW_KEY_UP));

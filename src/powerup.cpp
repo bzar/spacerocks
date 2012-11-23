@@ -38,7 +38,7 @@ void Powerup::term()
 
 Powerup::Powerup(GameWorld* world, Type const type, Vec2D const& position, Vec2D const& velocity) :
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
-  o(0), type(type), v(velocity), life(10), shape(position, RADIUS)
+  gameWorld(world), o(0), type(type), v(velocity), life(10), shape(position, RADIUS)
 {
   o = glhckSpriteNew(atlas.getTexture(), 16, 16);
   glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(type).transform, atlas.getTransform(type).degree);
@@ -58,6 +58,9 @@ void Powerup::render(ew::RenderContext* context)
 
 void Powerup::update(float const delta)
 {
+  if(gameWorld->getPaused())
+    return;
+  
   life -= delta;
   if(life <= 0)
     world->removeEntity(this);

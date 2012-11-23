@@ -26,7 +26,7 @@ void Beam::term()
 
 Beam::Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDelta) :
   ew::Entity(world), ew::Renderable(world, -1), ew::Updatable(world), ew::Collidable(world),
-  o(nullptr), tip(nullptr), hitDelay(0), recovering(false), shape({0, 0}, {0, 0}, 4)
+  gameWorld(world), o(nullptr), tip(nullptr), hitDelay(0), recovering(false), shape({0, 0}, {0, 0}, 4)
 {
   o = glhckSpriteNew(TEXTURE, 4, 128);
   tip = glhckSpriteNew(TIP_TEXTURE, 4, 4);
@@ -59,6 +59,9 @@ void Beam::render(ew::RenderContext* context)
 
 void Beam::update(float const delta)
 {
+  if(gameWorld->getPaused())
+    return;
+  
   Vec2D positionDelta = shape.p2 - shape.p1;
   Vec2D midPoint = shape.p1 + positionDelta.scale(0.5);
   glhckObjectPositionf(o, midPoint.x, midPoint.y, 0);

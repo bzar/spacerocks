@@ -29,6 +29,7 @@ public:
   void update(float const delta);
 
 private:
+  GameWorld* gameWorld;
   float size;
   float life;
   

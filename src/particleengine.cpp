@@ -24,7 +24,7 @@ void ParticleEngine::term()
 
 ParticleEngine::ParticleEngine(GameWorld* world) :
   ew::Entity(world), ew::Renderable(world, 0, 1), ew::Updatable(world),
-  particles(), live(0)
+  gameWorld(world), particles(), live(0)
 {
   for(Particle& p : particles)
   {
@@ -51,7 +51,9 @@ void ParticleEngine::render(ew::RenderContext* context)
 
 void ParticleEngine::update(float const delta)
 {
-
+  if(gameWorld->getPaused())
+    return;
+  
   for(int i = 0; i < live; ++i)
   {
     Particle& p = particles[i];

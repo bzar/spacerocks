@@ -38,6 +38,7 @@ private:
   static std::string const IMAGE;
   static glhckTexture* TEXTURE;
 
+  GameWorld* gameWorld;
   glhckObject* o;
   float power;
   float nextPower;

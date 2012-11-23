@@ -43,6 +43,7 @@ private:
   static glhckTexture* TEXTURE;
   static glhckTexture* TIP_TEXTURE;
 
+  GameWorld* gameWorld;
   glhckObject* o;
   glhckObject* tip;
   float hitDelay;

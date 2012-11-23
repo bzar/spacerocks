@@ -19,7 +19,7 @@ void UfoLaser::term()
 
 UfoLaser::UfoLaser(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity) :
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
-  o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
+  gameWorld(world), o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 2, 8);
   glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
@@ -43,6 +43,9 @@ void UfoLaser::render(ew::RenderContext* context)
 
 void UfoLaser::update(float const delta)
 {
+  if(gameWorld->getPaused())
+    return;
+  
   life -= delta;
   if(life <= 0)
     world->removeEntity(this);

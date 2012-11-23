@@ -38,6 +38,7 @@ private:
   static int const LENGTH = 8;
   static int const RADIUS = 1;
 
+  GameWorld* gameWorld;
   glhckObject* o;
   float life;
   Vec2D v;

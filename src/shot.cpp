@@ -19,7 +19,7 @@ void Shot::term()
 
 Shot::Shot(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity) :
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
-  o(0), life(life), v(velocity), shape(position, RADIUS)
+  gameWorld(world), o(0), life(life), v(velocity), shape(position, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 4, 4);
   glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
@@ -38,6 +38,9 @@ void Shot::render(ew::RenderContext* context)
 
 void Shot::update(float const delta)
 {
+  if(gameWorld->getPaused())
+    return;
+  
   life -= delta;
   if(life <= 0)
     world->removeEntity(this);

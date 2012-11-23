@@ -46,6 +46,9 @@ public:
   
   void addScore(int amount, Vec2D const& position);
 
+  void setPaused(bool value);
+  bool getPaused() const;
+  
   Level level;
   Player player;
   ParticleEngine* const particleEngine;
@@ -63,7 +66,8 @@ private:
   float deathDelay;
   float ufoDelay;
   int nextUfoScore;
-
+  
+  bool paused;
 };
 
 #endif

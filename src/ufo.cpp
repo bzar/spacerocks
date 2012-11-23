@@ -70,6 +70,9 @@ void Ufo::render(ew::RenderContext* context)
 
 void Ufo::update(float const delta)
 {
+  if(gameWorld->getPaused())
+    return;
+  
   time += delta;
   int const frame = ANIMATION_FRAMES[static_cast<int>(time * FPS) % NUM_FRAMES];
   glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(frame).transform, atlas.getTransform(frame).degree);

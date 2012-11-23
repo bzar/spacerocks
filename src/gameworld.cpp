@@ -24,7 +24,7 @@ GameWorld::GameWorld(ew::Engine* engine) :
   player(), level(),
   deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
   particleEngine(new ParticleEngine(this)), engine(engine),
-  hud(new Hud(this))
+  hud(new Hud(this)), paused(false)
 {
   this->player.lives = 3;
   initLevel(0);
@@ -167,3 +167,13 @@ int GameWorld::getUfoInterval()
   return UFO_SCORE_INTERVAL_MIN + (rand() % (UFO_SCORE_INTERVAL_MAX - UFO_SCORE_INTERVAL_MIN));
 }
 
+
+void GameWorld::setPaused(bool value)
+{
+  paused = value;
+}
+
+bool GameWorld::getPaused() const
+{
+  return paused;
+}

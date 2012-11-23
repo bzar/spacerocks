@@ -20,7 +20,7 @@ void Plasma::term()
 Plasma::Plasma(GameWorld* world, float const life, float const power,
                Vec2D const& position, Vec2D const& velocity) :
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
-  o(0), power(power), nextPower(power), life(life), v(velocity), shape(position, getRadius())
+  gameWorld(world), o(0), power(power), nextPower(power), life(life), v(velocity), shape(position, getRadius())
 {
   o = glhckSpriteNew(TEXTURE, 1, 1);
   glhckObjectScalef(o, getRadius(), getRadius(), 1);
@@ -41,6 +41,9 @@ void Plasma::render(ew::RenderContext* context)
 
 void Plasma::update(float delta)
 {
+  if(gameWorld->getPaused())
+    return;
+  
   life -= delta;
 
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);

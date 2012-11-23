@@ -35,6 +35,7 @@ private:
   static std::vector<std::string> const IMAGES;
   static TextureAtlas atlas;
 
+  GameWorld* gameWorld;
   glhckObject* o;
   float time;
 };

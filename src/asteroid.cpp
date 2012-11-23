@@ -57,8 +57,12 @@ void Asteroid::render(ew::RenderContext* context)
 
 void Asteroid::update(float const delta)
 {
-  glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
   glhckObjectRotatef(o, 0, 0, delta * 40);
+
+  if(gameWorld->getPaused())
+    return;
+  
+  glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
   // FIXME: Do proper wrapping
   kmVec3 const* pos = glhckObjectGetPosition(o);

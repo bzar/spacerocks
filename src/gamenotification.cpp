@@ -15,7 +15,7 @@ void GameNotification::term()
 GameNotification::GameNotification(GameWorld* world, const std::string& text, 
                                    float size, float life, const Vec2D& position): 
   ew::Entity(world), ew::Renderable(world, 0, 2), ew::Updatable(world),
-  size(size), life(life), o(nullptr), time(0)
+  gameWorld(world), size(size), life(life), o(nullptr), time(0)
 {
   float width = 0;
   float height = size * 1.5f;
@@ -53,6 +53,9 @@ void GameNotification::render(ew::RenderContext* context)
 
 void GameNotification::update(const float delta)
 {
+  if(gameWorld->getPaused())
+    return;
+  
   time += delta;
   
   if(life > time)

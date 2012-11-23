@@ -37,6 +37,7 @@ private:
   static glhckTexture* TEXTURE;
   static int const RADIUS = 4;
 
+  GameWorld* gameWorld;
   glhckObject* o;
   float life;
   Vec2D v;

@@ -52,6 +52,7 @@ private:
   static int const NUM_PARTICLES = 64;
   typedef std::array<Particle, NUM_PARTICLES> Particles;
 
+  GameWorld* gameWorld;
   Particles particles;
   int live;
 };
