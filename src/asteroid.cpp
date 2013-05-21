@@ -15,7 +15,7 @@ std::vector<std::string> const Asteroid::IMAGES  = {
   "img/asteroid_4.png"
 };
 
-float const Asteroid::IMAGE_SIZES[NUM_SIZES] = {8, 8, 16, 24 };
+float const Asteroid::IMAGE_SIZES[NUM_SIZES] = {16, 16, 32, 48 };
 
 TextureAtlas Asteroid::atlas = TextureAtlas();
 Sound Asteroid::hitSound = Sound();
@@ -41,7 +41,6 @@ Asteroid::Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec
 {
   o = glhckSpriteNew(atlas.getTexture(), IMAGE_SIZES[size], IMAGE_SIZES[size]);
   glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(size).transform, atlas.getTransform(size).degree);
-  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 
@@ -61,7 +60,7 @@ void Asteroid::update(float const delta)
 
   if(gameWorld->getPaused())
     return;
-  
+
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
   // FIXME: Do proper wrapping
@@ -223,7 +222,7 @@ void Asteroid::die()
       Asteroid* asteroid = new Asteroid(gameWorld, static_cast<Size>(size - 1), startPos, velocity);
     }
   }
-  
+
   if(size >= MEDIUM)
   {
     destroySoundBig.play();

@@ -9,7 +9,7 @@ glhckTexture* Plasma::TEXTURE = nullptr;
 
 void Plasma::init()
 {
-  TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
+  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, nullptr);
 }
 
 void Plasma::term()
@@ -22,9 +22,8 @@ Plasma::Plasma(GameWorld* world, float const life, float const power,
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   gameWorld(world), o(0), power(power), nextPower(power), life(life), v(velocity), shape(position, getRadius())
 {
-  o = glhckSpriteNew(TEXTURE, 1, 1);
+  o = glhckSpriteNew(TEXTURE, 2, 2);
   glhckObjectScalef(o, getRadius(), getRadius(), 1);
-  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle()) * 360);
 }
@@ -43,7 +42,7 @@ void Plasma::update(float delta)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   life -= delta;
 
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);

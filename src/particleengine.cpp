@@ -28,8 +28,7 @@ ParticleEngine::ParticleEngine(GameWorld* world) :
 {
   for(Particle& p : particles)
   {
-    p.o = glhckSpriteNew(atlas.getTexture(), 1, 1);
-    glhckObjectMaterialFlags(p.o, GLHCK_MATERIAL_ALPHA);
+    p.o = glhckSpriteNew(atlas.getTexture(), 2, 2);
   }
 }
 
@@ -53,7 +52,7 @@ void ParticleEngine::update(float const delta)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   for(int i = 0; i < live; ++i)
   {
     Particle& p = particles[i];

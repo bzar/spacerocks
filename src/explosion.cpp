@@ -111,10 +111,9 @@ Explosion::Explosion(GameWorld* world, Vec2D const& position) :
   ew::Entity(world), ew::Renderable(world, 1), ew::Updatable(world),
   gameWorld(world), o(nullptr), time(0)
 {
-  o = glhckSpriteNew(atlas.getTexture(), 160, 120);
+  o = glhckSpriteNew(atlas.getTexture(), 320, 240);
   glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(0).transform, atlas.getTransform(0).degree);
 
-  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 
@@ -127,7 +126,7 @@ void Explosion::update(float const delta)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   time += delta;
   int frame = static_cast<int>(time * FPS);
 

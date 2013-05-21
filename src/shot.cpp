@@ -9,7 +9,7 @@ glhckTexture* Shot::TEXTURE = nullptr;
 
 void Shot::init()
 {
-  TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
+  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, nullptr);
 }
 
 void Shot::term()
@@ -21,8 +21,7 @@ Shot::Shot(GameWorld* world, float const life, Vec2D const& position, Vec2D cons
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   gameWorld(world), o(0), life(life), v(velocity), shape(position, RADIUS)
 {
-  o = glhckSpriteNew(TEXTURE, 4, 4);
-  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  o = glhckSpriteNew(TEXTURE, 8, 8);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 
@@ -40,7 +39,7 @@ void Shot::update(float const delta)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   life -= delta;
   if(life <= 0)
     world->removeEntity(this);
