@@ -44,9 +44,7 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
 
-  glhckSetGlobalPrecision(GLHCK_INDEX_BYTE, GLHCK_VERTEX_V2F);
-
-  if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_OPENGL))
+  if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_AUTO))
   {
     std::cerr << "GLHCK display create error" << std::endl;
     return EXIT_FAILURE;
