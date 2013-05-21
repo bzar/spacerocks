@@ -22,7 +22,7 @@ TextureAtlas::TextureAtlas(std::vector<std::string> const& filenames) :
     transforms.push_back(TransformData());
   }
 
-  glhckAtlasPack(atlas, true, true);
+  glhckAtlasPack(atlas, GLHCK_RGBA, true, true, nullptr);
 
   for(int i = 0; i < transforms.size(); ++i)
   {
