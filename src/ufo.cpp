@@ -51,9 +51,8 @@ Ufo::Ufo(GameWorld* world, Vec2D const& startPosition, Vec2D const& endPosition,
   shootInterval(gameWorld->level.ufoShootInterval),
   time(0), life(3), shape(startPosition, RADIUS)
 {
-  o = glhckSpriteNew(atlas.getTexture(), 16, 16);
+  o = glhckSpriteNew(atlas.getTexture(), 32, 32);
   glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(0).transform, atlas.getTransform(0).degree);
-  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, startPosition.x, startPosition.y, 0);
 }
 
@@ -72,7 +71,7 @@ void Ufo::update(float const delta)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   time += delta;
   int const frame = ANIMATION_FRAMES[static_cast<int>(time * FPS) % NUM_FRAMES];
   glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(frame).transform, atlas.getTransform(frame).degree);
@@ -112,7 +111,7 @@ CircleShape const* Ufo::getShape() const
 void Ufo::collide(ew::Collidable const* other) {
   if(life <= 0)
     return;
-  
+
   Vec2D position = getPosition();
 
   bool collide = false;
@@ -167,7 +166,7 @@ void Ufo::collide(ew::Collidable const* other) {
       collide = true;
     }
   }
-  
+
   if(collide)
   {
     if(life > 0)
@@ -184,7 +183,7 @@ void Ufo::collide(ew::Collidable const* other) {
         Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
         gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
       }
-      
+
       hitSound.play();
     }
     else
@@ -196,7 +195,7 @@ void Ufo::collide(ew::Collidable const* other) {
       Vec2D velocity = Vec2D(0, 1).rotatei(randFloat(0, 1)).scalei(randFloat(30, 80));
       Powerup* powerup = new Powerup(gameWorld, powerupType, position, velocity);
       Explosion* explosion = new Explosion(gameWorld, position);
-      
+
       destroySound.play();
     }
   }

@@ -14,8 +14,8 @@ glhckTexture* Beam::TIP_TEXTURE = nullptr;
 
 void Beam::init()
 {
-  TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
-  TIP_TEXTURE = glhckTextureNew(TIP_IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
+  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, nullptr);
+  TIP_TEXTURE = glhckTextureNewFromFile(TIP_IMAGE.data(), nullptr, nullptr);
 }
 
 void Beam::term()
@@ -28,10 +28,8 @@ Beam::Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDel
   ew::Entity(world), ew::Renderable(world, -1), ew::Updatable(world), ew::Collidable(world),
   gameWorld(world), o(nullptr), tip(nullptr), hitDelay(0), recovering(false), shape({0, 0}, {0, 0}, 4)
 {
-  o = glhckSpriteNew(TEXTURE, 4, 128);
-  tip = glhckSpriteNew(TIP_TEXTURE, 4, 4);
-  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
-  glhckObjectMaterialFlags(tip, GLHCK_MATERIAL_ALPHA);
+  o = glhckSpriteNew(TEXTURE, 8, 256);
+  tip = glhckSpriteNew(TIP_TEXTURE, 8, 8);
 
   shape.p1 = basePosition;
   shape.p2 = basePosition + positionDelta;
@@ -61,7 +59,7 @@ void Beam::update(float const delta)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   Vec2D positionDelta = shape.p2 - shape.p1;
   Vec2D midPoint = shape.p1 + positionDelta.scale(0.5);
   glhckObjectPositionf(o, midPoint.x, midPoint.y, 0);

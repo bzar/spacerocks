@@ -49,14 +49,12 @@ Ship::Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity) :
   weapons({&laser, &spread, &beam, &plasma}),
   dead(false), shape(position, RADIUS)
 {
-  o = glhckSpriteNew(atlas.getTexture(), 16, 16);
-  shield = glhckSpriteNew(atlas.getTexture(), 24, 24);
+  o = glhckSpriteNew(atlas.getTexture(), 32, 32);
+  shield = glhckSpriteNew(atlas.getTexture(), 48, 48);
 
   glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(DEFAULT).transform, atlas.getTransform(DEFAULT).degree);
   glhckGeometryTransformCoordinates(glhckObjectGetGeometry(shield), &atlas.getTransform(SHIELD).transform, atlas.getTransform(SHIELD).degree);
 
-  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
-  glhckObjectMaterialFlags(shield, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 
   weapon = &laser;
@@ -75,7 +73,8 @@ void Ship::render(ew::RenderContext* context)
   if(dead)
     return;
 
-  glhckObjectColorb(o, 255, 255, 255, immortalityLeft > 0 ? 128 : 255);
+  glhckMaterial *m = glhckObjectGetMaterial(o);
+  if (m) glhckMaterialDiffuseb(m, 255, 255, 255, immortalityLeft > 0 ? 128 : 255);
   glhckObjectRender(o);
 
   if(shields > 0)
@@ -88,7 +87,7 @@ void Ship::update(float const delta)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   if(dead)
     return;
 
@@ -107,7 +106,7 @@ void Ship::update(float const delta)
   {
     v.uniti().scalei(MAX_SPEED);
   }
-  
+
   ImageType t = DEFAULT;
   if(accelerating) {
     t = turningLeft && !turningRight ? LEFT_ACCELERATING :
@@ -161,7 +160,7 @@ void Ship::control(ew::ControlContext* context)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   turnLeft(context->keyDown(GLFW_KEY_LEFT));
   turnRight(context->keyDown(GLFW_KEY_RIGHT));
   accelerate(context->keyDown(GLFW_KEY_UP));
@@ -251,7 +250,7 @@ void Ship::collide(ew::Collidable const* other) {
     if(shape.collidesWith(ufo->getShape()))
     {
       if(shields <= 0)
-      {      
+      {
         die();
       }
       else
@@ -318,7 +317,7 @@ void Ship::accelerate(bool const value)
 {
   if(value != accelerating)
   {
-    accelerating = value;  
+    accelerating = value;
     if(value)
     {
       engineSound.play(0, 0, -1);
@@ -410,21 +409,21 @@ void Ship::prevWeapon()
   }
 }
 
-void Ship::increaseLaserLevel() { 
-  laser.increaseLevel(); 
+void Ship::increaseLaserLevel() {
+  laser.increaseLevel();
   new GameNotification(gameWorld, "Laser +1", POWERUP_TEXT_SIZE, 1.0, getPosition());
 }
-void Ship::increaseSpreadLevel() { 
-  spread.increaseLevel(); 
-  new GameNotification(gameWorld, "Spread +1", POWERUP_TEXT_SIZE, 1.0, getPosition());  
+void Ship::increaseSpreadLevel() {
+  spread.increaseLevel();
+  new GameNotification(gameWorld, "Spread +1", POWERUP_TEXT_SIZE, 1.0, getPosition());
 }
-void Ship::increaseBeamLevel() { 
-  beam.increaseLevel(); 
-  new GameNotification(gameWorld, "Beam +1", POWERUP_TEXT_SIZE, 1.0, getPosition());  
+void Ship::increaseBeamLevel() {
+  beam.increaseLevel();
+  new GameNotification(gameWorld, "Beam +1", POWERUP_TEXT_SIZE, 1.0, getPosition());
 }
-void Ship::increasePlasmaLevel() { 
-  plasma.increaseLevel(); 
-  new GameNotification(gameWorld, "Plasma +1", POWERUP_TEXT_SIZE, 1.0, getPosition());  
+void Ship::increasePlasmaLevel() {
+  plasma.increaseLevel();
+  new GameNotification(gameWorld, "Plasma +1", POWERUP_TEXT_SIZE, 1.0, getPosition());
 }
 
 int Ship::getSelectedWeaponId() const
@@ -442,7 +441,7 @@ void Ship::die()
   {
     w->decreaseLevel();
   }
-  
+
   destroySound.play();
 }
 

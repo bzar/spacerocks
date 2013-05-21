@@ -9,7 +9,7 @@ glhckTexture* Laser::TEXTURE = nullptr;
 
 void Laser::init()
 {
-  TEXTURE = glhckTextureNew(IMAGE.data(), GLHCK_TEXTURE_DEFAULTS);
+  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, nullptr);
 }
 
 void Laser::term()
@@ -21,8 +21,7 @@ Laser::Laser(GameWorld* world, float const life, Vec2D const& position, Vec2D co
   Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   gameWorld(world), o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
 {
-  o = glhckSpriteNew(TEXTURE, 2, 8);
-  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
+  o = glhckSpriteNew(TEXTURE, 4, 16);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);
 
@@ -45,7 +44,7 @@ void Laser::update(float const delta)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   life -= delta;
   if(life <= 0)
     world->removeEntity(this);

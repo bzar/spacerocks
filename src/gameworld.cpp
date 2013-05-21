@@ -29,7 +29,7 @@ GameWorld::GameWorld(ew::Engine* engine) :
   this->player.lives = 3;
   initLevel(0);
   this->player.ship = new Ship(this, {0, 0}, {0, 0});
-  new Prop(this, "img/background.png", 400, 240, 0, -1);
+  new Prop(this, "img/background.png", 800, 480, 0, -1);
 }
 
 void GameWorld::update(float const delta)
@@ -156,10 +156,10 @@ void GameWorld::initLevel(int const n)
 void GameWorld::addScore(int amount, const Vec2D& position)
 {
   player.score += amount;
-  
+
   std::ostringstream oss;
   oss << amount;
-  new GameNotification(this, oss.str(), lerp(5, 15, amount/200.0), 0.5, position); 
+  new GameNotification(this, oss.str(), lerp(5, 15, amount/200.0), 0.5, position);
 }
 
 int GameWorld::getUfoInterval()
