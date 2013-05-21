@@ -15,9 +15,9 @@
 int const WIDTH = 800;
 int const HEIGHT = 480;
 
-int windowCloseCallback(GLFWwindow window);
-void windowResizeCallback(GLFWwindow window, int width, int height);
-int gameloop(GLFWwindow& window);
+void windowCloseCallback(GLFWwindow* window);
+void windowResizeCallback(GLFWwindow* window, int width, int height);
+int gameloop(GLFWwindow* window);
 
 int main(int argc, char** argv)
 {
@@ -25,26 +25,27 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
 
   glfwWindowHint(GLFW_DEPTH_BITS, 24);
-  GLFWwindow window = glfwCreateWindow(WIDTH, HEIGHT, GLFW_WINDOWED, "Space Rocks!", NULL);
+  GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Space Rocks!", nullptr, nullptr);
   glfwMakeContextCurrent(window);
 
   if(!window)
   {
-    std::cerr << "GLFW error: " << glfwErrorString(glfwGetError()) << std::endl;
+    // FIXME: use error callback
+    // std::cerr << "GLFW error: " << glfwErrorString(glfwGetError()) << std::endl;
     return EXIT_FAILURE;
   }
 
   glfwSwapInterval(0);
-  glfwSetWindowCloseCallback(windowCloseCallback);
+  glfwSetWindowCloseCallback(window, windowCloseCallback);
 
-  if(!glhckInit(argc, argv))
+  if(!glhckContextCreate(argc, argv))
   {
     std::cerr << "GLHCK initialization error" << std::endl;
     return EXIT_FAILURE;
   }
 
   glhckSetGlobalPrecision(GLHCK_INDEX_BYTE, GLHCK_VERTEX_V2F);
-  
+
   if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_OPENGL))
   {
     std::cerr << "GLHCK display create error" << std::endl;
@@ -52,35 +53,34 @@ int main(int argc, char** argv)
   }
 
   Sound::init();
-  
+
   int retval = gameloop(window);
 
   Sound::exit();
-  
-  glhckTerminate();
+
+  glhckContextTerminate();
   glfwTerminate();
 
   return retval;
 }
 
 
-int windowCloseCallback(GLFWwindow window)
+void windowCloseCallback(GLFWwindow* window)
 {
   ew::Engine* engine = static_cast<ew::Engine*>(glfwGetWindowUserPointer(window));
   engine->quit();
-  return GL_FALSE;
 }
 
-void windowResizeCallback(GLFWwindow window, int width, int height)
+void windowResizeCallback(GLFWwindow* window, int width, int height)
 {
   glhckDisplayResize(width, height);
 
   kmMat4 proj;
   kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
-  glhckRenderSetProjection(&proj);
+  glhckRenderProjectionOnly(&proj);
 }
 
-int gameloop(GLFWwindow& window)
+int gameloop(GLFWwindow* window)
 {
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -89,15 +89,15 @@ int gameloop(GLFWwindow& window)
 
   kmMat4 proj;
   kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
-  glhckRenderSetProjection(&proj);
+  glhckRenderProjectionOnly(&proj);
 
-  GLFWControlContext controlContext(&window);
+  GLFWControlContext controlContext(window);
   GlhckGLFWRenderContext renderContext(window);
   GLFWTimeContext timeContext;
   ew::Engine engine(&controlContext, &renderContext, &timeContext);
 
   glfwSetWindowUserPointer(window, &engine);
-  glfwSetWindowSizeCallback(windowResizeCallback);
+  glfwSetWindowSizeCallback(window, windowResizeCallback);
 
   GameState::init();
   GameState game(&engine);

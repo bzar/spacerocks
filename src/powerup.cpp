@@ -24,7 +24,7 @@ Sound Powerup::shieldSound = Sound();
 void Powerup::init()
 {
   atlas = TextureAtlas(IMAGES);
-  
+
   weaponSound.load("snd/sfx/weapon1probl.wav");
   extralifeSound.load("snd/sfx/game_showmenu.wav");
   loselifeSound.load("snd/sfx/game_hidemenu.wav");
@@ -40,9 +40,8 @@ Powerup::Powerup(GameWorld* world, Type const type, Vec2D const& position, Vec2D
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
   gameWorld(world), o(0), type(type), v(velocity), life(10), shape(position, RADIUS)
 {
-  o = glhckSpriteNew(atlas.getTexture(), 16, 16);
+  o = glhckSpriteNew(atlas.getTexture(), 32, 32);
   glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(type).transform, atlas.getTransform(type).degree);
-  glhckObjectMaterialFlags(o, GLHCK_MATERIAL_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 
@@ -60,7 +59,7 @@ void Powerup::update(float const delta)
 {
   if(gameWorld->getPaused())
     return;
-  
+
   life -= delta;
   if(life <= 0)
     world->removeEntity(this);
@@ -95,7 +94,7 @@ void Powerup::collide(ew::Collidable const* other) {
     if(ship->alive() && shape.collidesWith(ship->getShape()))
     {
       world->removeEntity(this);
-      
+
       if(type == LASER || type == SPREAD || type == BEAM || type == PLASMA) {
         weaponSound.play();
       } else if(type == EXTRALIFE) {
