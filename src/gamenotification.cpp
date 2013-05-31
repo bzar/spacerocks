@@ -1,8 +1,6 @@
 #include "gamenotification.h"
 #include "util/util.h"
 
-ew::UID const GameNotification::ID = ew::getUID();
-
 void GameNotification::init()
 {
 }

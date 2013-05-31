@@ -22,9 +22,6 @@ public:
   GameNotification(GameWorld* world, std::string const& text, float size, float life, Vec2D const& position);
   ~GameNotification();
 
-  static ew::UID const ID;
-  ew::UID getEntityId() const { return ID; }
-
   void render(ew::RenderContext* context);
   void update(float const delta);
 

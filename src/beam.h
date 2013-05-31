@@ -21,9 +21,6 @@ public:
   Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDelta);
   ~Beam();
 
-  static ew::UID const ID;
-  ew::UID getEntityId() const { return ID; }
-
   void render(ew::RenderContext* context);
   void update(float const delta);
   LineShape const* getShape() const;

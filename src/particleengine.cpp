@@ -1,7 +1,5 @@
 #include "particleengine.h"
 
-ew::UID const ParticleEngine::ID = ew::getUID();
-
 std::vector<std::string> const ParticleEngine::IMAGES = {
   "img/spark.png",
 };

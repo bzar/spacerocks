@@ -26,9 +26,6 @@ public:
   Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity);
   ~Ship();
 
-  static ew::UID const ID;
-  ew::UID getEntityId() const { return ID; }
-
   void render(ew::RenderContext* context);
   void update(float const delta);
   virtual void collide(ew::Collidable const* other);

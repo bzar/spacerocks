@@ -10,8 +10,6 @@
 
 #include "GL/glfw3.h"
 
-ew::UID const Ship::ID = ew::getUID();
-
 std::vector<std::string> const Ship::IMAGES = {
   "img/ship.png", "img/ship_accelerating.png",
   "img/ship_left.png", "img/ship_left_accelerating.png",
@@ -201,7 +199,7 @@ void Ship::collide(ew::Collidable const* other) {
 
   Vec2D position = getPosition();
 
-  if(other->getEntityId() == Asteroid::ID) {
+  if(typeid(*other) == typeid(Asteroid)) {
     if(immortalityLeft > 0)
       return;
 
@@ -222,7 +220,7 @@ void Ship::collide(ew::Collidable const* other) {
     return;
   }
 
-  if(other->getEntityId() == UfoLaser::ID) {
+  if(typeid(*other) == typeid(UfoLaser)) {
     if(immortalityLeft > 0)
       return;
 
@@ -242,7 +240,7 @@ void Ship::collide(ew::Collidable const* other) {
     return;
   }
 
-  if(other->getEntityId() == Ufo::ID) {
+  if(typeid(*other) == typeid(Ufo)) {
     if(immortalityLeft > 0)
       return;
 
@@ -261,7 +259,7 @@ void Ship::collide(ew::Collidable const* other) {
     return;
   }
 
-  if(other->getEntityId() == Powerup::ID) {
+  if(typeid(*other) == typeid(Powerup)) {
     Powerup const* powerup = static_cast<Powerup const*>(other);
     if(shape.collidesWith(powerup->getShape()))
     {

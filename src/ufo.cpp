@@ -12,8 +12,6 @@
 
 float const TAU = 2 * 3.14159265;
 
-ew::UID const Ufo::ID = ew::getUID();
-
 int const Ufo::ANIMATION_FRAMES[NUM_FRAMES] = {1, 1, 1, 1, 1, 1, 1, 1, 2, 3};
 
 std::vector<std::string> const Ufo::IMAGES = {
@@ -117,7 +115,7 @@ void Ufo::collide(ew::Collidable const* other) {
   bool collide = false;
   Vec2D p;
 
-  if(other->getEntityId() == Laser::ID) {
+  if(typeid(*other) == typeid(Laser)) {
     Laser const* laser = static_cast<Laser const*>(other);
     if(shape.collidesWith(laser->getShape()))
     {
@@ -127,7 +125,7 @@ void Ufo::collide(ew::Collidable const* other) {
     }
   }
 
-  else if(other->getEntityId() == Shot::ID) {
+  else if(typeid(*other) == typeid(Shot)) {
     Shot const* shot = static_cast<Shot const*>(other);
     if(shape.collidesWith(shot->getShape()))
     {
@@ -137,7 +135,7 @@ void Ufo::collide(ew::Collidable const* other) {
     }
   }
 
-  else if(other->getEntityId() == Plasma::ID) {
+  else if(typeid(*other) == typeid(Plasma)) {
     Plasma const* plasma = static_cast<Plasma const*>(other);
     if(shape.collidesWith(plasma->getShape()))
     {
@@ -147,7 +145,7 @@ void Ufo::collide(ew::Collidable const* other) {
     }
   }
 
-  else if(other->getEntityId() == Beam::ID) {
+  else if(typeid(*other) == typeid(Beam)) {
     Beam const* beam = static_cast<Beam const*>(other);
     if(beam->canHit() && shape.collidesWith(beam->getShape()))
     {
@@ -157,7 +155,7 @@ void Ufo::collide(ew::Collidable const* other) {
     }
   }
 
-  else if(other->getEntityId() == Ship::ID) {
+  else if(typeid(*other) == typeid(Ship)) {
     Ship const* ship = static_cast<Ship const*>(other);
     if(ship->alive() && shape.collidesWith(ship->getShape()))
     {

@@ -5,6 +5,8 @@
 #include "ew/integration/glfwcontrolcontext.h"
 #include "ew/integration/glfwtimecontext.h"
 #include "ew/integration/glhckglfwrendercontext.h"
+#include "states.h"
+#include "titlestate.h"
 #include "gamestate.h"
 #include "sound.h"
 
@@ -97,9 +99,13 @@ int gameloop(GLFWwindow* window)
   glfwSetWindowUserPointer(window, &engine);
   glfwSetWindowSizeCallback(window, windowResizeCallback);
 
+  TitleState::init();
+  TitleState title(&engine);
   GameState::init();
   GameState game(&engine);
-  engine.addState(0, &game);
+
+  engine.addState(States::TITLE, &title);
+  engine.addState(States::GAME, &game);
   engine.setState(0);
 
   glhckMemoryGraph();

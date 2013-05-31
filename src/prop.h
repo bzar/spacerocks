@@ -1,7 +1,7 @@
 #ifndef PROP_HH
 #define PROP_HH
 
-#include "gameworld.h"
+#include "ew/renderableworld.h"
 #include "ew/renderable.h"
 
 #include "glhck/glhck.h"
@@ -15,11 +15,8 @@ public:
   static void init();
   static void term();
 
-  Prop(GameWorld* world, std::string const& image, float const width, float const height, int const zIndex = 0, int const layer = 0);
+  Prop(ew::RenderableWorld* world, std::string const& image, float const width, float const height, int const zIndex = 0, int const layer = 0);
   ~Prop();
-
-  static ew::UID const ID;
-  ew::UID getEntityId() const { return ID; }
 
   void render(ew::RenderContext* context);
 

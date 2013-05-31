@@ -1,6 +1,7 @@
 #include "gameworld.h"
 
 #include <sstream>
+#include <iostream>
 
 #include "util/util.h"
 #include "ship.h"
@@ -83,9 +84,9 @@ void GameWorld::update(float const delta)
   for(ew::Entity* e : entities)
   {
     victory = victory
-      && e->getEntityId() != Asteroid::ID
-      && e->getEntityId() != Ufo::ID
-      && e->getEntityId() != UfoLaser::ID;
+      && typeid(*e) != typeid(Asteroid)
+      && typeid(*e) != typeid(Ufo)
+      && typeid(*e) != typeid(UfoLaser);
   }
 
   if(victory)

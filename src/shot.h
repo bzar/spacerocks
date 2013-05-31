@@ -21,9 +21,6 @@ public:
   Shot(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity);
   ~Shot();
 
-  static ew::UID const ID;
-  ew::UID getEntityId() const { return ID; }
-
   void render(ew::RenderContext* context);
   void update(float const delta);
   virtual void collide(ew::Collidable const* other);

@@ -3,7 +3,6 @@
 #include "ship.h"
 #include "util/util.h"
 
-ew::UID const UfoLaser::ID = ew::getUID();
 std::string const UfoLaser::IMAGE = "img/ufolaser.png";
 glhckTexture* UfoLaser::TEXTURE = nullptr;
 
@@ -63,7 +62,7 @@ LineShape const* UfoLaser::getShape() const
 void UfoLaser::collide(ew::Collidable const* other) {
   Vec2D position = getPosition();
 
-  if(other->getEntityId() == Asteroid::ID) {
+  if(typeid(*other) == typeid(Asteroid)) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))
     {
@@ -73,7 +72,7 @@ void UfoLaser::collide(ew::Collidable const* other) {
     return;
   }
 
-  if(other->getEntityId() == Ship::ID) {
+  if(typeid(*other) == typeid(Ship)) {
     Ship const* ship = static_cast<Ship const*>(other);
     if(shape.collidesWith(ship->getShape()))
     {

@@ -12,9 +12,6 @@ public:
   Hud(GameWorld* world);
   ~Hud();
 
-  static ew::UID const ID;
-  ew::UID getEntityId() const { return ID; }
-
   void render(ew::RenderContext* context);
 
 private:

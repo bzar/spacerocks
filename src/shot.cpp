@@ -3,7 +3,6 @@
 #include "ufo.h"
 #include "util/util.h"
 
-ew::UID const Shot::ID = ew::getUID();
 std::string const Shot::IMAGE = "img/shot.png";
 glhckTexture* Shot::TEXTURE = nullptr;
 
@@ -73,7 +72,7 @@ void Shot::collide(ew::Collidable const* other) {
   if(life <= 0)
     return;
 
-  if(other->getEntityId() == Asteroid::ID) {
+  if(typeid(*other) == typeid(Asteroid)) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))
     {
@@ -83,7 +82,7 @@ void Shot::collide(ew::Collidable const* other) {
     return;
   }
 
-  if(other->getEntityId() == Ufo::ID) {
+  if(typeid(*other) == typeid(Ufo)) {
     Ufo const* ufo = static_cast<Ufo const*>(other);
     if(shape.collidesWith(ufo->getShape()))
     {

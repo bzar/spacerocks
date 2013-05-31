@@ -6,7 +6,6 @@
 #include "util/util.h"
 #include "particleengine.h"
 
-ew::UID const Asteroid::ID = ew::getUID();
 float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
 std::vector<std::string> const Asteroid::IMAGES  = {
   "img/asteroid_1.png",
@@ -91,7 +90,7 @@ void Asteroid::collide(ew::Collidable const* other) {
 
   Vec2D position = getPosition();
 
-  if(other->getEntityId() == Asteroid::ID) {
+  if(typeid(*other) == typeid(Asteroid)) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
     if(shape.collidesWith(asteroid->getShape()))
     {
@@ -100,15 +99,15 @@ void Asteroid::collide(ew::Collidable const* other) {
     return;
   }
 
-  if(other->getEntityId() == Laser::ID
-    || other->getEntityId() == Shot::ID
-    || other->getEntityId() == Plasma::ID
-    || other->getEntityId() == Beam::ID)
+  if(typeid(*other) == typeid(Laser)
+    || typeid(*other) == typeid(Shot)
+    || typeid(*other) == typeid(Plasma)
+    || typeid(*other) == typeid(Beam))
   {
     bool collide = false;
     Vec2D p;
 
-    if(other->getEntityId() == Laser::ID) {
+    if(typeid(*other) == typeid(Laser)) {
       Laser const* laser = static_cast<Laser const*>(other);
       if(shape.collidesWith(laser->getShape()))
       {
@@ -118,7 +117,7 @@ void Asteroid::collide(ew::Collidable const* other) {
       }
     }
 
-    if(other->getEntityId() == Shot::ID) {
+    if(typeid(*other) == typeid(Shot)) {
       Shot const* shot = static_cast<Shot const*>(other);
       if(shape.collidesWith(shot->getShape()))
       {
@@ -128,7 +127,7 @@ void Asteroid::collide(ew::Collidable const* other) {
       }
     }
 
-    if(other->getEntityId() == Plasma::ID) {
+    if(typeid(*other) == typeid(Plasma)) {
       Plasma const* plasma = static_cast<Plasma const*>(other);
       if(shape.collidesWith(plasma->getShape()))
       {
@@ -138,7 +137,7 @@ void Asteroid::collide(ew::Collidable const* other) {
       }
     }
 
-    if(other->getEntityId() == Beam::ID) {
+    if(typeid(*other) == typeid(Beam)) {
       Beam const* beam = static_cast<Beam const*>(other);
       if(beam->canHit() && shape.collidesWith(beam->getShape()))
       {

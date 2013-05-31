@@ -25,9 +25,6 @@ public:
   Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec2D const& velocity);
   ~Asteroid();
 
-  static ew::UID const ID;
-  ew::UID getEntityId() const { return ID; }
-
   void render(ew::RenderContext* context);
   void update(float const delta);
 

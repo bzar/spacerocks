@@ -5,8 +5,6 @@
 #include <iomanip>
 #include <sstream>
 
-ew::UID const Hud::ID = ew::getUID();
-
 Hud::Hud(GameWorld* world) :
   ew::Entity(world), ew::Renderable(world, 0, 1),
   gameWorld(world), gameText(nullptr), fpsText(nullptr), gameFont(0), fpsFont(0)

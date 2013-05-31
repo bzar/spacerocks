@@ -3,7 +3,6 @@
 #include "util/util.h"
 #include <cstdlib>
 
-ew::UID const Powerup::ID = ew::getUID();
 float const Powerup::RADIUS = 16;
 std::vector<std::string> const Powerup::IMAGES = {
   "img/powerup_laser.png",
@@ -89,7 +88,7 @@ CircleShape const* Powerup::getShape() const
 }
 
 void Powerup::collide(ew::Collidable const* other) {
-  if(other->getEntityId() == Ship::ID) {
+  if(typeid(*other) == typeid(Ship)) {
     Ship const* ship = static_cast<Ship const*>(other);
     if(ship->alive() && shape.collidesWith(ship->getShape()))
     {

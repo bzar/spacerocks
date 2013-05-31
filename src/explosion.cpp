@@ -1,7 +1,5 @@
 #include "explosion.h"
 
-ew::UID const Explosion::ID = ew::getUID();
-
 std::vector<std::string> const Explosion::IMAGES = {
   "img/explosion/explosion1_0001.png",
   "img/explosion/explosion1_0002.png",

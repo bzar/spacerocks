@@ -25,9 +25,6 @@ public:
   Powerup(GameWorld* world, Type const type, Vec2D const& position, Vec2D const& velocity);
   ~Powerup();
 
-  static ew::UID const ID;
-  ew::UID getEntityId() const { return ID; }
-
   void render(ew::RenderContext* context);
   void update(float const delta);
   virtual void collide(ew::Collidable const* other);
