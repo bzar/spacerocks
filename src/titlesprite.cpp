@@ -32,3 +32,8 @@ void TitleSprite::update(const float delta)
   }
 }
 
+void TitleSprite::reset()
+{
+  now = 0;
+}
+

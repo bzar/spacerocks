@@ -5,7 +5,7 @@
 TitleState::TitleState(ew::Engine *engine) :
   ew::State(engine, &world),
   engine(engine),
-  world(engine),
+  world(engine), bgSound("snd/sfx/weaponfire17.wav"),
   update(&world),
   render(&world, engine->getRenderContext()),
   control(&world, engine->getControlContext())
@@ -13,6 +13,12 @@ TitleState::TitleState(ew::Engine *engine) :
   setPhases({&control, &update, &render});
   new Controller(this);
   new Timer(this);
+}
+
+void TitleState::enter()
+{
+  bgSound.play();
+  world.reset();
 }
 
 

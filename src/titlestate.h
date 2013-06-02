@@ -10,6 +10,7 @@
 #include "ew/updatable.h"
 
 #include "titleworld.h"
+#include "sound.h"
 
 class TitleState : public ew::State
 {
@@ -18,6 +19,8 @@ public:
   static void term();
 
   TitleState(ew::Engine* engine);
+
+  void enter();
 
 private:
   class Controller : public ew::Controllable
@@ -46,6 +49,7 @@ private:
 
   ew::Engine* engine;
   TitleWorld world;
+  Sound bgSound;
   ew::UpdatePhase update;
   ew::RenderPhase render;
   ew::ControlPhase control;

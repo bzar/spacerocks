@@ -29,3 +29,8 @@ void TitleStart::update(const float delta)
   glhckMaterialDiffuseb(glhckObjectGetMaterial(o), 255, 255, 255, visible ? 255 : 0);
 }
 
+void TitleStart::reset()
+{
+  now = 0;
+}
+

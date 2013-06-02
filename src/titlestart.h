@@ -16,6 +16,8 @@ public:
   void render(ew::RenderContext* context);
   void update(float const delta);
 
+  void reset();
+
 private:
   TitleWorld* world;
   glhckObject* o;
