@@ -19,7 +19,7 @@ public:
   static void init();
   static void term();
 
-  GameNotification(GameWorld* world, std::string const& text, float size, float life, Vec2D const& position);
+  GameNotification(GameWorld* world, std::string const& text, float size, float life, Vec2D const& position, float const endOpacity = 0.5);
   ~GameNotification();
 
   void render(ew::RenderContext* context);
@@ -29,7 +29,8 @@ private:
   GameWorld* gameWorld;
   float size;
   float life;
-  
+  float endOpacity;
+
   glhckObject* o;  
   float time;
 };

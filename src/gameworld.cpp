@@ -23,7 +23,7 @@ GameWorld::GameWorld(ew::Engine* engine) :
   ew::World(), ew::RenderableWorld(), ew::UpdatableWorld(), ew::CollidableWorld(),
   ew::ControllableWorld(),
   player(), level(),
-  deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
+  levelStartDelay(0), deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
   particleEngine(new ParticleEngine(this)), engine(engine),
   hud(new Hud(this)), paused(false)
 {
@@ -35,6 +35,16 @@ GameWorld::GameWorld(ew::Engine* engine) :
 
 void GameWorld::update(float const delta)
 {
+  if(levelStartDelay > 0)
+  {
+    levelStartDelay -= delta;
+  }
+
+  if(getPaused())
+  {
+    return;
+  }
+
   if(!player.ship->alive())
   {
     if(deathDelay == 0)
@@ -110,6 +120,11 @@ void GameWorld::initLevel(int const n)
     4 + 2*3 + 4*2 + 8*1,
   };
 
+  std::ostringstream oss;
+  oss << "Level " << (n + 1);
+  new GameNotification(this, oss.str(), 40, 3, {50, 0}, 0);
+  levelStartDelay = 3;
+
   level.n = n;
   level.minAsteroidSpeed = lerp(10, 20, n/40.0);
   level.maxAsteroidSpeed = lerp(20, 60, n/40.0);
@@ -176,5 +191,5 @@ void GameWorld::setPaused(bool value)
 
 bool GameWorld::getPaused() const
 {
-  return paused;
+  return paused || levelStartDelay > 0;
 }

@@ -31,8 +31,13 @@ TitleState::Controller::Controller(TitleState *state) :
 
 void TitleState::Controller::control(ew::ControlContext *context)
 {
-  if(context->keyDown(GLFW_KEY_SPACE))
+  if(context->keyDown(GLFW_KEY_SPACE) || context->keyDown(GLFW_KEY_ENTER))
   {
     state->engine->setState(States::GAME);
+  }
+
+  if(context->keyDown(GLFW_KEY_ESC))
+  {
+    state->engine->quit();
   }
 }

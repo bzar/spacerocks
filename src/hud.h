@@ -14,6 +14,8 @@ public:
 
   void render(ew::RenderContext* context);
 
+  void toggleShowFPS();
+
 private:
   GameWorld* gameWorld;
 
@@ -21,6 +23,8 @@ private:
   glhckText *fpsText;
   unsigned int gameFont;
   unsigned int fpsFont;
+
+  bool showFPS = false;
 };
 
 #endif

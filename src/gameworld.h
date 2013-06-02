@@ -53,7 +53,7 @@ public:
   Player player;
   ParticleEngine* const particleEngine;
   ew::Engine* const engine;
-  Hud const* hud;
+  Hud* hud;
 
 private:
   static int const UFO_SCORE_INTERVAL_MIN;
@@ -63,6 +63,7 @@ private:
 
   static int getUfoInterval();
 
+  float levelStartDelay;
   float deathDelay;
   float ufoDelay;
   int nextUfoScore;

@@ -64,13 +64,21 @@ void Hud::render(ew::RenderContext* context)
   glhckTextRender(gameText);
   glhckTextClear(gameText);
 
-  ss.str("");
-  ss << std::setprecision(2) << std::fixed
-      << "FPS: " << gameWorld->engine->getTimer().getFPS()
-      << " | total: " << gameWorld->engine->getTimer().getTotalTime()
-      << "s | frame: " << gameWorld->engine->getTimer().getTicks();
-  glhckTextStash(fpsText, fpsFont, 14, 5, 35, ss.str().data(), nullptr);
-  glhckTextRender(fpsText);
-  glhckTextClear(fpsText);
+  if(showFPS)
+  {
+    ss.str("");
+    ss << std::setprecision(2) << std::fixed
+        << "FPS: " << gameWorld->engine->getTimer().getFPS()
+        << " | total: " << gameWorld->engine->getTimer().getTotalTime()
+        << "s | frame: " << gameWorld->engine->getTimer().getTicks();
+    glhckTextStash(fpsText, fpsFont, 14, 5, 35, ss.str().data(), nullptr);
+    glhckTextRender(fpsText);
+    glhckTextClear(fpsText);
+  }
 
+}
+
+void Hud::toggleShowFPS()
+{
+  showFPS = !showFPS;
 }

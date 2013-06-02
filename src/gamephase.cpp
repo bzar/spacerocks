@@ -1,5 +1,6 @@
 #include "gamephase.h"
 #include "GL/glfw3.h"
+#include "hud.h"
 
 GamePhase::GamePhase(GameWorld* world, ew::Engine* engine) :
   world(world), engine(engine)
@@ -18,9 +19,11 @@ void GamePhase::execute(float const delta)
   {
     world->setPaused(!world->getPaused());
   }
-  
-  if(!world->getPaused())
+
+  if(engine->getControlContext()->keyPush(GLFW_KEY_I))
   {
-    world->update(delta);
+    world->hud->toggleShowFPS();
   }
+
+  world->update(delta);
 }
