@@ -7,6 +7,7 @@
 #include "ew/integration/glhckglfwrendercontext.h"
 #include "states.h"
 #include "titlestate.h"
+#include "highscorestate.h"
 #include "gamestate.h"
 #include "sound.h"
 
@@ -101,18 +102,26 @@ int gameloop(GLFWwindow* window)
 
   TitleState::init();
   TitleState title(&engine);
+
+  HighScoreState::init();
+  HighScoreState highscores(&engine);
+
   GameState::init();
   GameState game(&engine);
 
   engine.addState(States::TITLE, &title);
+  engine.addState(States::HIGHSCORES, &highscores);
   engine.addState(States::GAME, &game);
-  engine.setState(0);
+
+  engine.setState(States::TITLE);
 
   glhckMemoryGraph();
 
   engine.run();
 
   GameState::term();
+  HighScoreState::term();
+  TitleState::term();
 
   return EXIT_SUCCESS;
 }

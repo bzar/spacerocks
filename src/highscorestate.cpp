@@ -1,8 +1,8 @@
-#include "titlestate.h"
+#include "highscorestate.h"
 #include "GL/glfw3.h"
 #include "states.h"
 
-TitleState::TitleState(ew::Engine *engine) :
+HighScoreState::HighScoreState(ew::Engine *engine) :
   ew::State(engine, &world),
   engine(engine),
   world(engine),
@@ -16,25 +16,25 @@ TitleState::TitleState(ew::Engine *engine) :
 }
 
 
-void TitleState::init()
+void HighScoreState::init()
 {
 }
 
-void TitleState::term()
+void HighScoreState::term()
 {
 }
 
 
-TitleState::Controller::Controller(TitleState *state) :
+HighScoreState::Controller::Controller(HighScoreState *state) :
   ew::Entity(&state->world), ew::Controllable(&state->world), state(state)
 {
 }
 
-void TitleState::Controller::control(ew::ControlContext *context)
+void HighScoreState::Controller::control(ew::ControlContext *context)
 {
   if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER))
   {
-    state->engine->setState(States::GAME);
+    state->engine->setState(States::TITLE);
   }
 
   if(context->keyPush(GLFW_KEY_ESC))
@@ -43,19 +43,19 @@ void TitleState::Controller::control(ew::ControlContext *context)
   }
 }
 
-TitleState::Timer::Timer(TitleState *state) :
+HighScoreState::Timer::Timer(HighScoreState *state) :
   ew::Entity(&state->world), ew::Updatable(&state->world),
   state(state), stateTime(0)
 {
 }
 
-void TitleState::Timer::update(const float delta)
+void HighScoreState::Timer::update(const float delta)
 {
   stateTime += delta;
 
   if(stateTime > 10)
   {
-    state->engine->setState(States::HIGHSCORES);
+    state->engine->setState(States::TITLE);
     stateTime = 0;
   }
 }

@@ -11,6 +11,6 @@ TitleWorld::TitleWorld(ew::Engine *engine) :
   new Prop(this, "img/title-background.png", 800, 480, 0, -1);
   new TitleSprite(this, "img/title-space.png", "snd/sfx/weaponfire2.wav", {-800, -50}, {-150, 50}, 1.0, 1.5, 1);
   new TitleSprite(this, "img/title-rocks.png", "snd/sfx/weaponfire2.wav", {700, 50}, {0, -50}, 1.5, 2, 2);
-  new TitleSprite(this, "img/title-exclamation.png", "snd/sfx/explosion1.wav", {450, 370}, {320, 80}, 2, 2.3, 3);
+  new TitleSprite(this, "img/title-exclamation.png", "snd/sfx/explosion1.wav", {450, 370}, {320, 80}, 2.2, 2.5, 3);
   new TitleStart(this, "img/title-start.png", {0, -200}, 2.8, 0.2f, 4);
 }

@@ -1,5 +1,5 @@
-#ifndef TITLESTATE_H
-#define TITLESTATE_H
+#ifndef HIGHSCORESTATE_H
+#define HIGHSCORESTATE_H
 
 #include "ew/state.h"
 #include "ew/updatephase.h"
@@ -8,36 +8,35 @@
 
 #include "ew/controllable.h"
 #include "ew/updatable.h"
+#include "highscoreworld.h"
 
-#include "titleworld.h"
-
-class TitleState : public ew::State
+class HighScoreState : public ew::State
 {
 public:
   static void init();
   static void term();
 
-  TitleState(ew::Engine* engine);
+  HighScoreState(ew::Engine* engine);
 
 private:
   class Controller : public ew::Controllable
   {
   public:
-    Controller(TitleState *state);
+    Controller(HighScoreState *state);
     void control(ew::ControlContext* context);
 
   private:
-    TitleState* state;
+    HighScoreState* state;
   };
 
   class Timer : public ew::Updatable
   {
   public:
-    Timer(TitleState *state);
+    Timer(HighScoreState *state);
     void update(float const delta);
 
   private:
-    TitleState* state;
+    HighScoreState* state;
     float stateTime;
   };
 
@@ -45,7 +44,7 @@ private:
   friend class Timer;
 
   ew::Engine* engine;
-  TitleWorld world;
+  HighScoreWorld world;
   ew::UpdatePhase update;
   ew::RenderPhase render;
   ew::ControlPhase control;
@@ -53,4 +52,4 @@ private:
 
 };
 
-#endif // TITLESTATE_H
+#endif // HighScoreSTATE_H
