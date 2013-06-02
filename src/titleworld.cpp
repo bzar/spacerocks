@@ -1,5 +1,7 @@
 #include "titleworld.h"
 #include "prop.h"
+#include "titlesprite.h"
+#include "titlestart.h"
 
 TitleWorld::TitleWorld(ew::Engine *engine) :
   ew::World(), ew::RenderableWorld(), ew::UpdatableWorld(),
@@ -7,4 +9,8 @@ TitleWorld::TitleWorld(ew::Engine *engine) :
   engine(engine)
 {
   new Prop(this, "img/title-background.png", 800, 480, 0, -1);
+  new TitleSprite(this, "img/title-space.png", {-800, -50}, {-150, 50}, 1.0, 1.5, 1);
+  new TitleSprite(this, "img/title-rocks.png", {700, 50}, {0, -50}, 1.5, 2, 2);
+  new TitleSprite(this, "img/title-exclamation.png", {450, 370}, {320, 80}, 2, 2.3, 3);
+  new TitleStart(this, "img/title-start.png", {0, -200}, 2.8, 0.2f, 4);
 }
