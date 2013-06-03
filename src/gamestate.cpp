@@ -85,3 +85,8 @@ void GameState::process(const float delta)
       music.play();
     }
 }
+
+GameWorld *GameState::getGameWorld()
+{
+  return &world;
+}

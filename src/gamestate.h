@@ -24,6 +24,8 @@ public:
 
   virtual void process(float const delta);
 
+  GameWorld* getGameWorld();
+
 private:
   GameWorld world;
   GamePhase game;

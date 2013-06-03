@@ -1,6 +1,8 @@
 #include "gameoverstate.h"
 #include "GL/glfw3.h"
 #include "states.h"
+#include "gamestate.h"
+#include "text.h"
 
 GameOverState::GameOverState(ew::Engine *engine) :
   ew::State(engine, &world),
@@ -12,6 +14,13 @@ GameOverState::GameOverState(ew::Engine *engine) :
 {
   setPhases({&control, &update, &render});
   new Controller(this);
+}
+
+void GameOverState::enter()
+{
+  GameState* gameState = static_cast<GameState*>(engine->getState(States::GAME));
+  GameWorld* gameWorld = gameState->getGameWorld();
+  world.setScore(gameWorld->player.score);
 }
 
 

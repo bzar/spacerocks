@@ -18,6 +18,8 @@ public:
 
   GameOverState(ew::Engine* engine);
 
+  void enter();
+
 private:
   class Controller : public ew::Controllable
   {
@@ -33,6 +35,7 @@ private:
 
   ew::Engine* engine;
   GameOverWorld world;
+
   ew::UpdatePhase update;
   ew::RenderPhase render;
   ew::ControlPhase control;
