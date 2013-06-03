@@ -19,6 +19,9 @@ public:
 
   GameState(ew::Engine* engine);
   
+  void enter();
+  void exit();
+
   virtual void process(float const delta);
 
 private:

@@ -9,6 +9,7 @@
 #include "titlestate.h"
 #include "highscorestate.h"
 #include "gamestate.h"
+#include "gameoverstate.h"
 #include "sound.h"
 
 #include <cstdlib>
@@ -109,9 +110,13 @@ int gameloop(GLFWwindow* window)
   GameState::init();
   GameState game(&engine);
 
+  GameOverState::init();
+  GameOverState gameover(&engine);
+
   engine.addState(States::TITLE, &title);
   engine.addState(States::HIGHSCORES, &highscores);
   engine.addState(States::GAME, &game);
+  engine.addState(States::GAMEOVER, &gameover);
 
   engine.setState(States::TITLE);
 

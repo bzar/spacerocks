@@ -331,11 +331,11 @@ void Ship::shoot(bool const value)
 {
   if(shooting != value)
   {
-    if(value)
+    shooting = value && alive();
+    if(shooting)
       weapon->startShooting();
     else
       weapon->stopShooting();
-    shooting = value;
   }
 }
 
@@ -432,7 +432,7 @@ int Ship::getSelectedWeaponId() const
 void Ship::die()
 {
   weapon->stopShooting();
-  Explosion* explosion = new Explosion(gameWorld, getPosition());
+  new Explosion(gameWorld, getPosition());
   dead = true;
 
   for(Weapon* w : weapons)

@@ -65,6 +65,16 @@ GameState::GameState(ew::Engine* engine) :
   setPhases({&control, &update, &collide, &render, &game});
 }
 
+void GameState::enter()
+{
+  world.reset();
+}
+
+void GameState::exit()
+{
+  music.stop();
+}
+
 void GameState::process(const float delta)
 {
     ew::State::process(delta);

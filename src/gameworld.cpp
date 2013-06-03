@@ -13,6 +13,7 @@
 #include "hud.h"
 #include "gamenotification.h"
 #include "ew/engine.h"
+#include "states.h"
 
 int const GameWorld::UFO_SCORE_INTERVAL_MIN = 400;
 int const GameWorld::UFO_SCORE_INTERVAL_MAX = 800;
@@ -27,9 +28,6 @@ GameWorld::GameWorld(ew::Engine* engine) :
   particleEngine(new ParticleEngine(this)), engine(engine),
   hud(new Hud(this)), paused(false)
 {
-  this->player.lives = 3;
-  initLevel(0);
-  this->player.ship = new Ship(this, {0, 0}, {0, 0});
   new Prop(this, "img/background.png", 800, 480, 0, -1);
 }
 
@@ -63,6 +61,10 @@ void GameWorld::update(float const delta)
         deathDelay = 0;
         player.lives -= 1;
         player.ship->reset();
+      }
+      else
+      {
+        engine->setState(States::GAMEOVER);
       }
     }
   }
@@ -192,4 +194,18 @@ void GameWorld::setPaused(bool value)
 bool GameWorld::getPaused() const
 {
   return paused || levelStartDelay > 0;
+}
+
+void GameWorld::reset()
+{
+  level.n = 0;
+  player.lives = 3;
+  player.score = 0;
+
+  if(player.ship != nullptr)
+    delete player.ship;
+
+  player.ship = new Ship(this, {0, 0}, {0, 0});
+
+  initLevel(0);
 }

@@ -48,7 +48,9 @@ public:
 
   void setPaused(bool value);
   bool getPaused() const;
-  
+
+  void reset();
+
   Level level;
   Player player;
   ParticleEngine* const particleEngine;

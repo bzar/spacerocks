@@ -103,7 +103,7 @@ void BeamWeapon::update(float const delta)
     if(time > EXTEND_TIME)
     {
       maxLength -= delta * RETRACT_RATE;
-      maxLength = maxLength >= 0 ? maxLength : 0;
+      maxLength = maxLength > 0 ? maxLength : 0.0001;
     }
   } else {
     maxLength += delta * RECHARGE_RATE;
