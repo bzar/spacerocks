@@ -11,6 +11,7 @@
 
 #include "titleworld.h"
 #include "sound.h"
+#include "music.h"
 
 class TitleState : public ew::State
 {
@@ -50,10 +51,11 @@ private:
   ew::Engine* engine;
   TitleWorld world;
   Sound bgSound;
+  Music music;
+
   ew::UpdatePhase update;
   ew::RenderPhase render;
   ew::ControlPhase control;
-
 
 };
 

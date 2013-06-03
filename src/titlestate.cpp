@@ -4,8 +4,9 @@
 
 TitleState::TitleState(ew::Engine *engine) :
   ew::State(engine, &world),
-  engine(engine),
-  world(engine), bgSound("snd/sfx/weaponfire17.wav"),
+  engine(engine), world(engine),
+  bgSound("snd/sfx/weaponfire17.wav"),
+  music("snd/music/title.ogg"),
   update(&world),
   render(&world, engine->getRenderContext()),
   control(&world, engine->getControlContext())
@@ -17,6 +18,8 @@ TitleState::TitleState(ew::Engine *engine) :
 
 void TitleState::enter()
 {
+  if(!music.playing())
+    music.play();
   bgSound.play();
   world.reset();
 }
