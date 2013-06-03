@@ -43,11 +43,13 @@ void TitleState::Controller::control(ew::ControlContext *context)
 {
   if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER))
   {
+    state->music.stop();
     state->engine->setState(States::GAME);
   }
 
   if(context->keyPush(GLFW_KEY_ESC))
   {
+    state->music.stop();
     state->engine->quit();
   }
 }
