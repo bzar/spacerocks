@@ -58,5 +58,5 @@ int Sound::play(float distance, int position, int loops)
 
 int Sound::fadeOut(int durationMs)
 {
-  Mix_FadeOutChannel(channel, durationMs);
+  return Mix_FadeOutChannel(channel, durationMs);
 }
