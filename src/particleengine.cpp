@@ -84,7 +84,7 @@ void ParticleEngine::addParticle(ParticleType const type, Vec2D const& position,
   if(p.type != type)
   {
     p.type = type;
-    glhckGeometryTransformCoordinates(glhckObjectGetGeometry(p.o), &atlas.getTransform(p.type).transform, atlas.getTransform(p.type).degree);
+    glhckMaterialTextureTransform(glhckObjectGetMaterial(p.o), &atlas.getTransform(p.type).transform, atlas.getTransform(p.type).degree);
     glhckObjectScalef(p.o, PARTICLE_SIZES[p.type], PARTICLE_SIZES[p.type], 1);
   }
 

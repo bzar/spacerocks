@@ -80,6 +80,7 @@ void windowResizeCallback(GLFWwindow* window, int width, int height)
   kmMat4 proj;
   kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
   glhckRenderProjectionOnly(&proj);
+  glhckRenderFlip(0);
 }
 
 int gameloop(GLFWwindow* window)
@@ -92,6 +93,7 @@ int gameloop(GLFWwindow* window)
   kmMat4 proj;
   kmMat4Scaling(&proj, 2.0f/WIDTH, 2.0f/HEIGHT, 0);
   glhckRenderProjectionOnly(&proj);
+  glhckRenderFlip(0);
 
   GLFWControlContext controlContext(window);
   GlhckGLFWRenderContext renderContext(window);
