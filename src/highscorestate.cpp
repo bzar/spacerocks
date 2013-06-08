@@ -58,7 +58,7 @@ void HighScoreState::Timer::update(const float delta)
 {
   stateTime += delta;
 
-  if(stateTime > 10)
+  if(stateTime > 20)
   {
     state->engine->setState(States::TITLE);
     stateTime = 0;

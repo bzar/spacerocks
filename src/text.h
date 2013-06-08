@@ -4,6 +4,7 @@
 #include "ew/renderableworld.h"
 #include "ew/renderable.h"
 #include "util/vec2d.h"
+#include "ew/updatable.h"
 #include "glhck/glhck.h"
 
 #include <string>
@@ -15,10 +16,14 @@ public:
   ~Text();
 
   void render(ew::RenderContext* context);
-
+  void update(const float delta);
   void setContent(std::string const& newContent);
   void setCenterIn(Vec2D const& newCenterIn);
+
   void refresh();
+
+  bool getVisible() const;
+  void setVisible(bool value);
 
 private:
   glhckObject* o;
@@ -27,6 +32,7 @@ private:
   Vec2D centerIn;
   int fontId;
   int fontSize;
+  bool visible;
 };
 
 #endif // TEXT_H

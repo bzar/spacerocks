@@ -2,7 +2,8 @@
 
 Text::Text(ew::RenderableWorld *world, const std::string &content, Vec2D const& centerIn, int zIndex, int layer) :
   ew::Entity(world), ew::Renderable(world, zIndex, layer),
-  o(nullptr), text(nullptr), content(content), centerIn(centerIn), fontId(-1), fontSize(40)
+  o(nullptr), text(nullptr), content(content), centerIn(centerIn), fontId(-1), fontSize(40),
+  visible(true)
 {
   text = glhckTextNew(512, 512);
   glhckTextColorb(text, 255, 255, 255, 255);
@@ -18,7 +19,8 @@ Text::~Text()
 
 void Text::render(ew::RenderContext *context)
 {
-  glhckObjectRender(o);
+  if(visible)
+    glhckObjectRender(o);
 }
 
 void Text::setContent(const std::string &newContent)
@@ -39,4 +41,14 @@ void Text::refresh()
   o = glhckTextPlane(text, fontId, fontSize, content.data(), nullptr);
   glhckTextClear(text);
   glhckObjectPositionf(o, centerIn.x, centerIn.y, 0);
+}
+
+bool Text::getVisible() const
+{
+  return visible;
+}
+
+void Text::setVisible(bool value)
+{
+  visible = value;
 }

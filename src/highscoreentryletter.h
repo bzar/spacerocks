@@ -6,10 +6,12 @@
 #include "text.h"
 #include <string>
 
+class GameOverWorld;
+
 class HighScoreEntryLetter
 {
 public:
-  HighScoreEntryLetter(ew::RenderableWorld* world, Vec2D const& centerIn, int zIndex = 0, int layer = 0);
+  HighScoreEntryLetter(GameOverWorld* world, Vec2D const& centerIn, int zIndex = 0, int layer = 0);
   ~HighScoreEntryLetter();
 
   void setCenterIn(Vec2D const& newCenterIn);
@@ -17,10 +19,27 @@ public:
   void prev();
   char getValue() const;
 
+  bool getBlinking() const;
+  void setBlinking(bool value);
+
 private:
+  class Updater : public ew::Updatable
+  {
+  public:
+    Updater(HighScoreEntryLetter* parent);
+    void update(const float delta);
+  private:
+    HighScoreEntryLetter* parent;
+    float t = 0;
+    constexpr static float const BLINK_INTERVAL = 0.2f;
+  };
+
+  friend class Updater;
+
+  GameOverWorld* world;
   int index;
   Text* text;
-
+  bool blinking;
   static std::string const VALUES;
 };
 

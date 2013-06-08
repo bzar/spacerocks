@@ -1,7 +1,6 @@
 #include "highscoremanager.h"
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <algorithm>
 
 std::vector<HighScoreManager::Entry> const HighScoreManager::DEFAULT_ENTRIES = {
@@ -34,12 +33,9 @@ void HighScoreManager::load()
     awesomeScoreEncryptionSystem(ifs, decrypted);
     std::istringstream data(decrypted.str());
 
-    std::cout << "Loading scores: " << decrypted.str();
-
     Entry e;
     while((data >> e.name >> e.score) && entries.size() < MAX_ENTRIES)
     {
-      std::cout << "Loaded score: " << e.name << " - " << e.score << std::endl;
       entries.push_back(e);
     }
   }

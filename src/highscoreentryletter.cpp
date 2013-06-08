@@ -1,11 +1,13 @@
 #include "highscoreentryletter.h"
+#include "gameoverworld.h"
 
 std::string const HighScoreEntryLetter::VALUES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-HighScoreEntryLetter::HighScoreEntryLetter(ew::RenderableWorld *world, Vec2D const& centerIn, int zIndex, int layer) :
-  index(0), text(nullptr)
+HighScoreEntryLetter::HighScoreEntryLetter(GameOverWorld *world, Vec2D const& centerIn, int zIndex, int layer) :
+  world(world), index(0), text(nullptr)
 {
   text = new Text(world, VALUES.substr(index, 1), centerIn, zIndex, layer);
+  new Updater(this);
 }
 
 HighScoreEntryLetter::~HighScoreEntryLetter()
@@ -35,4 +37,26 @@ void HighScoreEntryLetter::prev()
 char HighScoreEntryLetter::getValue() const
 {
   return VALUES.at(index);
+}
+
+HighScoreEntryLetter::Updater::Updater(HighScoreEntryLetter* parent) :
+  ew::Entity(parent->world), ew::Updatable(parent->world), parent(parent)
+{
+
+}
+
+void HighScoreEntryLetter::Updater::update(const float delta)
+{
+  t += delta;
+  parent->text->setVisible(!parent->blinking || static_cast<int>(t / BLINK_INTERVAL) % 2 == 0);
+}
+
+bool HighScoreEntryLetter::getBlinking() const
+{
+  return blinking;
+}
+
+void HighScoreEntryLetter::setBlinking(bool value)
+{
+  blinking = value;
 }

@@ -46,6 +46,10 @@ void GameOverState::Controller::control(ew::ControlContext *context)
     {
       state->world.enterHighScoreEntryLetter();
     }
+    if(context->keyPush(GLFW_KEY_BACKSPACE) || context->keyPush(GLFW_KEY_LEFT))
+    {
+      state->world.eraseHighScoreEntryLetter();
+    }
 
     if(context->keyPush(GLFW_KEY_UP))
     {

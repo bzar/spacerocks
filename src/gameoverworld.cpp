@@ -32,6 +32,11 @@ void GameOverWorld::setScore(const int newScore)
   if(isHighScore())
   {
     focusedHighScoreEntryLetter = 0;
+    for(HighScoreEntryLetter* h : highScoreEntryLetters)
+    {
+      h->setBlinking(false);
+    }
+    highScoreEntryLetters.at(focusedHighScoreEntryLetter)->setBlinking(true);
   }
 }
 
@@ -56,6 +61,7 @@ void GameOverWorld::enterHighScoreEntryLetter()
   if(focusedHighScoreEntryLetter < 0)
     return;
 
+  highScoreEntryLetters.at(focusedHighScoreEntryLetter)->setBlinking(false);
   focusedHighScoreEntryLetter += 1;
 
   if(focusedHighScoreEntryLetter == NUM_HIGHSCORE_LETTERS)
@@ -63,6 +69,20 @@ void GameOverWorld::enterHighScoreEntryLetter()
     focusedHighScoreEntryLetter = -1;
     saveScore();
   }
+  else
+  {
+    highScoreEntryLetters.at(focusedHighScoreEntryLetter)->setBlinking(true);
+  }
+}
+
+void GameOverWorld::eraseHighScoreEntryLetter()
+{
+  if(focusedHighScoreEntryLetter <= 0 )
+    return;
+
+  highScoreEntryLetters.at(focusedHighScoreEntryLetter)->setBlinking(false);
+  focusedHighScoreEntryLetter -= 1;
+  highScoreEntryLetters.at(focusedHighScoreEntryLetter)->setBlinking(true);
 }
 
 bool GameOverWorld::enteringHighScore() const

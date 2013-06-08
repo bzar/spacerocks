@@ -22,6 +22,7 @@ public:
   void nextHighScoreEntryLetter();
   void prevHighScoreEntryLetter();
   void enterHighScoreEntryLetter();
+  void eraseHighScoreEntryLetter();
   bool enteringHighScore() const;
 
 private:
