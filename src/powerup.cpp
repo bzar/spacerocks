@@ -40,7 +40,7 @@ Powerup::Powerup(GameWorld* world, Type const type, Vec2D const& position, Vec2D
   gameWorld(world), o(0), type(type), v(velocity), life(10), shape(position, RADIUS)
 {
   o = glhckSpriteNew(atlas.getTexture(), 32, 32);
-  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(type).transform, atlas.getTransform(type).degree);
+  glhckMaterialTextureTransform(glhckObjectGetMaterial(o), &atlas.getTransform(type).transform, atlas.getTransform(type).degree);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 
