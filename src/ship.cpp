@@ -50,8 +50,8 @@ Ship::Ship(GameWorld* world, Vec2D const& position, Vec2D const& velocity) :
   o = glhckSpriteNew(atlas.getTexture(), 32, 32);
   shield = glhckSpriteNew(atlas.getTexture(), 48, 48);
 
-  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(DEFAULT).transform, atlas.getTransform(DEFAULT).degree);
-  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(shield), &atlas.getTransform(SHIELD).transform, atlas.getTransform(SHIELD).degree);
+  glhckMaterialTextureTransform(glhckObjectGetMaterial(o), &atlas.getTransform(DEFAULT).transform, atlas.getTransform(DEFAULT).degree);
+  glhckMaterialTextureTransform(glhckObjectGetMaterial(shield), &atlas.getTransform(SHIELD).transform, atlas.getTransform(SHIELD).degree);
 
   glhckObjectPositionf(o, position.x, position.y, 0);
 
@@ -116,7 +116,7 @@ void Ship::update(float const delta)
         DEFAULT;
   }
 
-  glhckGeometryTransformCoordinates(glhckObjectGetGeometry(o), &atlas.getTransform(t).transform, atlas.getTransform(t).degree);
+  glhckMaterialTextureTransform(glhckObjectGetMaterial(o), &atlas.getTransform(t).transform, atlas.getTransform(t).degree);
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
 
