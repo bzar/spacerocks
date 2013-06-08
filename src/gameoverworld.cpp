@@ -9,7 +9,7 @@ GameOverWorld::GameOverWorld(ew::Engine *engine) :
   engine(engine), score(0), scoreText(nullptr)
 {
   new Prop(this, "img/gameover.png", 800, 480, 0, -1);
-  scoreText = new Text(this, "Score: -", {400, 300});
+  scoreText = new Text(this, "Score: ", {0, -30});
 }
 
 void GameOverWorld::setScore(const int newScore)

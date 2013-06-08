@@ -12,6 +12,7 @@ class Text : public ew::Renderable
 {
 public:
   Text(ew::RenderableWorld* world, std::string const& content, Vec2D const& centerIn, int zIndex = 0, int layer = 0);
+  ~Text();
 
   void render(ew::RenderContext* context);
 
@@ -20,6 +21,7 @@ public:
   void refresh();
 
 private:
+  glhckObject* o;
   glhckText* text;
   std::string content;
   Vec2D centerIn;
