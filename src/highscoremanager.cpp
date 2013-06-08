@@ -4,6 +4,19 @@
 #include <iostream>
 #include <algorithm>
 
+std::vector<HighScoreManager::Entry> const HighScoreManager::DEFAULT_ENTRIES = {
+  {"BZR", 1000},
+  {"CDF", 900},
+  {"PKB", 800},
+  {"FOO", 700},
+  {"BAR", 600},
+  {"BAZ", 500},
+  {"BAG", 400},
+  {"ABC", 300},
+  {"DEF", 200},
+  {"GHI", 100}
+};
+
 HighScoreManager::HighScoreManager(const std::string &filename) :
   filename(filename)
 {
@@ -14,17 +27,25 @@ void HighScoreManager::load()
 {
   entries.clear();
   std::ifstream ifs(filename);
-  std::ostringstream decrypted;
-  awesomeScoreEncryptionSystem(ifs, decrypted);
-  std::istringstream data(decrypted.str());
 
-  std::cout << "Loading scores: " << decrypted.str();
-
-  Entry e;
-  while((data >> e.name >> e.score) && entries.size() < MAX_ENTRIES)
+  if(ifs)
   {
-    std::cout << "Loaded score: " << e.name << " - " << e.score << std::endl;
-    entries.push_back(e);
+    std::ostringstream decrypted;
+    awesomeScoreEncryptionSystem(ifs, decrypted);
+    std::istringstream data(decrypted.str());
+
+    std::cout << "Loading scores: " << decrypted.str();
+
+    Entry e;
+    while((data >> e.name >> e.score) && entries.size() < MAX_ENTRIES)
+    {
+      std::cout << "Loaded score: " << e.name << " - " << e.score << std::endl;
+      entries.push_back(e);
+    }
+  }
+  else
+  {
+    entries = DEFAULT_ENTRIES;
   }
   sort();
 }

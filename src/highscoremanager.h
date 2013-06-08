@@ -21,6 +21,7 @@ public:
 
 private:
   static int const MAX_ENTRIES = 10;
+  static std::vector<Entry> const DEFAULT_ENTRIES;
   static void awesomeScoreEncryptionSystem(std::istream& from, std::ostream& to);
 
   void sort();

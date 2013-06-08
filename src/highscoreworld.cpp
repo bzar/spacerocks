@@ -34,7 +34,7 @@ void HighScoreWorld::enter()
 
     std::ostringstream oss;
     oss << (i + 1) << ". " << entry.name << " - " << entry.score;
-    texts.push_back(new Text(this, oss.str(), Vec2D{-400 + 800/(COLUMNS + 1) * (COLUMN + 1) , 0 - (ROW + 0.5f) * 40}));
+    texts.push_back(new Text(this, oss.str(), Vec2D{-400 + 800/COLUMNS * (COLUMN + 0.5) , 0 - (ROW + 0.5f) * 40}));
     ++i;
   }
 }

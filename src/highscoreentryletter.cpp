@@ -1,6 +1,6 @@
 #include "highscoreentryletter.h"
 
-std::string const HighScoreEntryLetter::VALUES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+std::string const HighScoreEntryLetter::VALUES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 HighScoreEntryLetter::HighScoreEntryLetter(ew::RenderableWorld *world, Vec2D const& centerIn, int zIndex, int layer) :
   index(0), text(nullptr)
