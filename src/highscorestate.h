@@ -18,6 +18,8 @@ public:
 
   HighScoreState(ew::Engine* engine);
 
+  void enter();
+
 private:
   class Controller : public ew::Controllable
   {
@@ -45,6 +47,7 @@ private:
 
   ew::Engine* engine;
   HighScoreWorld world;
+
   ew::UpdatePhase update;
   ew::RenderPhase render;
   ew::ControlPhase control;

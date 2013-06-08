@@ -6,6 +6,11 @@
 #include "ew/controllableworld.h"
 #include "ew/engine.h"
 #include "text.h"
+#include "highscoreentryletter.h"
+#include "highscoremanager.h"
+
+#include <vector>
+#include <memory>
 
 class GameOverWorld : public ew::RenderableWorld, public ew::UpdatableWorld,
     public ew::ControllableWorld
@@ -14,11 +19,25 @@ public:
   GameOverWorld(ew::Engine* engine);
   void setScore(int const newScore);
 
+  void nextHighScoreEntryLetter();
+  void prevHighScoreEntryLetter();
+  void enterHighScoreEntryLetter();
+  bool enteringHighScore() const;
+
 private:
+  static int const NUM_HIGHSCORE_LETTERS = 3;
+  void saveScore();
+  bool isHighScore();
+
   ew::Engine* engine;
 
-  Text* scoreText;
   int score;
+  Text* scoreText;
+
+  std::vector<HighScoreEntryLetter*> highScoreEntryLetters;
+  int focusedHighScoreEntryLetter = -1;
+
+  HighScoreManager highScoreManager;
 };
 
 #endif // GAMEOVERWORLD_H

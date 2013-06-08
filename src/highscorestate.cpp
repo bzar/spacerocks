@@ -15,6 +15,11 @@ HighScoreState::HighScoreState(ew::Engine *engine) :
   new Timer(this);
 }
 
+void HighScoreState::enter()
+{
+  world.enter();
+}
+
 
 void HighScoreState::init()
 {

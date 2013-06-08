@@ -1,10 +1,40 @@
 #include "highscoreworld.h"
 #include "prop.h"
+#include <sstream>
 
 HighScoreWorld::HighScoreWorld(ew::Engine *engine) :
   ew::World(), ew::RenderableWorld(), ew::UpdatableWorld(),
   ew::ControllableWorld(),
-  engine(engine)
+  engine(engine),
+  highScoreManager("scores.enc"),
+  texts()
 {
   new Prop(this, "img/highscores.png", 800, 480, 0, -1);
+}
+
+void HighScoreWorld::enter()
+{
+  for(Text* t : texts)
+  {
+    delete t;
+  }
+  texts.clear();
+
+  highScoreManager.load();
+
+  int const ROWS_PER_COLUMN = 5;
+  int const COLUMNS = highScoreManager.getEntries().size() / (ROWS_PER_COLUMN + 1) + 1;
+  int const COLUMN_SIZE = highScoreManager.getEntries().size() / COLUMNS + (highScoreManager.getEntries().size() % COLUMNS == 0 ? 0 : 1);
+
+  int i = 0;
+  for(HighScoreManager::Entry const& entry : highScoreManager.getEntries())
+  {
+    int const COLUMN = i / COLUMN_SIZE;
+    int const ROW = i % COLUMN_SIZE;
+
+    std::ostringstream oss;
+    oss << (i + 1) << ". " << entry.name << " - " << entry.score;
+    texts.push_back(new Text(this, oss.str(), Vec2D{-400 + 800/(COLUMNS + 1) * (COLUMN + 1) , 0 - (ROW + 0.5f) * 40}));
+    ++i;
+  }
 }

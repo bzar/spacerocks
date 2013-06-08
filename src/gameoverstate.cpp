@@ -40,9 +40,30 @@ GameOverState::Controller::Controller(GameOverState *state) :
 
 void GameOverState::Controller::control(ew::ControlContext *context)
 {
-  if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER))
+  if(state->world.enteringHighScore())
   {
-    state->engine->setState(States::TITLE);
+    if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER) || context->keyPush(GLFW_KEY_RIGHT))
+    {
+      state->world.enterHighScoreEntryLetter();
+    }
+
+    if(context->keyPush(GLFW_KEY_UP))
+    {
+      state->world.nextHighScoreEntryLetter();
+    }
+
+    if(context->keyPush(GLFW_KEY_DOWN))
+    {
+      state->world.prevHighScoreEntryLetter();
+    }
+  }
+  else
+  {
+    if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER))
+    {
+      state->engine->setState(States::HIGHSCORES);
+    }
+
   }
 
   if(context->keyPush(GLFW_KEY_ESC))
