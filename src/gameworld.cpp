@@ -102,6 +102,7 @@ void GameWorld::update(float const delta)
     victory = victory
       && typeid(*e) != typeid(Asteroid)
       && typeid(*e) != typeid(Ufo)
+      && typeid(*e) != typeid(Powerup)
       && typeid(*e) != typeid(UfoLaser);
   }
 
