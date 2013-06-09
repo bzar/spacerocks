@@ -20,7 +20,10 @@ Text::~Text()
 void Text::render(ew::RenderContext *context)
 {
   if(visible)
+  {
+    glhckMaterialDiffuseb(glhckObjectGetMaterial(o), 255, 255, 255, 255 * opacity);
     glhckObjectRender(o);
+  }
 }
 
 void Text::setContent(const std::string &newContent)
@@ -39,6 +42,7 @@ void Text::refresh()
     glhckObjectFree(o);
 
   o = glhckTextPlane(text, fontId, fontSize, content.data(), nullptr);
+  glhckMaterialBlendFunc(glhckObjectGetMaterial(o), GLHCK_SRC_ALPHA, GLHCK_ONE_MINUS_SRC_ALPHA);
   glhckTextClear(text);
   glhckObjectPositionf(o, centerIn.x, centerIn.y, 0);
 }
@@ -51,4 +55,14 @@ bool Text::getVisible() const
 void Text::setVisible(bool value)
 {
   visible = value;
+}
+
+float Text::getOpacity() const
+{
+    return opacity;
+}
+
+void Text::setOpacity(float value)
+{
+    opacity = value;
 }

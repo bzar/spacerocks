@@ -25,6 +25,9 @@ public:
   bool getVisible() const;
   void setVisible(bool value);
 
+  float getOpacity() const;
+  void setOpacity(float value);
+
 private:
   glhckObject* o;
   glhckText* text;
@@ -33,6 +36,7 @@ private:
   int fontId;
   int fontSize;
   bool visible;
+  float opacity;
 };
 
 #endif // TEXT_H

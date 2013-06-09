@@ -37,6 +37,7 @@ private:
   friend class Updater;
 
   GameOverWorld* world;
+  Updater* updater;
   int index;
   Text* text;
   bool blinking;

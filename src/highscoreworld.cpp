@@ -1,6 +1,5 @@
 #include "highscoreworld.h"
 #include "prop.h"
-#include <sstream>
 
 HighScoreWorld::HighScoreWorld(ew::Engine *engine) :
   ew::World(), ew::RenderableWorld(), ew::UpdatableWorld(),
@@ -14,7 +13,7 @@ HighScoreWorld::HighScoreWorld(ew::Engine *engine) :
 
 void HighScoreWorld::enter()
 {
-  for(Text* t : texts)
+  for(HighScoreEntry* t : texts)
   {
     delete t;
   }
@@ -32,9 +31,7 @@ void HighScoreWorld::enter()
     int const COLUMN = i / COLUMN_SIZE;
     int const ROW = i % COLUMN_SIZE;
 
-    std::ostringstream oss;
-    oss << (i + 1) << ". " << entry.name << " - " << entry.score;
-    texts.push_back(new Text(this, oss.str(), Vec2D{-400 + 800/COLUMNS * (COLUMN + 0.5) , 0 - (ROW + 0.5f) * 40}));
+    texts.push_back(new HighScoreEntry(this, Vec2D{-400 + 800/COLUMNS * (COLUMN + 0.5) , 0 - (ROW + 0.5f) * 40}, i + 1, entry.name, entry.score));
     ++i;
   }
 }

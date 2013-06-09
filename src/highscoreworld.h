@@ -6,6 +6,7 @@
 #include "ew/controllableworld.h"
 #include "ew/engine.h"
 #include "highscoremanager.h"
+#include "highscoreentry.h"
 #include "text.h"
 #include <vector>
 
@@ -19,7 +20,7 @@ public:
 private:
   ew::Engine* engine;
   HighScoreManager highScoreManager;
-  std::vector<Text*> texts;
+  std::vector<HighScoreEntry*> texts;
 };
 
 #endif // HIGHSCOREWORLD_H

@@ -4,14 +4,14 @@
 std::string const HighScoreEntryLetter::VALUES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 HighScoreEntryLetter::HighScoreEntryLetter(GameOverWorld *world, Vec2D const& centerIn, int zIndex, int layer) :
-  world(world), index(0), text(nullptr)
+  world(world), updater(new Updater(this)), index(0), text(nullptr)
 {
   text = new Text(world, VALUES.substr(index, 1), centerIn, zIndex, layer);
-  new Updater(this);
 }
 
 HighScoreEntryLetter::~HighScoreEntryLetter()
 {
+  delete updater;
   delete text;
 }
 
@@ -40,7 +40,7 @@ char HighScoreEntryLetter::getValue() const
 }
 
 HighScoreEntryLetter::Updater::Updater(HighScoreEntryLetter* parent) :
-  ew::Entity(parent->world), ew::Updatable(parent->world), parent(parent)
+  ew::Entity(parent->world), ew::Updatable(parent->world), parent(parent), t(0)
 {
 
 }
