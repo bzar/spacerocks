@@ -37,7 +37,7 @@ void Powerup::term()
 
 Powerup::Powerup(GameWorld* world, Type const type, Vec2D const& position, Vec2D const& velocity) :
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
-  gameWorld(world), o(0), type(type), v(velocity), life(10), shape(position, RADIUS)
+  gameWorld(world), o(0), type(type), v(velocity), life(10), fadeOutTimer(0), shape(position, RADIUS)
 {
   o = glhckSpriteNew(atlas.getTexture(), 32, 32);
   glhckMaterialTextureTransform(glhckObjectGetMaterial(o), &atlas.getTransform(type).transform, atlas.getTransform(type).degree);
@@ -60,8 +60,26 @@ void Powerup::update(float const delta)
     return;
 
   life -= delta;
+
   if(life <= 0)
-    world->removeEntity(this);
+  {
+    fadeOutTimer -= delta;
+    if(fadeOutTimer <= 0)
+    {
+      world->removeEntity(this);
+    }
+    else
+    {
+      glhckMaterialDiffuseb(glhckObjectGetMaterial(o), 255, 255, 255, 255*max(0, fadeOutTimer)/FADEOUT_TIME);
+      float const scale = lerp(2, 1, fadeOutTimer/FADEOUT_TIME);
+      glhckObjectScalef(o, scale, scale, 1);
+    }
+  }
+  else
+  {
+    glhckMaterialDiffuseb(glhckObjectGetMaterial(o), 255, 255, 255, lerp(0, 255, life));
+  }
+
 
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
@@ -90,9 +108,12 @@ CircleShape const* Powerup::getShape() const
 void Powerup::collide(ew::Collidable const* other) {
   if(typeid(*other) == typeid(Ship)) {
     Ship const* ship = static_cast<Ship const*>(other);
-    if(ship->alive() && shape.collidesWith(ship->getShape()))
+    if(alive() && ship->alive() && shape.collidesWith(ship->getShape()))
     {
-      world->removeEntity(this);
+      life = 0;
+      fadeOutTimer = FADEOUT_TIME;
+      v = {0, 0};
+      glhckMaterialBlendFunc(glhckObjectGetMaterial(o), GLHCK_SRC_ALPHA, GLHCK_ONE);
 
       if(type == LASER || type == SPREAD || type == BEAM || type == PLASMA) {
         weaponSound.play();
@@ -117,4 +138,9 @@ Vec2D Powerup::getPosition() const
 Powerup::Type Powerup::getType() const
 {
   return type;
+}
+
+bool Powerup::alive() const
+{
+  return life > 0;
 }

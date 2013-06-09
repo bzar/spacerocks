@@ -33,10 +33,12 @@ public:
 
   Vec2D getPosition() const;
   Type getType() const;
-
+  bool alive() const;
 private:
   static float const RADIUS;
   static std::vector<std::string> const IMAGES;
+  constexpr static float const FADEOUT_TIME = 1.0f;
+
   static TextureAtlas atlas;
 
   GameWorld* gameWorld;
@@ -44,6 +46,7 @@ private:
   Type type;
   Vec2D v;
   float life;
+  float fadeOutTimer;
   CircleShape shape;
   
   static Sound weaponSound;

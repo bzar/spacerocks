@@ -287,7 +287,7 @@ void Ship::collide(ew::Collidable const* other) {
 
   if(typeid(*other) == typeid(Powerup)) {
     Powerup const* powerup = static_cast<Powerup const*>(other);
-    if(shape.collidesWith(powerup->getShape()))
+    if(powerup->alive() && shape.collidesWith(powerup->getShape()))
     {
       if(powerup->getType() == Powerup::LASER)
       {
