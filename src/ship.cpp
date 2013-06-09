@@ -374,6 +374,7 @@ void Ship::reset()
   glhckObjectRotationf(shield, 0, 0, 0);
   v = {0, 0};
   immortalityLeft = 4.0f;
+  weapon->stopShooting();
 }
 
 Vec2D Ship::getVelocity() const

@@ -141,7 +141,7 @@ void GameWorld::initLevel(int const n)
 
   std::ostringstream oss;
   oss << "Level " << (n + 1);
-  new GameNotification(this, oss.str(), 40, 3, {50, 0}, 0);
+  new GameNotification(this, oss.str(), 40, 3, {0, 0}, 0);
   levelStartDelay = 3;
 
   level.n = n;
