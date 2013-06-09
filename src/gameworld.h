@@ -24,6 +24,7 @@ public:
     int n;
     float minAsteroidSpeed;
     float maxAsteroidSpeed;
+    int asteroidFragCount;
     float ufoDuration;
     float ufoAccuracy;
     float ufoShootInterval;

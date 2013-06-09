@@ -130,6 +130,7 @@ void GameWorld::initLevel(int const n)
   level.n = n;
   level.minAsteroidSpeed = lerp(10, 20, n/40.0);
   level.maxAsteroidSpeed = lerp(20, 60, n/40.0);
+  level.asteroidFragCount = 2 + n / 20;
   level.ufoDuration = lerp(20, 10, n/40.0);
   level.ufoAccuracy = lerp(0.6, 0.9, n/60.0);
   level.ufoShootInterval = lerp(3.0, 1.5, n/60.0);
@@ -140,7 +141,7 @@ void GameWorld::initLevel(int const n)
   int maxAsteroidSize = Asteroid::NUM_SIZES - 1;
   int minAsteroidSize = maxAsteroidSize - n / levelsPerNextSize;
   minAsteroidSize = minAsteroidSize < 0 ? 0 : minAsteroidSize;
-  int asteroidValue = (n + 2) * ASTEROID_VALUES[maxAsteroidSize];
+  int asteroidValue = (n%20 + 2) * ASTEROID_VALUES[maxAsteroidSize];
 
   while(asteroidValue > 0)
   {
@@ -207,5 +208,5 @@ void GameWorld::reset()
 
   player.ship = new Ship(this, {0, 0}, {0, 0});
 
-  initLevel(0);
+  initLevel(level.n);
 }

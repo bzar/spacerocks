@@ -48,7 +48,7 @@ HighScoreEntryLetter::Updater::Updater(HighScoreEntryLetter* parent) :
 void HighScoreEntryLetter::Updater::update(const float delta)
 {
   t += delta;
-  parent->text->setVisible(!parent->blinking || static_cast<int>(t / BLINK_INTERVAL) % 2 == 0);
+  parent->text->setVisible(parent->visible && (!parent->blinking || static_cast<int>(t / BLINK_INTERVAL) % 2 == 0));
 }
 
 bool HighScoreEntryLetter::getBlinking() const
@@ -59,4 +59,14 @@ bool HighScoreEntryLetter::getBlinking() const
 void HighScoreEntryLetter::setBlinking(bool value)
 {
   blinking = value;
+}
+
+bool HighScoreEntryLetter::getVisible() const
+{
+  return visible;
+}
+
+void HighScoreEntryLetter::setVisible(bool value)
+{
+  visible = value;
 }

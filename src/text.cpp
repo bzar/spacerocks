@@ -3,7 +3,7 @@
 Text::Text(ew::RenderableWorld *world, const std::string &content, Vec2D const& centerIn, int zIndex, int layer) :
   ew::Entity(world), ew::Renderable(world, zIndex, layer),
   o(nullptr), text(nullptr), content(content), centerIn(centerIn), fontId(-1), fontSize(40),
-  visible(true)
+  visible(true), opacity(1)
 {
   text = glhckTextNew(512, 512);
   glhckTextColorb(text, 255, 255, 255, 255);

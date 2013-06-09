@@ -224,7 +224,7 @@ void Asteroid::die()
 
   if(size > TINY)
   {
-    for(int i = 0; i < 2; ++i)
+    for(int i = 0; i < gameWorld->level.asteroidFragCount; ++i)
     {
       float speed = randFloat(gameWorld->level.minAsteroidSpeed, gameWorld->level.maxAsteroidSpeed);
       Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();

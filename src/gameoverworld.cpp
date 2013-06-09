@@ -34,9 +34,18 @@ void GameOverWorld::setScore(const int newScore)
     focusedHighScoreEntryLetter = 0;
     for(HighScoreEntryLetter* h : highScoreEntryLetters)
     {
+      h->setVisible(true);
       h->setBlinking(false);
     }
     highScoreEntryLetters.at(focusedHighScoreEntryLetter)->setBlinking(true);
+  }
+  else
+  {
+    for(HighScoreEntryLetter* h : highScoreEntryLetters)
+    {
+      h->setVisible(false);
+    }
+    focusedHighScoreEntryLetter = -1;
   }
 }
 

@@ -22,6 +22,9 @@ public:
   bool getBlinking() const;
   void setBlinking(bool value);
 
+  bool getVisible() const;
+  void setVisible(bool value);
+
 private:
   class Updater : public ew::Updatable
   {
@@ -41,6 +44,7 @@ private:
   int index;
   Text* text;
   bool blinking;
+  bool visible;
   static std::string const VALUES;
 };
 
