@@ -61,10 +61,31 @@ public:
   void die();
 
 private:
-  enum ImageType { DEFAULT, ACCELERATING,
-                   LEFT, LEFT_ACCELERATING,
-                   RIGHT, RIGHT_ACCELERATING,
+  enum ImageType { RAPID_DEFAULT = 0, RAPID_ACCELERATING,
+                   RAPID_LEFT, RAPID_LEFT_ACCELERATING,
+                   RAPID_RIGHT, RAPID_RIGHT_ACCELERATING,
+                   SPREAD_DEFAULT, SPREAD_ACCELERATING,
+                   SPREAD_LEFT, SPREAD_LEFT_ACCELERATING,
+                   SPREAD_RIGHT, SPREAD_RIGHT_ACCELERATING,
+                   BEAM_DEFAULT, BEAM_ACCELERATING,
+                   BEAM_LEFT, BEAM_LEFT_ACCELERATING,
+                   BEAM_RIGHT, BEAM_RIGHT_ACCELERATING,
+                   PLASMA_DEFAULT, PLASMA_ACCELERATING,
+                   PLASMA_LEFT, PLASMA_LEFT_ACCELERATING,
+                   PLASMA_RIGHT, PLASMA_RIGHT_ACCELERATING,
                    SHIELD, NUM_IMAGES };
+
+  enum ActionType {
+    DEFAULT = 0, ACCELERATING,
+    LEFT, LEFT_ACCELERATING,
+    RIGHT, RIGHT_ACCELERATING, NUM_ACTIONS
+  };
+
+  enum WeaponType {
+    RAPID = 0, SPREAD,
+    BEAM, PLASMA, NUM_WEAPONS
+  };
+
   static std::vector<std::string> const IMAGES;
   static TextureAtlas atlas;
 

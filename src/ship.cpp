@@ -11,9 +11,18 @@
 #include "GL/glfw3.h"
 
 std::vector<std::string> const Ship::IMAGES = {
-  "img/ship.png", "img/ship_accelerating.png",
-  "img/ship_left.png", "img/ship_left_accelerating.png",
-  "img/ship_right.png", "img/ship_right_accelerating.png",
+  "img/ship-rapid.png", "img/ship-rapid_accelerating.png",
+  "img/ship-rapid_left.png", "img/ship-rapid_left_accelerating.png",
+  "img/ship-rapid_right.png", "img/ship-rapid_right_accelerating.png",
+  "img/ship-spread.png", "img/ship-spread_accelerating.png",
+  "img/ship-spread_left.png", "img/ship-spread_left_accelerating.png",
+  "img/ship-spread_right.png", "img/ship-spread_right_accelerating.png",
+  "img/ship-beam.png", "img/ship-beam_accelerating.png",
+  "img/ship-beam_left.png", "img/ship-beam_left_accelerating.png",
+  "img/ship-beam_right.png", "img/ship-beam_right_accelerating.png",
+  "img/ship-plasma.png", "img/ship-plasma_accelerating.png",
+  "img/ship-plasma_left.png", "img/ship-plasma_left_accelerating.png",
+  "img/ship-plasma_right.png", "img/ship-plasma_right_accelerating.png",
   "img/shield.png"
 };
 
@@ -105,18 +114,30 @@ void Ship::update(float const delta)
     v.uniti().scalei(MAX_SPEED);
   }
 
-  ImageType t = DEFAULT;
+  ActionType at = DEFAULT;
   if(accelerating) {
-    t = turningLeft && !turningRight ? LEFT_ACCELERATING :
+    at = turningLeft && !turningRight ? LEFT_ACCELERATING :
         turningRight && !turningLeft ? RIGHT_ACCELERATING :
         ACCELERATING;
   } else {
-    t = turningLeft && !turningRight ? LEFT :
+    at = turningLeft && !turningRight ? LEFT :
         turningRight && !turningLeft ? RIGHT :
         DEFAULT;
   }
 
-  glhckMaterialTextureTransform(glhckObjectGetMaterial(o), &atlas.getTransform(t).transform, atlas.getTransform(t).degree);
+  WeaponType wt;
+  if(weapon->getWeaponId() == LaserWeapon::ID)
+    wt = RAPID;
+  else if(weapon->getWeaponId() == SpreadWeapon::ID)
+    wt = SPREAD;
+  else if(weapon->getWeaponId() == BeamWeapon::ID)
+    wt = BEAM;
+  else
+    wt = PLASMA;
+
+  ImageType it = static_cast<ImageType>(wt * NUM_ACTIONS + at);
+
+  glhckMaterialTextureTransform(glhckObjectGetMaterial(o), &atlas.getTransform(it).transform, atlas.getTransform(it).degree);
   glhckObjectMovef(o, v.x * delta, v.y * delta, 0);
 
 
