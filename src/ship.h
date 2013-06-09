@@ -32,6 +32,7 @@ public:
   void control(ew::ControlContext* context);
 
   bool alive() const;
+  bool immortal() const;
   virtual CircleShape const* getShape() const;
 
   void turnLeft(bool const value);

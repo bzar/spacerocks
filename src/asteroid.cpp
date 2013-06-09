@@ -5,6 +5,7 @@
 #include "beam.h"
 #include "util/util.h"
 #include "particleengine.h"
+#include "ship.h"
 
 float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
 std::vector<std::string> const Asteroid::IMAGES  = {
@@ -102,7 +103,8 @@ void Asteroid::collide(ew::Collidable const* other) {
   if(typeid(*other) == typeid(Laser)
     || typeid(*other) == typeid(Shot)
     || typeid(*other) == typeid(Plasma)
-    || typeid(*other) == typeid(Beam))
+    || typeid(*other) == typeid(Beam)
+    || typeid(*other) == typeid(Ship))
   {
     bool collide = false;
     Vec2D p;
@@ -143,6 +145,16 @@ void Asteroid::collide(ew::Collidable const* other) {
       {
         life -= 0.5;
         p = beam->getBasePosition();
+        collide = true;
+      }
+    }
+
+    if(typeid(*other) == typeid(Ship)) {
+      Ship const* ship = static_cast<Ship const*>(other);
+      if(!ship->immortal() && shape.collidesWith(ship->getShape()))
+      {
+        life = 0;
+        p = ship->getPosition();
         collide = true;
       }
     }

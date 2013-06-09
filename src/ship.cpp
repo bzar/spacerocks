@@ -208,6 +208,11 @@ bool Ship::alive() const
   return !dead;
 }
 
+bool Ship::immortal() const
+{
+  return immortalityLeft > 0;
+}
+
 CircleShape const* Ship::getShape() const
 {
   return &shape;
