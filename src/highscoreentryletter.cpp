@@ -12,7 +12,7 @@ HighScoreEntryLetter::HighScoreEntryLetter(GameOverWorld *world, Vec2D const& ce
 HighScoreEntryLetter::~HighScoreEntryLetter()
 {
   delete updater;
-  delete text;
+  world->removeEntity(text);
 }
 
 void HighScoreEntryLetter::setCenterIn(const Vec2D &newCenterIn)

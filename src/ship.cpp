@@ -370,6 +370,8 @@ void Ship::reset()
   dead = false;
   glhckObjectPositionf(o, 0, 0, 0);
   glhckObjectRotationf(o, 0, 0, 0);
+  glhckObjectPositionf(shield, 0, 0, 0);
+  glhckObjectRotationf(shield, 0, 0, 0);
   v = {0, 0};
   immortalityLeft = 4.0f;
 }

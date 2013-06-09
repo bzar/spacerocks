@@ -14,6 +14,10 @@
 #include "gamenotification.h"
 #include "ew/engine.h"
 #include "states.h"
+#include "powerup.h"
+#include "laser.h"
+#include "plasma.h"
+#include "shot.h"
 
 int const GameWorld::UFO_SCORE_INTERVAL_MIN = 400;
 int const GameWorld::UFO_SCORE_INTERVAL_MAX = 800;
@@ -115,6 +119,19 @@ void GameWorld::nextLevel()
 
 void GameWorld::initLevel(int const n)
 {
+  for(ew::Entity* e : entities)
+  {
+    if(typeid(*e) == typeid(Asteroid)
+       || typeid(*e) == typeid(Ufo)
+       || typeid(*e) == typeid(UfoLaser)
+       || typeid(*e) == typeid(Powerup)
+       || typeid(*e) == typeid(Laser)
+       || typeid(*e) == typeid(Plasma)
+       || typeid(*e) == typeid(Shot)) {
+      removeEntity(e);
+    }
+  }
+
   int const ASTEROID_VALUES[Asteroid::NUM_SIZES] = {
     1,
     2 + 2*1,
