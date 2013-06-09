@@ -20,7 +20,7 @@ GameNotification::GameNotification(GameWorld* world, const std::string& text,
   glhckText* textObject = glhckTextNew(512, 512);
   unsigned int font = glhckTextFontNew(textObject, "fonts/DejaVuSans.ttf");
   glhckTextColorb(textObject, 255, 255, 255, 255);
-  o = glhckTextPlane(textObject, font, size*renderMultiplier, text.data(), nullptr);
+  o = glhckTextPlane(textObject, font, 2*size*renderMultiplier, text.data(), nullptr);
   glhckMaterialBlendFunc(glhckObjectGetMaterial(o), GLHCK_SRC_ALPHA, GLHCK_ONE_MINUS_SRC_ALPHA);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckTextFree(textObject);
@@ -43,7 +43,7 @@ void GameNotification::update(const float delta)
   if(life > time)
   {
     float progress = time / life;
-    float scale = lerp(1, 2, progress);
+    float scale = lerp(0.5, 1, progress);
     glhckObjectScalef(o, scale, scale, 1);
 
     unsigned char opacity = lerp(255, static_cast<unsigned char>(endOpacity * 255), progress);
