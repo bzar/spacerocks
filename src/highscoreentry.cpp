@@ -13,6 +13,7 @@ HighScoreEntry::HighScoreEntry(HighScoreWorld *world, const Vec2D &centerIn, con
 HighScoreEntry::~HighScoreEntry()
 {
   delete updater;
+  text->setVisible(false);
   world->removeEntity(text);
 }
 

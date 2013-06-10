@@ -142,5 +142,5 @@ Powerup::Type Powerup::getType() const
 
 bool Powerup::alive() const
 {
-  return life > 0;
+  return life >= 0;
 }
