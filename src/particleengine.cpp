@@ -2,11 +2,13 @@
 
 std::vector<std::string> const ParticleEngine::IMAGES = {
   "img/spark.png",
-  "img/flares/corona.png"
+  "img/flares/corona.png",
+  "img/flares/tunelring.png",
+  "img/flares/wave.png"
 };
 
 std::vector<float> const ParticleEngine::PARTICLE_SIZES = {
-  3, 128
+  3, 128, 32, 32
 };
 
 TextureAtlas ParticleEngine::atlas = TextureAtlas();

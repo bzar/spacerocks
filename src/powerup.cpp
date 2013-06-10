@@ -1,6 +1,8 @@
 #include "powerup.h"
 #include "ship.h"
 #include "util/util.h"
+#include "particleengine.h"
+
 #include <cstdlib>
 
 float const Powerup::RADIUS = 16;
@@ -114,6 +116,7 @@ void Powerup::collide(ew::Collidable const* other) {
       fadeOutTimer = FADEOUT_TIME;
       v = {0, 0};
       glhckMaterialBlendFunc(glhckObjectGetMaterial(o), GLHCK_SRC_ALPHA, GLHCK_ONE);
+      gameWorld->particleEngine->addParticle(ParticleEngine::TUNEL_RING, getPosition(), Vec2D(), 1, 0, 0, 1, 2, 0.2, -0.2);
 
       if(type == LASER || type == SPREAD || type == BEAM || type == PLASMA) {
         weaponSound.play();

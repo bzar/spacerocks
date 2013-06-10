@@ -5,6 +5,7 @@
 #include "ufolaser.h"
 #include "powerup.h"
 #include "gamenotification.h"
+#include "particleengine.h"
 #include "util/util.h"
 #include <iostream>
 
@@ -462,6 +463,7 @@ void Ship::die()
 {
   weapon->stopShooting();
   new Explosion(gameWorld, getPosition());
+  gameWorld->particleEngine->addParticle(ParticleEngine::WAVE, getPosition(), Vec2D(), 1, 0, 0, 0.1, 3, 0.1, -0.1);
   dead = true;
 
   for(Weapon* w : weapons)

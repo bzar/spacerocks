@@ -16,7 +16,7 @@
 class ParticleEngine : public ew::Renderable, public ew::Updatable
 {
 public:
-  enum ParticleType { SPARK, CORONA, NUM_PARTICLE_TYPES };
+  enum ParticleType { SPARK, CORONA, TUNEL_RING, WAVE, NUM_PARTICLE_TYPES };
 
   static void init();
   static void term();
