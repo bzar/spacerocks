@@ -16,7 +16,7 @@
 class ParticleEngine : public ew::Renderable, public ew::Updatable
 {
 public:
-  enum ParticleType { SPARK, NUM_PARTICLE_TYPES };
+  enum ParticleType { SPARK, CORONA, NUM_PARTICLE_TYPES };
 
   static void init();
   static void term();
@@ -27,7 +27,10 @@ public:
   void render(ew::RenderContext* context);
   void update(float const delta);
 
-  void addParticle(ParticleType const type, Vec2D const& position, Vec2D const& velocity, float const life);
+  void addParticle(ParticleType const type, Vec2D const& position, Vec2D const& velocity, float const life,
+                   float const angle = 0, float const angleVelocity = 0,
+                   float const scale = 1, float const scalingSpeed = 0,
+                   float const opacity = 1, float const opacitySpeed = 0);
 
 private:
   struct Particle
@@ -39,6 +42,12 @@ private:
     glhckObject* o;
     ParticleType type;
     Vec2D velocity;
+    float angle;
+    float angularVelocity;
+    float scale;
+    float scalingSpeed;
+    float opacity;
+    float opacitySpeed;
     float life;
   };
 

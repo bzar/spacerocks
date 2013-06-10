@@ -171,14 +171,16 @@ void Asteroid::collide(ew::Collidable const* other) {
         {
           float pLife = randFloat(0.1, 0.2);
           float speed = randFloat(120, 160);
+          float scale = randFloat(1, 4);
           Vec2D dev = hitNormal.scale(randFloat(-100, 100));
           Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
-          gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife);
+          gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife, 0, 1, 1, scale, 1, -1);
         }
         hitSound.play();
       }
       else
       {
+        gameWorld->particleEngine->addParticle(ParticleEngine::CORONA, position, {0, 0}, 1, 0, 0, (size+1)/4.0f, 0, 0.1, -0.1);
         die();
       }
 
