@@ -56,6 +56,11 @@ int Sound::play(float distance, int position, int loops)
     return channel;
 }
 
+int Sound::stop()
+{
+  Mix_HaltChannel(channel);
+}
+
 int Sound::fadeOut(int durationMs)
 {
   return Mix_FadeOutChannel(channel, durationMs);

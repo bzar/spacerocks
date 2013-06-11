@@ -19,6 +19,7 @@ public:
     void load(const std::string& filename);
     bool loaded() const;
     int play(float distance = 0.0f, int position = 0, int loops = 0);
+    int stop();
     int fadeOut(int durationMs);
 private:
     int channel;

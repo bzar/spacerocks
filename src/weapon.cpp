@@ -76,13 +76,14 @@ void BeamWeapon::shoot(Vec2D const& position, Vec2D const& direction)
   if(beam == nullptr)
   {
     beam = new Beam(world, position, beamVector);
+    sound.stop();
+    sound.play(lerp(0.0, 0.1, maxLength * (level - 1) / (levelLength() * 8.0)), 0, -1);
   }
   else
   {
     beam->setBasePosition(position);
     beam->setPositionDelta(beamVector);
   }
-  sound.play(lerp(0.8, 0.1, maxLength * (level - 1) / (levelLength() * 8.0)), 0, -1);
 }
 
 void BeamWeapon::stopShooting()
