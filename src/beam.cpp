@@ -36,8 +36,6 @@ Beam::Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDel
   glhckObjectAddChild(tip, tipGlow);
   glhckObjectParentAffection(oGlow, GLHCK_AFFECT_TRANSLATION|GLHCK_AFFECT_ROTATION|GLHCK_AFFECT_SCALING);
   glhckObjectParentAffection(tipGlow, GLHCK_AFFECT_TRANSLATION|GLHCK_AFFECT_ROTATION|GLHCK_AFFECT_SCALING);
-  glhckMaterialDiffuseb(glhckObjectGetMaterial(oGlow), 255, 255, 255, 64);
-  glhckMaterialDiffuseb(glhckObjectGetMaterial(tipGlow), 255, 255, 255, 64);
   glhckMaterialBlendFunc(glhckObjectGetMaterial(oGlow), GLHCK_SRC_ALPHA, GLHCK_ONE);
   glhckMaterialBlendFunc(glhckObjectGetMaterial(tipGlow), GLHCK_SRC_ALPHA, GLHCK_ONE);
 
@@ -61,18 +59,23 @@ Beam::~Beam()
 
 void Beam::render(ew::RenderContext* context)
 {
-  glhckObjectRender(oGlow);
-  glhckObjectRender(tipGlow);
   glhckObjectRender(o);
   glhckObjectRender(tip);
+  glhckObjectRender(oGlow);
+  glhckObjectRender(tipGlow);
 }
 
 void Beam::update(float const delta)
 {
   glowPhase += delta;
-  float const glowScale = 0.7 * (sin(glowPhase*5) + 1)/2 + 1.1;
+  float const phaseSpeed = 5;
+  float const phase = (sin(glowPhase*phaseSpeed) + 1)/2;
+  float const glowScale = lerp(1.1, 1.8, phase);
+  float const glowOpacity = lerp(0.1, 0.5, phase);
   glhckObjectScalef(oGlow, glowScale, 1, 1);
   glhckObjectScalef(tipGlow, glowScale, glowScale, 1);
+  glhckMaterialDiffuseb(glhckObjectGetMaterial(oGlow), 255, 255, 255, 255 * glowOpacity);
+  glhckMaterialDiffuseb(glhckObjectGetMaterial(tipGlow), 255, 255, 255, 255 * glowOpacity);
 
   if(gameWorld->getPaused())
     return;
