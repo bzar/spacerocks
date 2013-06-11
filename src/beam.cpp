@@ -93,6 +93,8 @@ void Beam::update(float const delta)
 
   hitDelay = hitDelay > 0 ? hitDelay - delta : 0;
   recovering = hitDelay > 0;
+
+  shape.p2 = nextEndPoint;
 }
 
 LineShape const* Beam::getShape() const
@@ -134,7 +136,7 @@ void Beam::setBasePosition(Vec2D const& basePosition)
 
 void Beam::setPositionDelta(Vec2D const& positionDelta)
 {
-  shape.p2 = shape.p1 + positionDelta;
+  nextEndPoint = shape.p1 + positionDelta;
 }
 
 Vec2D Beam::getBasePosition() const

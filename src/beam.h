@@ -45,6 +45,7 @@ private:
   glhckObject* tip;
   glhckObject* oGlow;
   glhckObject* tipGlow;
+  Vec2D nextEndPoint;
   float hitDelay;
   bool recovering;
   float glowPhase;
