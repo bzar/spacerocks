@@ -22,13 +22,14 @@
 int const GameWorld::UFO_SCORE_INTERVAL_MIN = 400;
 int const GameWorld::UFO_SCORE_INTERVAL_MAX = 800;
 float const GameWorld::DEATH_DELAY = 3.0f;
+float const GameWorld::LEVEL_END_DELAY = 3.0f;
 float const GameWorld::UFO_DELAY = 2.0f;
 
 GameWorld::GameWorld(ew::Engine* engine) :
   ew::World(), ew::RenderableWorld(), ew::UpdatableWorld(), ew::CollidableWorld(),
   ew::ControllableWorld(),
   player(), level(),
-  levelStartDelay(0), deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
+  levelStartDelay(0), levelEndDelay(0), deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
   particleEngine(new ParticleEngine(this)), engine(engine),
   hud(new Hud(this)), paused(false)
 {
@@ -73,6 +74,8 @@ void GameWorld::update(float const delta)
     }
   }
 
+  bool victory = ufoDelay <= 0 && player.ship != nullptr;
+
   if(ufoDelay > 0)
   {
     ufoDelay -= delta;
@@ -95,8 +98,6 @@ void GameWorld::update(float const delta)
     ufoDelay = UFO_DELAY;
   }
 
-  bool victory = ufoDelay <= 0 && player.ship != nullptr;
-
   for(ew::Entity* e : entities)
   {
     victory = victory
@@ -108,8 +109,18 @@ void GameWorld::update(float const delta)
 
   if(victory)
   {
-    nextLevel();
+    if (levelEndDelay > 0) {
+      levelEndDelay -= delta;
+      if(levelEndDelay <= 0) {
+        nextLevel();
+        levelEndDelay = 0;
+      }
+    } else {
+      levelEndDelay = LEVEL_END_DELAY;
+      new GameNotification(this, "Cleared!", 40, LEVEL_END_DELAY, Vec2D{0, 0});
+    }
   }
+
 }
 
 void GameWorld::nextLevel()
@@ -207,7 +218,7 @@ int GameWorld::getUfoInterval()
 
 void GameWorld::setPaused(bool value)
 {
-  paused = value;
+  paused = value && levelEndDelay <= 0 && levelStartDelay <= 0;
 }
 
 bool GameWorld::getPaused() const

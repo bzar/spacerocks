@@ -62,11 +62,13 @@ private:
   static int const UFO_SCORE_INTERVAL_MIN;
   static int const UFO_SCORE_INTERVAL_MAX;
   static float const DEATH_DELAY;
+  static float const LEVEL_END_DELAY;
   static float const UFO_DELAY;
 
   static int getUfoInterval();
 
   float levelStartDelay;
+  float levelEndDelay;
   float deathDelay;
   float ufoDelay;
   int nextUfoScore;
