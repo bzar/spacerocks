@@ -4,7 +4,6 @@ project(spacerocks)
 find_package(SDL REQUIRED)
 find_package(SDL_mixer REQUIRED)
 
-SET(GLHCK_BUILD_EXAMPLES 0 CACHE BOOL "Don't build GLhck examples")
 add_subdirectory(lib)
 
 include_directories(

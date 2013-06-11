@@ -1,4 +1,4 @@
-#include "GL/glfw3.h"
+#include "GLFW/glfw3.h"
 #include "glhck/glhck.h"
 
 #include "ew/engine.h"

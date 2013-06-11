@@ -7,9 +7,8 @@
 #include "gamenotification.h"
 #include "particleengine.h"
 #include "util/util.h"
-#include <iostream>
 
-#include "GL/glfw3.h"
+#include "GLFW/glfw3.h"
 
 std::vector<std::string> const Ship::IMAGES = {
   "img/ship-rapid.png", "img/ship-rapid_accelerating.png",

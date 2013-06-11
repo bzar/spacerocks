@@ -1,5 +1,5 @@
 #include "gameoverstate.h"
-#include "GL/glfw3.h"
+#include "GLFW/glfw3.h"
 #include "states.h"
 #include "gamestate.h"
 #include "text.h"
@@ -70,7 +70,7 @@ void GameOverState::Controller::control(ew::ControlContext *context)
 
   }
 
-  if(context->keyPush(GLFW_KEY_ESC))
+  if(context->keyPush(GLFW_KEY_ESCAPE))
   {
     state->engine->quit();
   }

@@ -1,6 +1,7 @@
 #include "gamephase.h"
-#include "GL/glfw3.h"
+#include "GLFW/glfw3.h"
 #include "hud.h"
+#include "states.h"
 
 GamePhase::GamePhase(GameWorld* world, ew::Engine* engine) :
   world(world), engine(engine)
@@ -10,9 +11,9 @@ GamePhase::GamePhase(GameWorld* world, ew::Engine* engine) :
 
 void GamePhase::execute(float const delta)
 {
-  if(engine->getControlContext()->keyDown(GLFW_KEY_ESCAPE))
+  if(engine->getControlContext()->keyPush(GLFW_KEY_ESCAPE))
   {
-    engine->quit();
+    engine->setState(States::TITLE);
   }
   
   if(engine->getControlContext()->keyPush(GLFW_KEY_P))

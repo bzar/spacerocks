@@ -1,5 +1,5 @@
 #include "highscorestate.h"
-#include "GL/glfw3.h"
+#include "GLFW/glfw3.h"
 #include "states.h"
 
 HighScoreState::HighScoreState(ew::Engine *engine) :
@@ -42,7 +42,7 @@ void HighScoreState::Controller::control(ew::ControlContext *context)
     state->engine->setState(States::TITLE);
   }
 
-  if(context->keyPush(GLFW_KEY_ESC))
+  if(context->keyPush(GLFW_KEY_ESCAPE))
   {
     state->engine->quit();
   }
