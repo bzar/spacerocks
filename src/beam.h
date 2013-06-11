@@ -43,8 +43,11 @@ private:
   GameWorld* gameWorld;
   glhckObject* o;
   glhckObject* tip;
+  glhckObject* oGlow;
+  glhckObject* tipGlow;
   float hitDelay;
   bool recovering;
+  float glowPhase;
   LineShape shape;
 };
 

@@ -24,10 +24,22 @@ void Beam::term()
 
 Beam::Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDelta) :
   ew::Entity(world), ew::Renderable(world, -1), ew::Updatable(world), ew::Collidable(world),
-  gameWorld(world), o(nullptr), tip(nullptr), hitDelay(0), recovering(false), shape({0, 0}, {0, 0}, 4)
+  gameWorld(world), o(nullptr), tip(nullptr), oGlow(nullptr), tipGlow(nullptr), hitDelay(0),
+  recovering(false), glowPhase(0), shape({0, 0}, {0, 0}, 4)
 {
   o = glhckSpriteNew(TEXTURE, 8, 256);
   tip = glhckSpriteNew(TIP_TEXTURE, 8, 8);
+
+  oGlow = glhckSpriteNew(TEXTURE, 8, 256);
+  tipGlow = glhckSpriteNew(TIP_TEXTURE, 8, 8);
+  glhckObjectAddChild(o, oGlow);
+  glhckObjectAddChild(tip, tipGlow);
+  glhckObjectParentAffection(oGlow, GLHCK_AFFECT_TRANSLATION|GLHCK_AFFECT_ROTATION|GLHCK_AFFECT_SCALING);
+  glhckObjectParentAffection(tipGlow, GLHCK_AFFECT_TRANSLATION|GLHCK_AFFECT_ROTATION|GLHCK_AFFECT_SCALING);
+  glhckMaterialDiffuseb(glhckObjectGetMaterial(oGlow), 255, 255, 255, 64);
+  glhckMaterialDiffuseb(glhckObjectGetMaterial(tipGlow), 255, 255, 255, 64);
+  glhckMaterialBlendFunc(glhckObjectGetMaterial(oGlow), GLHCK_SRC_ALPHA, GLHCK_ONE);
+  glhckMaterialBlendFunc(glhckObjectGetMaterial(tipGlow), GLHCK_SRC_ALPHA, GLHCK_ONE);
 
   shape.p1 = basePosition;
   shape.p2 = basePosition + positionDelta;
@@ -49,12 +61,19 @@ Beam::~Beam()
 
 void Beam::render(ew::RenderContext* context)
 {
+  glhckObjectRender(oGlow);
+  glhckObjectRender(tipGlow);
   glhckObjectRender(o);
   glhckObjectRender(tip);
 }
 
 void Beam::update(float const delta)
 {
+  glowPhase += delta;
+  float const glowScale = 0.7 * (sin(glowPhase*5) + 1)/2 + 1.1;
+  glhckObjectScalef(oGlow, glowScale, 1, 1);
+  glhckObjectScalef(tipGlow, glowScale, glowScale, 1);
+
   if(gameWorld->getPaused())
     return;
 
