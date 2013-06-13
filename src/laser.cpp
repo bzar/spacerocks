@@ -18,11 +18,16 @@ void Laser::term()
 
 Laser::Laser(GameWorld* world, float const life, Vec2D const& position, Vec2D const& velocity) :
   Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
-  gameWorld(world), o(0), life(life), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
+  gameWorld(world), o(0), oGlow(nullptr), life(life), glowPhase(0), v(velocity), shape({0, 0}, {0, 0}, RADIUS)
 {
   o = glhckSpriteNew(TEXTURE, 4, 16);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle() - 0.25) * 360);
+
+  oGlow = glhckSpriteNew(TEXTURE, 4, 16);
+  glhckObjectAddChild(o, oGlow);
+  glhckObjectParentAffection(oGlow, GLHCK_AFFECT_TRANSLATION|GLHCK_AFFECT_ROTATION|GLHCK_AFFECT_SCALING);
+  glhckMaterialBlendFunc(glhckObjectGetMaterial(oGlow), GLHCK_SRC_ALPHA, GLHCK_ONE);
 
   Vec2D r = v.unit().scale(LENGTH/2.0f - RADIUS);
   shape.p1 = position + r;
@@ -32,15 +37,25 @@ Laser::Laser(GameWorld* world, float const life, Vec2D const& position, Vec2D co
 Laser::~Laser()
 {
   glhckObjectFree(o);
+  glhckObjectFree(oGlow);
 }
 
 void Laser::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
+  glhckObjectRender(oGlow);
 }
 
 void Laser::update(float const delta)
 {
+  glowPhase += delta;
+  float const phaseSpeed = 15;
+  float const phase = (sin(glowPhase*phaseSpeed) + 1)/2;
+  float const glowScale = lerp(0.1, 0.8, phase);
+  float const glowOpacity = lerp(0.1, 0.5, phase);
+  glhckObjectScalef(oGlow, glowScale + 1, glowScale * 0.25 + 1, 1);
+  glhckMaterialDiffuseb(glhckObjectGetMaterial(oGlow), 255, 255, 255, 255 * glowOpacity);
+
   if(gameWorld->getPaused())
     return;
 

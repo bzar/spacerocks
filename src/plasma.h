@@ -37,9 +37,11 @@ private:
 
   GameWorld* gameWorld;
   glhckObject* o;
+  glhckObject* oGlow;
   float power;
   float nextPower;
   float life;
+  float glowPhase;
   Vec2D v;
   CircleShape shape;
 };

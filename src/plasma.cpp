@@ -19,9 +19,15 @@ void Plasma::term()
 Plasma::Plasma(GameWorld* world, float const life, float const power,
                Vec2D const& position, Vec2D const& velocity) :
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
-  gameWorld(world), o(0), power(power), nextPower(power), life(life), v(velocity), shape(position, getRadius())
+  gameWorld(world), o(nullptr), oGlow(nullptr), power(power), nextPower(power), life(life), glowPhase(0), v(velocity), shape(position, getRadius())
 {
   o = glhckSpriteNew(TEXTURE, 2, 2);
+
+  oGlow = glhckSpriteNew(TEXTURE, 2, 2);
+  glhckObjectAddChild(o, oGlow);
+  glhckObjectParentAffection(oGlow, GLHCK_AFFECT_TRANSLATION|GLHCK_AFFECT_ROTATION|GLHCK_AFFECT_SCALING);
+  glhckMaterialBlendFunc(glhckObjectGetMaterial(oGlow), GLHCK_SRC_ALPHA, GLHCK_ONE);
+
   glhckObjectScalef(o, getRadius(), getRadius(), 1);
   glhckObjectPositionf(o, position.x, position.y, 0);
   glhckObjectRotationf(o, 0, 0, (v.angle()) * 360);
@@ -30,15 +36,25 @@ Plasma::Plasma(GameWorld* world, float const life, float const power,
 Plasma::~Plasma()
 {
   glhckObjectFree(o);
+  glhckObjectFree(oGlow);
 }
 
 void Plasma::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
+  glhckObjectRender(oGlow);
 }
 
 void Plasma::update(float delta)
 {
+  glowPhase += delta;
+  float const phaseSpeed = 10;
+  float const phase = (sin(glowPhase*phaseSpeed) + 1)/2;
+  float const glowScale = lerp(1.2, 1.3, phase);
+  float const glowOpacity = lerp(0.1, 0.5, phase);
+  glhckObjectScalef(oGlow, glowScale, glowScale, 1);
+  glhckMaterialDiffuseb(glhckObjectGetMaterial(oGlow), 255, 255, 255, 255 * glowOpacity);
+
   if(gameWorld->getPaused())
     return;
 
