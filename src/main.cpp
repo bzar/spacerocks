@@ -48,7 +48,7 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
 
-  if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_OPENGL))
+  if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_AUTO))
   {
     std::cerr << "GLHCK display create error" << std::endl;
     return EXIT_FAILURE;
