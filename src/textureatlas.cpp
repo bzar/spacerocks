@@ -16,7 +16,7 @@ TextureAtlas::TextureAtlas(std::vector<std::string> const& filenames) :
   glhckAtlas *atlas = glhckAtlasNew();
   for(std::string const filename : filenames)
   {
-    glhckTexture* tex = glhckTextureNewFromFile(filename.data(), nullptr, nullptr);
+    glhckTexture* tex = glhckTextureNewFromFile(filename.data(), nullptr, glhckTextureDefaultSpriteParameters());
     glhckAtlasInsertTexture(atlas, tex);
     glhckTextureFree(tex);
     transforms.push_back(TransformData());
