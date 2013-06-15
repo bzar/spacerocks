@@ -41,7 +41,8 @@ TitleState::Controller::Controller(TitleState *state) :
 
 void TitleState::Controller::control(ew::ControlContext *context)
 {
-  if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER))
+  if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER) ||
+     context->keyPush(GLFW_KEY_END) || context->keyPush(GLFW_KEY_LEFT_ALT))
   {
     state->music.stop();
     state->engine->setState(States::GAME);
