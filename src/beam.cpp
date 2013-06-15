@@ -12,8 +12,8 @@ glhckTexture* Beam::TIP_TEXTURE = nullptr;
 
 void Beam::init()
 {
-  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, nullptr);
-  TIP_TEXTURE = glhckTextureNewFromFile(TIP_IMAGE.data(), nullptr, nullptr);
+  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, glhckTextureDefaultSpriteParameters());
+  TIP_TEXTURE = glhckTextureNewFromFile(TIP_IMAGE.data(), nullptr, glhckTextureDefaultSpriteParameters());
 }
 
 void Beam::term()
