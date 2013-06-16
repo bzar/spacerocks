@@ -4,6 +4,13 @@ project(spacerocks)
 find_package(SDL REQUIRED)
 find_package(SDL_mixer REQUIRED)
 
+# Disable GLHCK features
+SET(GLHCK_IMPORT_OPENCTM OFF CACHE BOOL "Disable OpenCTM")
+SET(GLHCK_IMPORT_MMD OFF CACHE BOOL "Disable MMD")
+SET(GLHCK_IMPORT_BMP OFF CACHE BOOL "Disable BMP")
+SET(GLHCK_IMPORT_TGA OFF CACHE BOOL "Disable TGA")
+SET(GLHCK_IMPORT_JPEG OFF CACHE BOOL "Disable JPEG")
+
 add_subdirectory(lib)
 
 include_directories(
