@@ -4,6 +4,13 @@ project(spacerocks)
 find_package(SDL REQUIRED)
 find_package(SDL_mixer REQUIRED)
 
+# Disable GLHCK features
+SET(GLHCK_IMPORT_OPENCTM OFF CACHE BOOL "Disable OpenCTM")
+SET(GLHCK_IMPORT_MMD OFF CACHE BOOL "Disable MMD")
+SET(GLHCK_IMPORT_BMP OFF CACHE BOOL "Disable BMP")
+SET(GLHCK_IMPORT_TGA OFF CACHE BOOL "Disable TGA")
+SET(GLHCK_IMPORT_JPEG OFF CACHE BOOL "Disable JPEG")
+
 add_subdirectory(lib)
 
 include_directories(
@@ -15,11 +22,10 @@ include_directories(
 )
 
 file(GLOB SPACEROCKS_SOURCES src/*.cpp src/ew/*.cpp src/util/*.cpp)
-add_definitions(-DGLHCK_KAZMATH_FLOAT -DUSE_SINGLE_PRECISION)
 list(APPEND CMAKE_CXX_FLAGS -std=c++0x)
 add_executable(spacerocks ${SPACEROCKS_SOURCES})
 
-target_link_libraries(spacerocks engineworks glfw glhck ${GLFW_LIBRARIES} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
+target_link_libraries(spacerocks engineworks glfw glhck ${GLHCK_LIBRARIES} ${GLFW_LIBRARIES} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
 
 install(TARGETS spacerocks DESTINATION .)
 install(DIRECTORY img DESTINATION .)

@@ -42,11 +42,13 @@ void GameOverState::Controller::control(ew::ControlContext *context)
 {
   if(state->world.enteringHighScore())
   {
-    if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER) || context->keyPush(GLFW_KEY_RIGHT))
+    if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER) ||
+       context->keyPush(GLFW_KEY_RIGHT) || context->keyPush(GLFW_KEY_END))
     {
       state->world.enterHighScoreEntryLetter();
     }
-    if(context->keyPush(GLFW_KEY_BACKSPACE) || context->keyPush(GLFW_KEY_LEFT))
+    if(context->keyPush(GLFW_KEY_BACKSPACE) || context->keyPush(GLFW_KEY_LEFT) ||
+       context->keyPush(GLFW_KEY_PAGE_DOWN))
     {
       state->world.eraseHighScoreEntryLetter();
     }
@@ -63,7 +65,7 @@ void GameOverState::Controller::control(ew::ControlContext *context)
   }
   else
   {
-    if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER))
+    if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER) || context->keyPush(GLFW_KEY_END))
     {
       state->engine->setState(States::HIGHSCORES);
     }

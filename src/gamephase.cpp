@@ -15,8 +15,8 @@ void GamePhase::execute(float const delta)
   {
     engine->setState(States::TITLE);
   }
-  
-  if(engine->getControlContext()->keyPush(GLFW_KEY_P))
+
+  if(engine->getControlContext()->keyPush(GLFW_KEY_P) || engine->getControlContext()->keyPush(GLFW_KEY_LEFT_ALT))
   {
     world->setPaused(!world->getPaused());
   }
