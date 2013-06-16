@@ -8,7 +8,7 @@ glhckTexture* Shot::TEXTURE = nullptr;
 
 void Shot::init()
 {
-  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, nullptr);
+  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, glhckTextureDefaultSpriteParameters());
 }
 
 void Shot::term()

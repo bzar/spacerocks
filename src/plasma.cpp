@@ -8,7 +8,7 @@ glhckTexture* Plasma::TEXTURE = nullptr;
 
 void Plasma::init()
 {
-  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, nullptr);
+  TEXTURE = glhckTextureNewFromFile(IMAGE.data(), nullptr, glhckTextureDefaultSpriteParameters());
 }
 
 void Plasma::term()

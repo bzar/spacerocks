@@ -28,7 +28,18 @@ int main(int argc, char** argv)
   if (!glfwInit())
     return EXIT_FAILURE;
 
-  glfwWindowHint(GLFW_DEPTH_BITS, 24);
+  glhckCompileFeatures features;
+  glhckGetCompileFeatures(&features);
+  if (features.render.glesv1 || features.render.glesv2) {
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+    glfwWindowHint(GLFW_DEPTH_BITS, 16);
+  }
+  if (features.render.glesv2) {
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+  }
+  if (features.render.opengl) {
+    glfwWindowHint(GLFW_DEPTH_BITS, 24);
+  }
   GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Space Rocks!", nullptr, nullptr);
   glfwMakeContextCurrent(window);
 
