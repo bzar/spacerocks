@@ -18,7 +18,7 @@ file(GLOB SPACEROCKS_SOURCES src/*.cpp src/ew/*.cpp src/util/*.cpp)
 list(APPEND CMAKE_CXX_FLAGS -std=c++0x)
 add_executable(spacerocks ${SPACEROCKS_SOURCES})
 
-target_link_libraries(spacerocks engineworks glfw glhck ${GLFW_LIBRARIES} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
+target_link_libraries(spacerocks engineworks glfw glhck ${GLHCK_LIBRARIES} ${GLFW_LIBRARIES} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
 
 install(TARGETS spacerocks DESTINATION .)
 install(DIRECTORY img DESTINATION .)
