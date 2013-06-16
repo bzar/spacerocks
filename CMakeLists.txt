@@ -15,7 +15,6 @@ include_directories(
 )
 
 file(GLOB SPACEROCKS_SOURCES src/*.cpp src/ew/*.cpp src/util/*.cpp)
-add_definitions(-DGLHCK_KAZMATH_FLOAT -DUSE_SINGLE_PRECISION)
 list(APPEND CMAKE_CXX_FLAGS -std=c++0x)
 add_executable(spacerocks ${SPACEROCKS_SOURCES})
 
