@@ -1,5 +1,6 @@
 #include "gamephase.h"
 #include "GLFW/glfw3.h"
+#include "glhck/glhck.h"
 #include "hud.h"
 #include "states.h"
 
@@ -24,6 +25,14 @@ void GamePhase::execute(float const delta)
   if(engine->getControlContext()->keyPush(GLFW_KEY_I))
   {
     world->hud->toggleShowFPS();
+  }
+
+  if(engine->getControlContext()->keyPush(GLFW_KEY_O)) {
+    if(glhckRenderGetPass() & GLHCK_PASS_OVERDRAW) {
+      glhckRenderPass(glhckRenderPassDefaults() & ~GLHCK_PASS_DEPTH);
+    } else {
+      glhckRenderPass(GLHCK_PASS_OVERDRAW);
+    }
   }
 
   world->update(delta);
