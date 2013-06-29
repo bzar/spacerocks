@@ -23,6 +23,43 @@ void windowCloseCallback(GLFWwindow* window);
 void windowResizeCallback(GLFWwindow* window, int width, int height);
 int gameloop(GLFWwindow* window);
 
+#ifdef PANDORA
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/fb.h>
+#ifndef FBIO_WAITFORVSYNC
+#define FBIO_WAITFORVSYNC _IOW('F', 0x20, __u32)
+#endif
+
+// Custom render context to include pandora's vsync
+class PandoraGlhckGLFWRenderContext : public GlhckGLFWRenderContext
+{
+public:
+  PandoraGlhckGLFWRenderContext(GLFWwindow* window) : GlhckGLFWRenderContext(window)
+  {
+    fbdev = open ("/dev/fb0", O_RDONLY /* O_RDWR */ );
+    if ( fbdev < 0 )
+    {
+      std::cerr << "EGL Couldn't open /dev/fb0 for vsync" << std::endl;
+    }
+  }
+
+  virtual void postRender()
+  {
+#ifdef VSYNC
+    int arg = 0;
+    ioctl( fbdev, FBIO_WAITFORVSYNC, &arg );
+#endif
+    GlhckGLFWRenderContext::postRender();
+  }
+
+private:
+  int fbdev = -1;
+};
+#endif
+
+
 int main(int argc, char** argv)
 {
   if (!glfwInit())
@@ -50,7 +87,10 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
 
+#ifdef VSYNC
   glfwSwapInterval(1);
+#endif
+
   glfwSetWindowCloseCallback(window, windowCloseCallback);
 
   if(!glhckContextCreate(argc, argv))
@@ -107,7 +147,11 @@ int gameloop(GLFWwindow* window)
   glhckRenderFlip(0);
 
   GLFWControlContext controlContext(window);
+#ifdef PANDORA
+  PandoraGlhckGLFWRenderContext renderContext(window);
+#else
   GlhckGLFWRenderContext renderContext(window);
+#endif
   GLFWTimeContext timeContext;
   ew::Engine engine(&controlContext, &renderContext, &timeContext);
 

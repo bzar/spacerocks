@@ -183,7 +183,7 @@ void Ship::control(ew::ControlContext* context)
   turnLeft(context->keyDown(GLFW_KEY_LEFT));
   turnRight(context->keyDown(GLFW_KEY_RIGHT));
   accelerate(context->keyDown(GLFW_KEY_UP) || context->keyDown(GLFW_KEY_PAGE_UP) || context->keyDown(GLFW_KEY_PAGE_DOWN));
-  shoot(context->keyDown(GLFW_KEY_SPACE) ||context->keyDown(GLFW_KEY_END)||context->keyDown(GLFW_KEY_INSERT));
+  shoot(context->keyDown(GLFW_KEY_SPACE) ||context->keyDown(GLFW_KEY_END)||context->keyDown(GLFW_KEY_HOME));
 
   if(context->keyPush(GLFW_KEY_Z) || context->keyPush(GLFW_KEY_RIGHT_SHIFT))
     prevWeapon();

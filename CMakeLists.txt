@@ -4,6 +4,18 @@ project(spacerocks)
 find_package(SDL REQUIRED)
 find_package(SDL_mixer REQUIRED)
 
+
+OPTION(PANDORA "Build with Pandora specific hacks" OFF)
+OPTION(VSYNC "Build vsync support" ON)
+
+IF (PANDORA)
+    ADD_DEFINITIONS(-DPANDORA)
+ENDIF (PANDORA)
+
+IF (VSYNC)
+    ADD_DEFINITIONS(-DVSYNC)
+ENDIF (VSYNC)
+
 # Disable GLHCK features
 SET(GLHCK_IMPORT_OPENCTM OFF CACHE BOOL "Disable OpenCTM")
 SET(GLHCK_IMPORT_MMD OFF CACHE BOOL "Disable MMD")
