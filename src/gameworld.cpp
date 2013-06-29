@@ -231,6 +231,7 @@ void GameWorld::reset()
   level.n = 0;
   player.lives = 3;
   player.score = 0;
+  player.cheater = false;
 
   if(player.ship != nullptr)
     delete player.ship;

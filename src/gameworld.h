@@ -36,6 +36,7 @@ public:
     Ship* ship;
     int lives;
     int score;
+    bool cheater;
   };
 
   GameWorld(ew::Engine* engine);

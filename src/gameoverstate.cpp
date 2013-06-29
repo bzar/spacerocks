@@ -20,7 +20,7 @@ void GameOverState::enter()
 {
   GameState* gameState = static_cast<GameState*>(engine->getState(States::GAME));
   GameWorld* gameWorld = gameState->getGameWorld();
-  world.setScore(gameWorld->player.score);
+  world.setScore(gameWorld->player.cheater ? -1 : gameWorld->player.score);
 }
 
 

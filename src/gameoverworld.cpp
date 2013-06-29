@@ -22,6 +22,19 @@ GameOverWorld::GameOverWorld(ew::Engine *engine) :
 
 void GameOverWorld::setScore(const int newScore)
 {
+  // No high scores for cheaters
+  if(newScore < 0)
+  {
+    scoreText->setContent("Cheater!");
+    scoreText->refresh();
+    for(HighScoreEntryLetter* h : highScoreEntryLetters)
+    {
+      h->setVisible(false);
+    }
+    focusedHighScoreEntryLetter = -1;
+    return;
+  }
+
   score = newScore;
 
   std::ostringstream oss;

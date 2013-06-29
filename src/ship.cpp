@@ -182,8 +182,8 @@ void Ship::control(ew::ControlContext* context)
 
   turnLeft(context->keyDown(GLFW_KEY_LEFT));
   turnRight(context->keyDown(GLFW_KEY_RIGHT));
-  accelerate(context->keyDown(GLFW_KEY_UP));
-  shoot(context->keyDown(GLFW_KEY_SPACE)||context->keyDown(GLFW_KEY_END));
+  accelerate(context->keyDown(GLFW_KEY_UP) || context->keyDown(GLFW_KEY_PAGE_UP) || context->keyDown(GLFW_KEY_PAGE_DOWN));
+  shoot(context->keyDown(GLFW_KEY_SPACE) ||context->keyDown(GLFW_KEY_END)||context->keyDown(GLFW_KEY_INSERT));
 
   if(context->keyPush(GLFW_KEY_Z) || context->keyPush(GLFW_KEY_RIGHT_SHIFT))
     prevWeapon();
@@ -191,16 +191,32 @@ void Ship::control(ew::ControlContext* context)
   if(context->keyPush(GLFW_KEY_X) || context->keyPush(GLFW_KEY_RIGHT_CONTROL))
     nextWeapon();
 
+  // Cheats
   if(context->keyPush(GLFW_KEY_F1))
+  {
     increaseLaserLevel();
+    gameWorld->player.cheater = true;
+  }
   if(context->keyPush(GLFW_KEY_F2))
+  {
     increaseSpreadLevel();
+    gameWorld->player.cheater = true;
+  }
   if(context->keyPush(GLFW_KEY_F3))
+  {
     increaseBeamLevel();
+    gameWorld->player.cheater = true;
+  }
   if(context->keyPush(GLFW_KEY_F4))
+  {
     increasePlasmaLevel();
+    gameWorld->player.cheater = true;
+  }
   if(context->keyPush(GLFW_KEY_F5))
+  {
     shields += 1;
+    gameWorld->player.cheater = true;
+  }
 }
 
 bool Ship::alive() const
