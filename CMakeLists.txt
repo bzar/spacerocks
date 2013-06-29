@@ -7,6 +7,7 @@ find_package(SDL_mixer REQUIRED)
 
 OPTION(PANDORA "Build with Pandora specific hacks" OFF)
 OPTION(VSYNC "Build vsync support" ON)
+OPTION(FULLSCREEN "Fullscreen build" OFF)
 
 IF (PANDORA)
     ADD_DEFINITIONS(-DPANDORA)
@@ -14,6 +15,10 @@ ENDIF (PANDORA)
 
 IF (VSYNC)
     ADD_DEFINITIONS(-DVSYNC)
+ENDIF (VSYNC)
+
+IF (FULLSCREEN)
+    ADD_DEFINITIONS(-DFULLSCREEN)
 ENDIF (VSYNC)
 
 # Disable GLHCK features

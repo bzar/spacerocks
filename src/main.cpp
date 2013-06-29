@@ -77,7 +77,13 @@ int main(int argc, char** argv)
   if (features.render.opengl) {
     glfwWindowHint(GLFW_DEPTH_BITS, 24);
   }
-  GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Space Rocks!", nullptr, nullptr);
+
+  GLFWmonitor* monitor = nullptr;
+#ifdef FULLSCREEN
+  int monitors = -1;
+  GLFWmonitor* monitor = glfwGetMonitors(&monitors)[0];
+#endif
+  GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Space Rocks!", monitor, nullptr);
   glfwMakeContextCurrent(window);
 
   if(!window)
