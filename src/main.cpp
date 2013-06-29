@@ -81,7 +81,7 @@ int main(int argc, char** argv)
   GLFWmonitor* monitor = nullptr;
 #ifdef FULLSCREEN
   int monitors = -1;
-  GLFWmonitor* monitor = glfwGetMonitors(&monitors)[0];
+  monitor = glfwGetMonitors(&monitors)[0];
 #endif
   GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Space Rocks!", monitor, nullptr);
   glfwMakeContextCurrent(window);
