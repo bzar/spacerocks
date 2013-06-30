@@ -176,7 +176,7 @@ void Asteroid::collide(ew::Collidable const* other) {
           Vec2D startPos = hitPosition + Vec2D((rand() % 9) - 4, (rand() % 9) - 4);
           gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife, 0, 1, 1, scale, 1, -1);
         }
-        hitSound.play();
+        hitSound.stopAndPlay();
       }
       else
       {
