@@ -1,5 +1,5 @@
 #include "titlestate.h"
-#include "GLFW/glfw3.h"
+#include "keys.h"
 #include "states.h"
 
 TitleState::TitleState(ew::Engine *engine) :
@@ -41,14 +41,13 @@ TitleState::Controller::Controller(TitleState *state) :
 
 void TitleState::Controller::control(ew::ControlContext *context)
 {
-  if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER) ||
-     context->keyPush(GLFW_KEY_END) || context->keyPush(GLFW_KEY_LEFT_ALT))
+  if(actionKeyPush(ACTION_START, context))
   {
     state->music.stop();
     state->engine->setState(States::GAME);
   }
 
-  if(context->keyPush(GLFW_KEY_ESCAPE))
+  if(actionKeyPush(ACTION_EXIT, context))
   {
     state->music.stop();
     state->engine->quit();

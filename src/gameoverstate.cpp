@@ -3,6 +3,7 @@
 #include "states.h"
 #include "gamestate.h"
 #include "text.h"
+#include "keys.h"
 
 GameOverState::GameOverState(ew::Engine *engine) :
   ew::State(engine, &world),
@@ -42,38 +43,31 @@ void GameOverState::Controller::control(ew::ControlContext *context)
 {
   if(state->world.enteringHighScore())
   {
-    if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER) ||
-       context->keyPush(GLFW_KEY_RIGHT) || context->keyPush(GLFW_KEY_END))
+    if(actionKeyPush(ACTION_ENTER_LETTER, context))
     {
       state->world.enterHighScoreEntryLetter();
     }
-    if(context->keyPush(GLFW_KEY_BACKSPACE) || context->keyPush(GLFW_KEY_LEFT) ||
-       context->keyPush(GLFW_KEY_PAGE_DOWN))
+    if(actionKeyPush(ACTION_ERASE_LETTER, context))
     {
       state->world.eraseHighScoreEntryLetter();
     }
 
-    if(context->keyPush(GLFW_KEY_UP))
+    if(actionKeyPush(ACTION_NEXT_LETTER, context))
     {
       state->world.nextHighScoreEntryLetter();
     }
 
-    if(context->keyPush(GLFW_KEY_DOWN))
+    if(actionKeyPush(ACTION_PREV_LETTER, context))
     {
       state->world.prevHighScoreEntryLetter();
     }
   }
   else
   {
-    if(context->keyPush(GLFW_KEY_SPACE) || context->keyPush(GLFW_KEY_ENTER) || context->keyPush(GLFW_KEY_END))
+    if(actionKeyPush(ACTION_START, context))
     {
       state->engine->setState(States::HIGHSCORES);
     }
 
-  }
-
-  if(context->keyPush(GLFW_KEY_ESCAPE))
-  {
-    state->engine->quit();
   }
 }

@@ -1,5 +1,5 @@
 #include "gamephase.h"
-#include "GLFW/glfw3.h"
+#include "keys.h"
 #include "glhck/glhck.h"
 #include "hud.h"
 #include "states.h"
@@ -12,22 +12,23 @@ GamePhase::GamePhase(GameWorld* world, ew::Engine* engine) :
 
 void GamePhase::execute(float const delta)
 {
-  if(engine->getControlContext()->keyPush(GLFW_KEY_ESCAPE))
+  ew::ControlContext* ctx = engine->getControlContext();
+  if(actionKeyPush(ACTION_EXIT, ctx))
   {
     engine->setState(States::TITLE);
   }
 
-  if(engine->getControlContext()->keyPush(GLFW_KEY_P) || engine->getControlContext()->keyPush(GLFW_KEY_LEFT_ALT))
+  if(actionKeyPush(ACTION_PAUSE, ctx))
   {
     world->setPaused(!world->getPaused());
   }
 
-  if(engine->getControlContext()->keyPush(GLFW_KEY_I))
+  if(actionKeyPush(ACTION_SHOW_INFO, ctx))
   {
     world->hud->toggleShowFPS();
   }
 
-  if(engine->getControlContext()->keyPush(GLFW_KEY_O)) {
+  if(actionKeyPush(ACTION_SHOW_OVERDRAW, ctx)) {
     if(glhckRenderGetPass() & GLHCK_PASS_OVERDRAW) {
       glhckRenderPass(glhckRenderPassDefaults() & ~GLHCK_PASS_DEPTH);
     } else {

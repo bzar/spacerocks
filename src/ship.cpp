@@ -7,8 +7,7 @@
 #include "gamenotification.h"
 #include "particleengine.h"
 #include "util/util.h"
-
-#include "GLFW/glfw3.h"
+#include "keys.h"
 
 std::vector<std::string> const Ship::IMAGES = {
   "img/ship-rapid.png", "img/ship-rapid_accelerating.png",
@@ -180,15 +179,15 @@ void Ship::control(ew::ControlContext* context)
   if(gameWorld->getPaused())
     return;
 
-  turnLeft(context->keyDown(GLFW_KEY_LEFT));
-  turnRight(context->keyDown(GLFW_KEY_RIGHT));
-  accelerate(context->keyDown(GLFW_KEY_UP) || context->keyDown(GLFW_KEY_PAGE_UP) || context->keyDown(GLFW_KEY_PAGE_DOWN));
-  shoot(context->keyDown(GLFW_KEY_SPACE) ||context->keyDown(GLFW_KEY_END)||context->keyDown(GLFW_KEY_HOME));
+  turnLeft(actionKeyDown(ACTION_LEFT, context));
+  turnRight(actionKeyDown(ACTION_RIGHT, context));
+  accelerate(actionKeyDown(ACTION_ACCELERATE, context));
+  shoot(actionKeyDown(ACTION_FIRE, context));
 
-  if(context->keyPush(GLFW_KEY_Z) || context->keyPush(GLFW_KEY_RIGHT_SHIFT))
+  if(actionKeyPush(ACTION_PREV_WEAPON, context))
     prevWeapon();
 
-  if(context->keyPush(GLFW_KEY_X) || context->keyPush(GLFW_KEY_RIGHT_CONTROL))
+  if(actionKeyPush(ACTION_NEXT_WEAPON, context))
     nextWeapon();
 
   // Cheats
