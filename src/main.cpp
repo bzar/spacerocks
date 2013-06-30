@@ -65,6 +65,8 @@ int main(int argc, char** argv)
   if (!glfwInit())
     return EXIT_FAILURE;
 
+  glfwDefaultWindowHints();
+
   glhckCompileFeatures features;
   glhckGetCompileFeatures(&features);
   if (features.render.glesv1 || features.render.glesv2) {
