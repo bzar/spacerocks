@@ -1,5 +1,4 @@
 #include "sound.h"
-#include <iostream>
 
 std::unordered_map<int, Sound*> Sound::channelMap = std::unordered_map<int, Sound*>();
 
@@ -58,7 +57,6 @@ int Sound::play(float distance, int position, int loops)
     channel = Mix_PlayChannel(-1, buffer, loops);
     if(channel != -1)
     {
-      std::cout << "reserved channel " << channel << std::endl;
       Mix_SetPosition(channel, position, static_cast<int>(distance * 255));
       channelMap[channel] = this;
     }
@@ -77,10 +75,8 @@ int Sound::stopAndPlay(float distance, int position, int loops)
 {
   if(channelMap[channel] == this)
   {
-    std::cout << "rewinding channel " << channel << std::endl;
     Mix_SetPosition(channel, position, static_cast<int>(distance * 255));
     Mix_PlayChannel(channel, buffer, loops);
-    std::cout << "re-reserving channel " << channel << std::endl;
     channelMap[channel] = this;
     return channel;
   }
@@ -97,7 +93,6 @@ int Sound::fadeOut(int durationMs)
 
 void Sound::unsetChannel(int channel)
 {
-  std::cout << "unsetchannel " << channel << std::endl;
   auto i = channelMap.find(channel);
   if(i != channelMap.end() && i->second != nullptr)
   {
