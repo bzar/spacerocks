@@ -41,6 +41,7 @@ Beam::Beam(GameWorld* world, Vec2D const& basePosition, Vec2D const& positionDel
 
   shape.p1 = basePosition;
   shape.p2 = basePosition + positionDelta;
+  nextEndPoint = shape.p2;
   Vec2D midPoint = basePosition + positionDelta.scale(0.5);
   glhckObjectPositionf(o, midPoint.x, midPoint.y, 0);
   glhckObjectPositionf(tip, shape.p2.x, shape.p2.y, 0);

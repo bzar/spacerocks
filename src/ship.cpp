@@ -359,6 +359,7 @@ void Ship::accelerate(bool const value)
     accelerating = value;
     if(value)
     {
+      engineSound.stop();
       engineSound.play(0, 0, -1);
     }
     else
@@ -485,6 +486,6 @@ void Ship::die()
     w->decreaseLevel();
   }
 
-  destroySound.play();
+  destroySound.stopAndPlay();
 }
 

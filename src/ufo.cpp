@@ -92,7 +92,7 @@ void Ufo::update(float const delta)
     direction.rotatei(randFloat(-spread, spread));
     Vec2D velocity = direction.scale(600);
     UfoLaser* laser = new UfoLaser(gameWorld, 5.0f, getPosition(), velocity);
-    shootSound.play();
+    shootSound.stopAndPlay();
   }
 
   shape.center = getPosition();
@@ -183,7 +183,7 @@ void Ufo::collide(ew::Collidable const* other) {
         gameWorld->particleEngine->addParticle(ParticleEngine::SPARK, startPos, hitDirection.scale(speed) + dev, pLife, 0, 1, 1, scale, 1, -1);
       }
 
-      hitSound.play();
+      hitSound.stopAndPlay();
     }
     else
     {
@@ -196,7 +196,7 @@ void Ufo::collide(ew::Collidable const* other) {
       Explosion* explosion = new Explosion(gameWorld, position);
       gameWorld->particleEngine->addParticle(ParticleEngine::WAVE, position, Vec2D(), 1, 0, 0, 0.1, 3, 0.1, -0.1);
 
-      destroySound.play();
+      destroySound.stopAndPlay();
     }
   }
 }

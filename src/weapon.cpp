@@ -27,7 +27,7 @@ void LaserWeapon::shoot(Vec2D const& position, Vec2D const& direction)
   Laser* laser1 = new Laser(world, 0.25, position + p, velocity);
   Laser* laser2 = new Laser(world, 0.25, position - p, velocity);
   cooldown = lerp(0.3, 0.05, (level - 1)/8.0);
-  sound.play();
+  sound.stopAndPlay();
 }
 
 void LaserWeapon::update(float const delta)
@@ -53,7 +53,7 @@ void SpreadWeapon::shoot(Vec2D const& position, Vec2D const& direction)
     Shot* shot = new Shot(world, 0.20, position, velocity);
   }
   cooldown = cooldown = lerp(0.8, 0.3, (level - 1)/8.0);
-  sound.play();
+  sound.stopAndPlay();
 }
 
 void SpreadWeapon::update(float const delta)
@@ -76,7 +76,6 @@ void BeamWeapon::shoot(Vec2D const& position, Vec2D const& direction)
   if(beam == nullptr)
   {
     beam = new Beam(world, position, beamVector);
-    sound.stop();
     sound.play(lerp(0.0, 0.1, maxLength * (level - 1) / (levelLength() * 8.0)), 0, -1);
   }
   else
@@ -136,7 +135,7 @@ void PlasmaWeapon::shoot(Vec2D const& position, Vec2D const& direction)
   float power = lerp(4, 16, (level - 1)/8.0);
   Plasma* plasma = new Plasma(world, 0.5, power, position, velocity);
   cooldown = lerp(1.2, 0.8, (level - 1)/8.0);
-  sound.play(lerp(0.5, 0,  (level - 1)/8.0));
+  sound.stopAndPlay(lerp(0.5, 0,  (level - 1)/8.0));
 }
 
 void PlasmaWeapon::update(float const delta)

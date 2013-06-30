@@ -238,10 +238,10 @@ void Asteroid::die()
 
   if(size >= MEDIUM)
   {
-    destroySoundBig.play();
+    destroySoundBig.stopAndPlay();
   }
   else
   {
-    destroySoundSmall.play();
+    destroySoundSmall.stopAndPlay();
   }
 }
