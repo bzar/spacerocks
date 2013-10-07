@@ -21,12 +21,13 @@ void TitleSprite::render(ew::RenderContext *context)
 
 void TitleSprite::update(const float delta)
 {
-  now += delta;
+  float d = delta < 0.1 ? delta : 0.1;
+  now += d;
   float progress = max(0, min(1, (now - start) / (finish - start)));
   Vec2D position = from + (to - from) * progress;
   glhckObjectPositionf(o, position.x, position.y, 0);
 
-  if(now - delta < finish && now >= finish)
+  if(now - d < finish && now >= finish)
   {
     finishSound.play();
   }
