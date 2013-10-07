@@ -35,3 +35,13 @@ void HighScoreWorld::enter()
     ++i;
   }
 }
+
+void HighScoreWorld::exit()
+{
+  for(HighScoreEntry* t : texts)
+  {
+    delete t;
+  }
+  texts.clear();
+  glhckMemoryGraph();
+}

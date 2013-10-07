@@ -19,6 +19,7 @@ public:
   HighScoreState(ew::Engine* engine);
 
   void enter();
+  void exit();
 
 private:
   class Controller : public ew::Controllable

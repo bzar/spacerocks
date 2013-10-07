@@ -16,6 +16,7 @@ class HighScoreWorld : public ew::RenderableWorld, public ew::UpdatableWorld,
 public:
   HighScoreWorld(ew::Engine* engine);
   void enter();
+  void exit();
 
 private:
   ew::Engine* engine;

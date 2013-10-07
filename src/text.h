@@ -29,11 +29,12 @@ public:
   void setOpacity(float value);
 
 private:
+  static glhckText* text;
+  static int fontId;
+
   glhckObject* o;
-  glhckText* text;
   std::string content;
   Vec2D centerIn;
-  int fontId;
   int fontSize;
   bool visible;
   float opacity;

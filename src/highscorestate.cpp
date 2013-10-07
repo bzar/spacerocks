@@ -20,6 +20,11 @@ void HighScoreState::enter()
   world.enter();
 }
 
+void HighScoreState::exit()
+{
+  world.exit();
+}
+
 
 void HighScoreState::init()
 {

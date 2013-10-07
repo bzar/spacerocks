@@ -1,20 +1,25 @@
 #include "text.h"
 
+glhckText* Text::text = nullptr;
+int Text::fontId = -1;
+
 Text::Text(ew::RenderableWorld *world, const std::string &content, Vec2D const& centerIn, int zIndex, int layer) :
   ew::Entity(world), ew::Renderable(world, zIndex, layer),
-  o(nullptr), text(nullptr), content(content), centerIn(centerIn), fontId(-1), fontSize(40),
+  o(nullptr), content(content), centerIn(centerIn), fontSize(40),
   visible(true), opacity(1)
 {
-  text = glhckTextNew(512, 512);
-  glhckTextColorb(text, 255, 255, 255, 255);
-  fontId = glhckTextFontNew(text, "fonts/DejaVuSans.ttf");
+  if(text == nullptr)
+  {
+    text = glhckTextNew(512, 512);
+    glhckTextColorb(text, 255, 255, 255, 255);
+    fontId = glhckTextFontNew(text, "fonts/DejaVuSans.ttf");
+  }
   refresh();
 }
 
 Text::~Text()
 {
   glhckObjectFree(o);
-  glhckTextFree(text);
 }
 
 void Text::render(ew::RenderContext *context)
