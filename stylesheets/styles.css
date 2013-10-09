@@ -777,6 +777,7 @@ dt {
 #header nav li.title {
   float: right;
   margin-right: 10px;
+  margin-left: 20px;
   font-size: 11px;
 }
 
