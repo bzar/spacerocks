@@ -51,7 +51,7 @@ public:
   void setPaused(bool value);
   bool getPaused() const;
 
-  void reset();
+  void reset(int nextLevel = 0);
 
   Level level;
   Player player;

@@ -36,5 +36,8 @@ void GamePhase::execute(float const delta)
     }
   }
 
+  if(actionKeyPush(ACTION_SKIP_LEVEL, ctx)) {
+    world->reset(world->level.n + 1);
+  }
   world->update(delta);
 }

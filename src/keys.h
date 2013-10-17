@@ -22,6 +22,7 @@ enum KeyAction
   ACTION_PAUSE,
   ACTION_SHOW_INFO,
   ACTION_SHOW_OVERDRAW,
+  ACTION_SKIP_LEVEL,
 
   NUM_KEY_ACTIONS
 };
@@ -42,7 +43,8 @@ std::unordered_set<int> const KEY_ACTION_MAPPING[NUM_KEY_ACTIONS] = {
   {GLFW_KEY_BACKSPACE, GLFW_KEY_LEFT, GLFW_KEY_PAGE_UP, GLFW_KEY_PAGE_DOWN},
   {GLFW_KEY_LEFT_ALT, GLFW_KEY_P},
   {GLFW_KEY_I},
-  {GLFW_KEY_O}
+  {GLFW_KEY_O},
+  {GLFW_KEY_N}
 };
 #else
 std::unordered_set<int> const KEY_ACTION_MAPPING[NUM_KEY_ACTIONS] = {
@@ -60,7 +62,8 @@ std::unordered_set<int> const KEY_ACTION_MAPPING[NUM_KEY_ACTIONS] = {
   {GLFW_KEY_BACKSPACE, GLFW_KEY_LEFT},
   {GLFW_KEY_P},
   {GLFW_KEY_I},
-  {GLFW_KEY_O}
+  {GLFW_KEY_O},
+  {GLFW_KEY_N}
 };
 #endif
 

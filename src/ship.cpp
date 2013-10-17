@@ -381,7 +381,7 @@ void Ship::shoot(bool const value)
   }
 }
 
-void Ship::reset()
+void Ship::reset(bool full)
 {
   dead = false;
   glhckObjectPositionf(o, 0, 0, 0);
@@ -391,6 +391,16 @@ void Ship::reset()
   v = {0, 0};
   immortalityLeft = 4.0f;
   weapon->stopShooting();
+
+  if(full)
+  {
+    weapon = &laser;
+    laser.setLevel(1);
+    spread.setLevel(0);
+    beam.setLevel(0);
+    plasma.setLevel(0);
+    shields = 0;
+  }
 }
 
 Vec2D Ship::getVelocity() const

@@ -226,17 +226,17 @@ bool GameWorld::getPaused() const
   return paused || levelStartDelay > 0;
 }
 
-void GameWorld::reset()
+void GameWorld::reset(int nextLevel)
 {
-  level.n = 0;
+  level.n = nextLevel;
   player.lives = 3;
   player.score = 0;
   player.cheater = false;
 
-  if(player.ship != nullptr)
-    delete player.ship;
+  if(player.ship == nullptr)
+    player.ship = new Ship(this, {0, 0}, {0, 0});
 
-  player.ship = new Ship(this, {0, 0}, {0, 0});
+  player.ship->reset(true);
 
   initLevel(level.n);
 }

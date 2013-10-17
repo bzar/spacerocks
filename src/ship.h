@@ -39,7 +39,7 @@ public:
   void turnRight(bool const value);
   void accelerate(bool const value);
   void shoot(bool const value);
-  void reset();
+  void reset(bool full = false);
 
   Vec2D getVelocity() const;
   Vec2D getPosition() const;
