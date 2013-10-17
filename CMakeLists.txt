@@ -44,7 +44,9 @@ add_executable(spacerocks ${SPACEROCKS_SOURCES})
 
 target_link_libraries(spacerocks engineworks glfw glhck ${GLHCK_LIBRARIES} ${GLFW_LIBRARIES} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
 
-install(TARGETS spacerocks DESTINATION .)
+add_executable(gethighscore util/gethighscore.cpp src/highscoremanager.cpp)
+
+install(TARGETS spacerocks gethighscore DESTINATION .)
 install(DIRECTORY img DESTINATION .)
 install(DIRECTORY snd DESTINATION .)
 install(DIRECTORY fonts DESTINATION .)
