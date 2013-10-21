@@ -34,6 +34,25 @@ void HighScoreEntryLetter::prev()
   text->refresh();
 }
 
+bool HighScoreEntryLetter::set(char letter)
+{
+  if(letter >= 'a' && letter <= 'z')
+  {
+    letter = 'A' + (letter - 'a');
+  }
+
+  std::string::size_type pos = VALUES.find(letter);
+  if(pos != VALUES.npos)
+  {
+    index = pos;
+    char const str[] = {letter, '\0'};
+    text->setContent(str);
+    text->refresh();
+    return true;
+  }
+  return false;
+}
+
 char HighScoreEntryLetter::getValue() const
 {
   return VALUES.at(index);

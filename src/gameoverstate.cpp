@@ -61,10 +61,19 @@ void GameOverState::Controller::control(ew::ControlContext *context)
     {
       state->world.prevHighScoreEntryLetter();
     }
+
+    char lastChar = context->lastPressedChar();
+    if(lastChar)
+    {
+      if(state->world.setHighScoreEntryLetter(lastChar))
+      {
+        state->world.enterHighScoreEntryLetter();
+      }
+    }
   }
   else
   {
-    if(actionKeyPush(ACTION_START, context))
+    if(actionKeyPush(ACTION_START, context) || actionKeyPush(ACTION_ENTER_LETTER, context))
     {
       state->engine->setState(States::HIGHSCORES);
     }

@@ -21,6 +21,7 @@ public:
 
   void nextHighScoreEntryLetter();
   void prevHighScoreEntryLetter();
+  bool setHighScoreEntryLetter(char letter);
   void enterHighScoreEntryLetter();
   void eraseHighScoreEntryLetter();
   bool enteringHighScore() const;

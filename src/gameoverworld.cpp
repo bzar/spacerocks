@@ -78,6 +78,14 @@ void GameOverWorld::prevHighScoreEntryLetter()
   highScoreEntryLetters.at(focusedHighScoreEntryLetter)->prev();
 }
 
+bool GameOverWorld::setHighScoreEntryLetter(char letter)
+{
+  if(focusedHighScoreEntryLetter < 0)
+    return false;
+
+  return highScoreEntryLetters.at(focusedHighScoreEntryLetter)->set(letter);
+}
+
 void GameOverWorld::enterHighScoreEntryLetter()
 {
   if(focusedHighScoreEntryLetter < 0)

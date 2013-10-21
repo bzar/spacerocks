@@ -17,6 +17,7 @@ public:
   void setCenterIn(Vec2D const& newCenterIn);
   void next();
   void prev();
+  bool set(char letter);
   char getValue() const;
 
   bool getBlinking() const;
