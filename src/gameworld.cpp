@@ -239,4 +239,5 @@ void GameWorld::reset(int nextLevel)
   player.ship->reset(true);
 
   initLevel(level.n);
+  nextUfoScore = getUfoInterval();
 }
