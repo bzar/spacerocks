@@ -9,7 +9,6 @@
 #include "glhck/glhck.h"
 #include "util/vec2d.h"
 #include "util/circleshape.h"
-#include "textureatlas.h"
 #include "sound.h"
 
 #include <string>
@@ -21,8 +20,10 @@ public:
   static void init();
   static void term();
 
+  static int const NUM_THEMES = 12;
+
   enum Size { TINY = 0, SMALL, MEDIUM, LARGE, NUM_SIZES };
-  Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec2D const& velocity);
+  Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec2D const& velocity, int theme = 0);
   ~Asteroid();
 
   void render(ew::RenderContext* context);
@@ -38,9 +39,11 @@ public:
 
 private:
   static float const RADII[NUM_SIZES];
-  static std::vector<std::string> const IMAGES;
-  static float const IMAGE_SIZES[NUM_SIZES];
-  static TextureAtlas atlas;
+  static int const IMAGE_SIZES[NUM_SIZES];
+  static int const IMAGE_BLOCK_WIDTH;
+  static int const IMAGE_BLOCK_HEIGHT;
+  static std::string const IMAGE;
+  static glhckTexture* texture;
 
   GameWorld* gameWorld;
   glhckObject* o;
@@ -48,6 +51,7 @@ private:
   Vec2D v;
   float life;
   CircleShape shape;
+  int theme;
 
   static Sound hitSound;
   static Sound destroySoundBig;

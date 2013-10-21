@@ -172,6 +172,8 @@ void GameWorld::initLevel(int const n)
   minAsteroidSize = minAsteroidSize < 0 ? 0 : minAsteroidSize;
   int asteroidValue = (n%20 + 2) * ASTEROID_VALUES[maxAsteroidSize];
 
+  int asteroidTheme = randInt(0, Asteroid::NUM_THEMES - 1);
+
   while(asteroidValue > 0)
   {
     Asteroid::Size size = Asteroid::TINY;
@@ -197,7 +199,7 @@ void GameWorld::initLevel(int const n)
     Vec2D velocity = Vec2D(0, 1)
       .rotatei(randFloat(0, 1))
       .scalei(randFloat(level.minAsteroidSpeed, level.maxAsteroidSpeed));
-    Asteroid* asteroid = new Asteroid(this, size, position, velocity);
+    Asteroid* asteroid = new Asteroid(this, size, position, velocity, asteroidTheme);
   }
 }
 

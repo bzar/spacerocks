@@ -8,23 +8,28 @@
 #include "ship.h"
 
 float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
-std::vector<std::string> const Asteroid::IMAGES  = {
+/*std::vector<std::string> const Asteroid::IMAGES  = {
   "img/asteroid_1.png",
   "img/asteroid_2.png",
   "img/asteroid_3.png",
   "img/asteroid_4.png"
-};
+};*/
+std::string const Asteroid::IMAGE = "img/asteroids.png";
 
-float const Asteroid::IMAGE_SIZES[NUM_SIZES] = {16, 16, 32, 48 };
 
-TextureAtlas Asteroid::atlas = TextureAtlas();
+int const Asteroid::IMAGE_SIZES[NUM_SIZES] = {16, 16, 32, 48 };
+int const Asteroid::IMAGE_BLOCK_WIDTH = 16 + 16 + 32 + 48;
+int const Asteroid::IMAGE_BLOCK_HEIGHT = 48;
+
+glhckTexture* Asteroid::texture = nullptr;
 Sound Asteroid::hitSound = Sound();
 Sound Asteroid::destroySoundBig = Sound();
 Sound Asteroid::destroySoundSmall = Sound();
 
 void Asteroid::init()
 {
-  atlas = TextureAtlas(IMAGES);
+  texture = glhckTextureNewFromFile(IMAGE.data(), nullptr, glhckTextureDefaultSpriteParameters());
+  glhckTextureRef(texture);
   hitSound.load("snd/sfx/explosion4.wav");
   destroySoundBig.load("snd/sfx/explosion2.wav");
   destroySoundSmall.load("snd/sfx/explosion4.wav");
@@ -32,15 +37,36 @@ void Asteroid::init()
 
 void Asteroid::term()
 {
-  atlas = TextureAtlas();
+  glhckTextureFree(texture);
 }
 
-Asteroid::Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec2D const& velocity) :
+Asteroid::Asteroid(GameWorld* world, Size const size, Vec2D const& position, Vec2D const& velocity, int theme) :
   ew::Entity(world), ew::Renderable(world), ew::Updatable(world), ew::Collidable(world),
-  gameWorld(world), o(0), size(size), v(velocity), life((size + 1)/2.0f), shape(position, RADII[size])
+  gameWorld(world), o(0), size(size), v(velocity), life((size + 1)/2.0f), shape(position, RADII[size]), theme(theme)
 {
-  o = glhckSpriteNew(atlas.getTexture(), IMAGE_SIZES[size], IMAGE_SIZES[size]);
-  glhckMaterialTextureTransform(glhckObjectGetMaterial(o), &atlas.getTransform(size).transform, atlas.getTransform(size).degree);
+  int width, height;
+  glhckTextureGetInformation(texture, nullptr, &width, &height, nullptr, nullptr, nullptr, nullptr);
+
+  int blocksPerColumn = height / IMAGE_BLOCK_HEIGHT;
+  int column = theme / blocksPerColumn;
+  int row = theme % blocksPerColumn;
+
+  float widthf = width;
+  float heightf = height;
+  o = glhckSpriteNew(texture, IMAGE_SIZES[size], IMAGE_SIZES[size]);
+
+  float tx = column * IMAGE_BLOCK_WIDTH;
+  for(int i = 0; i < size; ++i)
+  {
+    tx += IMAGE_SIZES[i];
+  }
+  float ty = row * IMAGE_BLOCK_HEIGHT;
+
+  glhckRect rect = {tx / widthf, 1 - ty / heightf,
+                    IMAGE_SIZES[size]/widthf,
+                    -IMAGE_SIZES[size]/heightf};
+
+  glhckMaterialTextureTransform(glhckObjectGetMaterial(o), &rect, 0);
   glhckObjectPositionf(o, position.x, position.y, 0);
 }
 
@@ -232,7 +258,7 @@ void Asteroid::die()
       Vec2D direction = Vec2D(randFloat(-1, 1), randFloat(-1, 1)).uniti();
       Vec2D velocity = direction.scale(speed);
       Vec2D startPos = position + direction.scale(rand() % r);
-      Asteroid* asteroid = new Asteroid(gameWorld, static_cast<Size>(size - 1), startPos, velocity);
+      Asteroid* asteroid = new Asteroid(gameWorld, static_cast<Size>(size - 1), startPos, velocity, theme);
     }
   }
 
