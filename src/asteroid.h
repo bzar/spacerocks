@@ -30,6 +30,7 @@ public:
   void update(float const delta);
 
   CircleShape const* getShape() const;
+  bool collidesWith(Shape const* other) const;
   void collide(ew::Collidable const* other);
 
   Vec2D getPosition() const;

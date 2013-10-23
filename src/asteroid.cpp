@@ -7,6 +7,8 @@
 #include "particleengine.h"
 #include "ship.h"
 
+#include <iostream>
+
 float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
 /*std::vector<std::string> const Asteroid::IMAGES  = {
   "img/asteroid_1.png",
@@ -78,6 +80,33 @@ Asteroid::~Asteroid()
 void Asteroid::render(ew::RenderContext* context)
 {
   glhckObjectRender(o);
+  kmVec3 pos = *glhckObjectGetPosition(o);
+  float const R = IMAGE_SIZES[size]/2;
+  if(pos.x <= R - 400 || pos.x >= 400 - R)
+  {
+    kmVec3 wrap = pos;
+    wrap.x = wrap.x < 0 ? wrap.x + 800 : wrap.x - 800;
+    glhckObjectPosition(o, &wrap);
+    glhckObjectRender(o);
+    glhckObjectPosition(o, &pos);
+  }
+  if(pos.y <= R - 240 || pos.y >= 240 - R)
+  {
+    kmVec3 wrap = pos;
+    wrap.y = wrap.y < 0 ? wrap.y + 480 : wrap.y - 480;
+    glhckObjectPosition(o, &wrap);
+    glhckObjectRender(o);
+    glhckObjectPosition(o, &pos);
+  }
+  if((pos.x <= R - 400 || pos.x >= 400 - R) && (pos.y <= R - 240 || pos.y >= 240 - R))
+  {
+    kmVec3 wrap = pos;
+    wrap.x = wrap.x < 0 ? wrap.x + 800 : wrap.x - 800;
+    wrap.y = wrap.y < 0 ? wrap.y + 480 : wrap.y - 480;
+    glhckObjectPosition(o, &wrap);
+    glhckObjectRender(o);
+    glhckObjectPosition(o, &pos);
+  }
 }
 
 void Asteroid::update(float const delta)
@@ -111,6 +140,46 @@ CircleShape const* Asteroid::getShape() const
   return &shape;
 }
 
+bool Asteroid::collidesWith(const Shape* other) const
+{
+  if(other->collidesWith(&shape))
+  {
+    return true;
+  }
+
+  float const R = IMAGE_SIZES[size]/2;
+  if(shape.center.x <= R - 400 || shape.center.x >= 400 - R)
+  {
+    CircleShape wrap = shape;
+    wrap.center.x = wrap.center.x < 0 ? wrap.center.x + 800 : wrap.center.x - 800;
+    if(other->collidesWith(&wrap))
+    {
+      return true;
+    }
+  }
+  if(shape.center.y <= R - 240 || shape.center.y >= 240 - R)
+  {
+    CircleShape wrap = shape;
+    wrap.center.y = wrap.center.y < 0 ? wrap.center.y + 480 : wrap.center.y - 480;
+    if(other->collidesWith(&wrap))
+    {
+      return true;
+    }
+  }
+  if((shape.center.x <= R - 400 || shape.center.x >= 400 - R) && (shape.center.y <= R - 240 || shape.center.y >= 240 - R))
+  {
+    CircleShape wrap = shape;
+    wrap.center.x = wrap.center.x < 0 ? wrap.center.x + 800 : wrap.center.x - 800;
+    wrap.center.y = wrap.center.y < 0 ? wrap.center.y + 480 : wrap.center.y - 480;
+    if(other->collidesWith(&wrap))
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void Asteroid::collide(ew::Collidable const* other) {
   if(life <= 0)
     return;
@@ -119,7 +188,7 @@ void Asteroid::collide(ew::Collidable const* other) {
 
   if(typeid(*other) == typeid(Asteroid)) {
     Asteroid const* asteroid = static_cast<Asteroid const*>(other);
-    if(shape.collidesWith(asteroid->getShape()))
+    if(collidesWith(asteroid->getShape()))
     {
       v = (position - asteroid->getPosition()).uniti().scalei(v.length());
     }
@@ -137,7 +206,7 @@ void Asteroid::collide(ew::Collidable const* other) {
 
     if(typeid(*other) == typeid(Laser)) {
       Laser const* laser = static_cast<Laser const*>(other);
-      if(shape.collidesWith(laser->getShape()))
+      if(collidesWith(laser->getShape()))
       {
         life -= 0.5;
         p = laser->getPosition();
@@ -147,7 +216,7 @@ void Asteroid::collide(ew::Collidable const* other) {
 
     if(typeid(*other) == typeid(Shot)) {
       Shot const* shot = static_cast<Shot const*>(other);
-      if(shape.collidesWith(shot->getShape()))
+      if(collidesWith(shot->getShape()))
       {
         life -= 0.5;
         p = shot->getPosition();
@@ -157,7 +226,7 @@ void Asteroid::collide(ew::Collidable const* other) {
 
     if(typeid(*other) == typeid(Plasma)) {
       Plasma const* plasma = static_cast<Plasma const*>(other);
-      if(shape.collidesWith(plasma->getShape()))
+      if(collidesWith(plasma->getShape()))
       {
         life -= 1.0;
         p = plasma->getPosition();
@@ -167,7 +236,7 @@ void Asteroid::collide(ew::Collidable const* other) {
 
     if(typeid(*other) == typeid(Beam)) {
       Beam const* beam = static_cast<Beam const*>(other);
-      if(beam->canHit() && shape.collidesWith(beam->getShape()))
+      if(beam->canHit() && collidesWith(beam->getShape()))
       {
         life -= 0.5;
         p = beam->getBasePosition();
@@ -177,7 +246,7 @@ void Asteroid::collide(ew::Collidable const* other) {
 
     if(typeid(*other) == typeid(Ship)) {
       Ship const* ship = static_cast<Ship const*>(other);
-      if(!ship->immortal() && shape.collidesWith(ship->getShape()))
+      if(!ship->immortal() && collidesWith(ship->getShape()))
       {
         life = 0;
         p = ship->getPosition();
