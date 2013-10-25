@@ -17,8 +17,8 @@ float const Asteroid::RADII[NUM_SIZES] = {3, 6, 13, 20};
 std::string const Asteroid::IMAGE = "img/asteroids.png";
 
 
-int const Asteroid::IMAGE_SIZES[NUM_SIZES] = {16, 16, 32, 48 };
-int const Asteroid::IMAGE_BLOCK_WIDTH = 16 + 16 + 32 + 48;
+int const Asteroid::IMAGE_SIZES[NUM_SIZES] = {8, 16, 32, 48 };
+int const Asteroid::IMAGE_BLOCK_WIDTH = 8 + 16 + 32 + 48;
 int const Asteroid::IMAGE_BLOCK_HEIGHT = 48;
 
 glhckTexture* Asteroid::texture = nullptr;
