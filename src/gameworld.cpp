@@ -9,7 +9,6 @@
 #include "ufo.h"
 #include "ufolaser.h"
 #include "particleengine.h"
-#include "prop.h"
 #include "hud.h"
 #include "gamenotification.h"
 #include "ew/engine.h"
@@ -24,6 +23,21 @@ int const GameWorld::UFO_SCORE_INTERVAL_MAX = 800;
 float const GameWorld::DEATH_DELAY = 3.0f;
 float const GameWorld::LEVEL_END_DELAY = 3.0f;
 float const GameWorld::UFO_DELAY = 2.0f;
+std::string const GameWorld::BACKGROUND_IMAGES[] = {
+  "img/background-1.png",
+  "img/background-2.png",
+  "img/background-3.png",
+  "img/background-4.png",
+  "img/background-5.png",
+  "img/background-6.png",
+  "img/background-7.png",
+  "img/background-8.png",
+  "img/background-9.png",
+  "img/background-10.png",
+  "img/background-11.png",
+  "img/background-12.png"
+};
+int const GameWorld::NUM_BACKGROUND_IMAGES = sizeof(BACKGROUND_IMAGES) / sizeof(std::string);
 
 GameWorld::GameWorld(ew::Engine* engine) :
   ew::World(), ew::RenderableWorld(), ew::UpdatableWorld(), ew::CollidableWorld(),
@@ -31,9 +45,8 @@ GameWorld::GameWorld(ew::Engine* engine) :
   player(), level(),
   levelStartDelay(0), levelEndDelay(0), deathDelay(0), ufoDelay(0), nextUfoScore(getUfoInterval()),
   particleEngine(new ParticleEngine(this)), engine(engine),
-  hud(new Hud(this)), paused(false)
+  hud(new Hud(this)), background(nullptr), paused(false)
 {
-  new Prop(this, "img/background.png", 800, 480, 0, -1);
 }
 
 void GameWorld::update(float const delta)
@@ -144,6 +157,17 @@ void GameWorld::initLevel(int const n)
     }
   }
 
+  if(background)
+    removeEntity(background);
+
+
+  int nextBackgroundTheme = rand() % NUM_BACKGROUND_IMAGES;
+  backgroundTheme = nextBackgroundTheme != backgroundTheme ? nextBackgroundTheme : (nextBackgroundTheme + 1) % NUM_BACKGROUND_IMAGES;
+  int nextAsteroidTheme = rand() % Asteroid::NUM_THEMES;
+  asteroidTheme = nextAsteroidTheme != asteroidTheme ? nextAsteroidTheme : (nextAsteroidTheme + 1) % Asteroid::NUM_THEMES;
+
+  background = new Prop(this, BACKGROUND_IMAGES[backgroundTheme] , 800, 480, 0, -1);
+
   int const ASTEROID_VALUES[Asteroid::NUM_SIZES] = {
     1,
     2 + 2*1,
@@ -172,7 +196,6 @@ void GameWorld::initLevel(int const n)
   minAsteroidSize = minAsteroidSize < 0 ? 0 : minAsteroidSize;
   int asteroidValue = (n%20 + 2) * ASTEROID_VALUES[maxAsteroidSize];
 
-  int asteroidTheme = randInt(0, Asteroid::NUM_THEMES - 1);
 
   while(asteroidValue > 0)
   {

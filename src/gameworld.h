@@ -6,6 +6,7 @@
 #include "ew/collidableworld.h"
 #include "ew/controllableworld.h"
 #include "ew/engine.h"
+#include "prop.h"
 
 #include "util/vec2d.h"
 
@@ -65,7 +66,8 @@ private:
   static float const DEATH_DELAY;
   static float const LEVEL_END_DELAY;
   static float const UFO_DELAY;
-
+  static std::string const BACKGROUND_IMAGES[];
+  static int const NUM_BACKGROUND_IMAGES;
   static int getUfoInterval();
 
   float levelStartDelay;
@@ -73,6 +75,10 @@ private:
   float deathDelay;
   float ufoDelay;
   int nextUfoScore;
+
+  int backgroundTheme;
+  int asteroidTheme;
+  Prop* background;
   
   bool paused;
 };
