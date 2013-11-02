@@ -4,7 +4,7 @@
 #include "util/util.h"
 
 float const Beam::RADIUS = 4;
-float const Beam::HIT_RATE = 4;
+float const Beam::HIT_RATE = 6;
 std::string const Beam::IMAGE = "img/continuous_beam.png";
 std::string const Beam::TIP_IMAGE = "img/continuous_tip.png";
 glhckTexture* Beam::TEXTURE = nullptr;

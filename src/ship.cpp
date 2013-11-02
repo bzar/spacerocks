@@ -254,7 +254,7 @@ void Ship::collide(ew::Collidable const* other) {
       else
       {
         shields -= 1;
-        float speed = 2 * asteroid->getVelocity().subtract(v).length();
+        float speed = asteroid->getVelocity().projection(position.subtract(asteroid->getPosition())).subtract(v).length();
         v = position.subtract(asteroid->getPosition()).uniti().scale(speed);
       }
     }

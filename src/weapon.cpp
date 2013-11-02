@@ -112,7 +112,7 @@ void BeamWeapon::update(float const delta)
 }
 
 float const BeamWeapon::EXTEND_TIME = 0.125;
-float const BeamWeapon::BASE_LENGTH = 16.0;
+float const BeamWeapon::BASE_LENGTH = 24.0;
 float const BeamWeapon::LENGTH_PER_LEVEL = 16.0;
 float const BeamWeapon::RECHARGE_RATE = 16.0;
 float const BeamWeapon::RETRACT_RATE = 8.0;
@@ -132,7 +132,7 @@ void PlasmaWeapon::shoot(Vec2D const& position, Vec2D const& direction)
     return;
 
   Vec2D velocity = direction.scale(1000);
-  float power = lerp(4, 16, (level - 1)/8.0);
+  float power = lerp(4, 20, (level - 1)/8.0);
   Plasma* plasma = new Plasma(world, 0.5, power, position, velocity);
   cooldown = lerp(1.2, 0.8, (level - 1)/8.0);
   sound.stopAndPlay(lerp(0.5, 0,  (level - 1)/8.0));
