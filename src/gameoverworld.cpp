@@ -59,6 +59,9 @@ void GameOverWorld::setScore(const int newScore)
       h->setVisible(false);
     }
     focusedHighScoreEntryLetter = -1;
+    #ifdef C4A_ENABLED
+      highScoreManager.submitToCompo4All();
+    #endif
   }
 }
 
@@ -128,6 +131,9 @@ void GameOverWorld::saveScore()
     oss << entryLetter->getValue();
   }
   highScoreManager.addEntry(oss.str(), score);
+#ifdef C4A_ENABLED
+  highScoreManager.submitToCompo4All();
+#endif
   highScoreManager.save();
 }
 

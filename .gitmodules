@@ -4,3 +4,6 @@
 [submodule "lib/engineworks"]
 	path = lib/engineworks
 	url = git://github.com/bzar/engineworks.git
+[submodule "lib/sparrow3d"]
+	path = lib/sparrow3d
+	url = https://github.com/theZiz/sparrow3d.git

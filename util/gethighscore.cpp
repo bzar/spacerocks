@@ -19,7 +19,11 @@ int main(int argc, char** argv)
   }
   else
   {
-    std::cout << entries.at(0).score << std::endl;
+    //std::cout << entries.at(0).score << std::endl;
+    for(HighScoreManager::Entry const& e : entries)
+    {
+      std::cout << e.name << " " << e.score << " " << e.submitted << std::endl;
+    }
   }
 }
 

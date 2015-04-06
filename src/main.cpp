@@ -107,7 +107,11 @@ int main(int argc, char** argv)
     return EXIT_FAILURE;
   }
 
+#ifdef OPENGL_FIXED
+  if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_OPENGL_FIXED_PIPELINE))
+#else
   if(!glhckDisplayCreate(WIDTH, HEIGHT, GLHCK_RENDER_AUTO))
+#endif
   {
     std::cerr << "GLHCK display create error" << std::endl;
     return EXIT_FAILURE;
