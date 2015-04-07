@@ -20,7 +20,9 @@ public:
   bool isHighScore(int const score) const;
   void addEntry(std::string const& name, int const score);
   std::vector<Entry> const& getEntries() const;
+#ifdef C4A_ENABLED
   void submitToCompo4All();
+#endif
 
 private:
   class C4AException : public std::exception

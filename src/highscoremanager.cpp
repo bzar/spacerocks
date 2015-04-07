@@ -1,5 +1,7 @@
 #include "highscoremanager.h"
+#ifdef C4A_ENABLED
 #include "sparrowNet.h"
+#endif
 
 #include <fstream>
 #include <sstream>
@@ -83,6 +85,7 @@ const std::vector<HighScoreManager::Entry> &HighScoreManager::getEntries() const
   return entries;
 }
 
+#ifdef C4A_ENABLED
 void HighScoreManager::submitToCompo4All()
 {
   spNetC4AProfilePointer profile = nullptr;
@@ -137,6 +140,7 @@ void HighScoreManager::submitToCompo4All()
 
   spQuitNet();
 }
+#endif
 
 void HighScoreManager::awesomeScoreEncryptionSystem(std::istream &from, std::ostream &to)
 {

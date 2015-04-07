@@ -1,4 +1,11 @@
 add_subdirectory(glhck)
 add_subdirectory(engineworks)
 
-add_library(sparrowNet sparrow3d/sparrowNet.c)
+IF (C4A)
+  find_package(SDL_net REQUIRED)
+  add_library(sparrowNet sparrow3d/sparrowNet.c)
+  target_link_libraries(sparrowNet ${SDLNET_LIBRARY})
+  IF (PANDORA)
+    target_link_libraries(sparrowNet pnd)
+  ENDIF (PANDORA)
+ENDIF (C4A)
